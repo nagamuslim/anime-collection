@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Player</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        .header {
+            background: rgba(0,0,0,0.3); backdrop-filter: blur(10px);
+            padding: 15px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .header-content { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
+        .back-btn {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            color: white; padding: 10px 18px; border-radius: 8px;
+            text-decoration: none; font-weight: 600; transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.2); transform: translateX(-3px); }
+        .anime-title { font-size: 1.4em; font-weight: 600; color: white; flex: 1; }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .player-section { display: grid; grid-template-columns: 1fr 360px; gap: 20px; }
+
+        .video-container {
+            background: rgba(0,0,0,0.5); border-radius: 12px;
+            overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .video-wrapper {
+            position: relative; width: 100%; padding-bottom: 56.25%;
+            height: 0; overflow: hidden; background: #000;
+        }
+        .video-wrapper iframe { position: absolute; top:0; left:0; width:100%; height:100%; border:0; }
+        .video-info { padding: 18px 20px; }
+        .current-episode { font-size: 1.2em; font-weight: 600; color: white; margin-bottom: 6px; }
+        .episode-meta { color: #b0b0b0; font-size: 0.9em; }
+
+        .navigation { display: flex; gap: 12px; margin-top: 16px; }
+        .nav-btn {
+            flex: 1; padding: 14px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white; border-radius: 8px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-size: 0.95em;
+        }
+        .nav-btn:hover:not(:disabled) { background: rgba(102,126,234,0.3); border-color: rgba(102,126,234,0.5); }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        .episodes-sidebar {
+            background: rgba(255,255,255,0.05); border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden; display: flex; flex-direction: column;
+            max-height: 680px;
+        }
+        .sidebar-header {
+            padding: 16px 18px; background: rgba(0,0,0,0.3);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+        }
+        .sidebar-title { font-size: 1em; font-weight: 600; color: white; }
+
+        .sort-toggle { display: flex; gap: 6px; }
+        .sort-btn {
+            padding: 5px 12px; border-radius: 6px; font-size: 0.8em; font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.06); color: #ccc; cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .sort-btn.active { background: linear-gradient(135deg, #667eea, #764ba2); border-color: transparent; color: white; }
+        .sort-btn:hover:not(.active) { background: rgba(255,255,255,0.12); }
+
+        .episodes-list { overflow-y: auto; flex: 1; padding: 10px; }
+        .episode-item {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px; padding: 13px 15px;
+            margin-bottom: 8px; cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex; align-items: center; gap: 14px;
+        }
+        .episode-item:hover { background: rgba(255,255,255,0.1); border-color: rgba(102,126,234,0.4); transform: translateX(4px); }
+        .episode-item.active { background: linear-gradient(135deg, #667eea, #764ba2); border-color: transparent; }
+        .ep-num {
+            background: rgba(0,0,0,0.3); padding: 7px 10px; border-radius: 6px;
+            font-weight: 700; min-width: 46px; text-align: center; font-size: 0.9em;
+        }
+        .episode-item.active .ep-num { background: rgba(255,255,255,0.2); }
+        .ep-title { font-size: 0.9em; font-weight: 500; color: white; line-height: 1.3; }
+
+        .loading { text-align: center; padding: 60px; color: #b0b0b0; font-size: 1.2em; }
+        .episodes-list::-webkit-scrollbar { width: 6px; }
+        .episodes-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
+        .episodes-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+        .episodes-list::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
+        @media (max-width: 1024px) {
+            .player-section { grid-template-columns: 1fr; }
+            .episodes-sidebar { max-height: 420px; }
+        }
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; align-items: flex-start; }
+            .navigation { flex-direction: column; }
+            .anime-title { font-size: 1.1em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="index.html" class="back-btn">&#8592; Kembali</a>
+            <div class="anime-title" id="animeTitle">Loading...</div>
+        </div>
+    </div>
+    <div class="container">
+        <div id="content"><div class="loading">&#9203; Memuat anime...</div></div>
+    </div>
+
+    <script>
+        let currentAnime = null;
+
+        // currentAnime.videos is ALWAYS sorted ascending by episode number (ep 1 first).
+        // currentEpNumber is the episode number of whatever is playing right now.
+        // sortOrder only affects the display list — it NEVER changes what prev/next do.
+        // Prev = always go to the episode with the next LOWER number than currentEpNumber.
+        // Next = always go to the episode with the next HIGHER number than currentEpNumber.
+
+        let currentEpNumber = null; // the episode number currently playing
+        let sortOrder = 'asc';      // 'asc' = default (1,2,3...), 'desc' = newest (N,...,2,1)
+
+        function embedUrl(id, startSeconds) {
+            var url = 'https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0';
+            if (startSeconds) url += '&start=' + startSeconds;
+            // Add captions for true marathons OR series flagged for CC
+            if (currentAnime && (currentAnime.marathon_video_id || currentAnime.use_cc)) {
+                url += '&cc_load_policy=1&cc_lang_pref=id';
+            }
+            return url;
+        }
+
+        // Episodes sorted for display only
+        function getDisplayList() {
+            const vids = currentAnime.videos.slice(); // already asc from JSON
+            if (sortOrder === 'desc') vids.reverse();
+            return vids;
+        }
+
+        // Find the video object for a given episode number
+        function getVideoByEp(epNum) {
+            return currentAnime.videos.find(v => v.episode === epNum) || null;
+        }
+
+        // All episode numbers, always ascending
+        function allEpNumbers() {
+            return currentAnime.videos.map(v => v.episode).sort((a,b) => a - b);
+        }
+
+        function prevEpNumber() {
+            const nums = allEpNumbers();
+            const idx = nums.indexOf(currentEpNumber);
+            return idx > 0 ? nums[idx - 1] : null;
+        }
+
+        function nextEpNumber() {
+            const nums = allEpNumbers();
+            const idx = nums.indexOf(currentEpNumber);
+            return idx !== -1 && idx < nums.length - 1 ? nums[idx + 1] : null;
+        }
+
+        function buildPlayerUI() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Determine starting episode
+            const count = currentAnime.videos.length;
+            const nums = allEpNumbers();
+
+            if (count < 12) {
+                // Short series: start at the highest episode number, show newest first
+                currentEpNumber = nums[nums.length - 1];
+                sortOrder = 'desc';
+            } else {
+                // Long series: start at the lowest episode number
+                currentEpNumber = nums[0];
+                sortOrder = 'asc';
+            }
+
+            // URL episode override
+            const epParam = urlParams.get('episode');
+            if (epParam) {
+                const n = parseInt(epParam);
+                if (nums.includes(n)) {
+                    currentEpNumber = n;
+                    sortOrder = 'asc';
+                }
+            }
+
+            const content = document.getElementById('content');
+            content.innerHTML =
+                '<div class="player-section">' +
+                  '<div>' +
+                    '<div class="video-container">' +
+                      '<div class="video-wrapper">' +
+                        '<iframe id="videoPlayer" src="" frameborder="0" ' +
+                        'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ' +
+                        'referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' +
+                      '</div>' +
+                      '<div class="video-info">' +
+                        '<div class="current-episode" id="currentTitle"></div>' +
+                        '<div class="episode-meta" id="currentMeta"></div>' +
+                      '</div>' +
+                    '</div>' +
+                    '<div class="navigation">' +
+                      '<button class="nav-btn" id="prevBtn">&#8592; Episode Sebelumnya</button>' +
+                      '<button class="nav-btn" id="nextBtn">Episode Selanjutnya &#8594;</button>' +
+                    '</div>' +
+                  '</div>' +
+                  '<div class="episodes-sidebar">' +
+                    '<div class="sidebar-header">' +
+                      '<div class="sidebar-title">Daftar Episode</div>' +
+                      '<div class="sort-toggle">' +
+                        '<button class="sort-btn" id="sortToggle">Terbaru</button>' +
+                      '</div>' +
+                    '</div>' +
+                    '<div class="episodes-list" id="episodesList"></div>' +
+                  '</div>' +
+                '</div>';
+
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                const p = prevEpNumber();
+                if (p !== null) playEpisode(p);
+            });
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                const n = nextEpNumber();
+                if (n !== null) playEpisode(n);
+            });
+            document.getElementById('sortToggle').addEventListener('click', () => setSort(sortOrder === 'asc' ? 'desc' : 'asc'));
+
+            refreshAll();
+        }
+
+        function setSort(order) {
+            if (sortOrder === order) return;
+            sortOrder = order;
+            renderEpisodeList();
+            updateSortButtons();
+        }
+
+        function playEpisode(epNum) {
+            currentEpNumber = epNum;
+            refreshAll();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function refreshAll() {
+            const video = getVideoByEp(currentEpNumber);
+            if (!video) return;
+
+            // Update player
+            document.getElementById('videoPlayer').src = embedUrl(video.video_id, video.start_seconds);
+            document.getElementById('currentTitle').textContent = currentAnime.name;
+            var epLabel = video.end_episode ? 'Episode ' + video.episode + '-' + video.end_episode : 'Episode ' + video.episode;
+            document.getElementById('currentMeta').textContent = epLabel + ' \u2022 Sub Indonesia';
+
+            // Update prev/next — purely based on whether a lower/higher episode exists
+            document.getElementById('prevBtn').disabled = prevEpNumber() === null;
+            document.getElementById('nextBtn').disabled = nextEpNumber() === null;
+
+            renderEpisodeList();
+            updateSortButtons();
+        }
+
+        function renderEpisodeList() {
+            const list = document.getElementById('episodesList');
+            list.innerHTML = '';
+            getDisplayList().forEach(video => {
+                const item = document.createElement('div');
+                item.className = 'episode-item' + (video.episode === currentEpNumber ? ' active' : '');
+                const epLabel = video.end_episode ? 'Episode ' + video.episode + '-' + video.end_episode : 'Episode ' + video.episode;
+                const cleanTitle = video.chapter_title || epLabel;
+                item.innerHTML =
+                    '<div class="ep-num">EP ' + video.episode + '</div>' +
+                    '<div class="ep-title">' + cleanTitle + '</div>';
+                item.addEventListener('click', () => playEpisode(video.episode));
+                list.appendChild(item);
+            });
+            const activeItem = list.querySelector('.episode-item.active');
+            if (activeItem) activeItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function updateSortButtons() {
+            document.getElementById('sortToggle').classList.toggle('active', sortOrder === 'desc');
+        }
+
+        async function loadAnimeData() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const animeName = urlParams.get('anime');
+                if (!animeName) throw new Error('No anime specified');
+
+                // Load priority: localStorage first → server JSON fallback
+                let data = null;
+                try {
+                    const raw = localStorage.getItem('anime_data');
+                    if (raw) data = JSON.parse(raw);
+                } catch(e) {}
+                if (!data || !data.anime_list) {
+                    const res = await fetch('anime_data.json');
+                    data = await res.json();
+                }
+
+                currentAnime = data.anime_list.find(a => a.name === animeName);
+                if (!currentAnime) throw new Error('Anime not found');
+
+                document.title = currentAnime.name + ' - Anime Player';
+                document.getElementById('animeTitle').textContent = currentAnime.name;
+                buildPlayerUI();
+            } catch(e) {
+                document.getElementById('content').innerHTML =
+                    '<div class="loading">&#10060; ' + e.message + '<br><br>' +
+                    '<a href="index.html" style="color:#667eea">&#8592; Kembali ke Beranda</a></div>';
+            }
+        }
+
+        loadAnimeData();
+    </script>
+</body>
+</html>
