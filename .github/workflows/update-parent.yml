@@ -1,0 +1,26 @@
+name: Update Submodule in Parent
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout parent repo
+        uses: actions/checkout@v4
+        with:
+          repository: nagamuslim/nagamuslim.github.io
+          token: ${{ secrets.SUBMODULE_UPDATE_TOKEN }}
+          submodules: true
+
+      - name: Update submodule
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git submodule update --remote project/anime-collection
+          git add project/anime-collection
+          git commit -m "Auto-update anime-collection submodule to latest" || echo "No changes to commit"
+          git push
