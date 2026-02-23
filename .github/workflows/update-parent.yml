@@ -1,26 +1,27 @@
-name: Update Submodule in Parent
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  update:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout parent repo
+- name: Checkout parent repo
         uses: actions/checkout@v4
         with:
           repository: nagamuslim/nagamuslim.github.io
+          # Pastikan secret ini BENAR-BENAR ada di repo asal
           token: ${{ secrets.SUBMODULE_UPDATE_TOKEN }}
           submodules: true
+          # Tambahkan path agar tidak konflik dengan direktori kerja default
+          path: parent-repo
 
       - name: Update submodule
         run: |
+          cd parent-repo
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # Update submodule spesifik
           git submodule update --remote project/anime-collection
-          git add project/anime-collection
-          git commit -m "Auto-update anime-collection submodule to latest" || echo "No changes to commit"
-          git push
+          
+          # Cek apakah ada perubahan
+          if git diff --quiet; then
+            echo "No changes to commit"
+          else
+            git add project/anime-collection
+            git commit -m "Auto-update anime-collection submodule"
+            git push
+          fi
