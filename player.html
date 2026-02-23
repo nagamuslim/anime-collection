@@ -125,8 +125,11 @@
         <div id="content"><div class="loading">&#9203; Memuat anime...</div></div>
     </div>
 
+    <script src="bookmark.js" defer onerror="void 0"></script>
     <script>
         let currentAnime = null;
+        let ytPlayer = null;
+        let ytApiReady = false;
 
         // currentAnime.videos is ALWAYS sorted ascending by episode number (ep 1 first).
         // currentEpNumber is the episode number of whatever is playing right now.
@@ -138,7 +141,7 @@
         let sortOrder = 'asc';      // 'asc' = default (1,2,3...), 'desc' = newest (N,...,2,1)
 
         function embedUrl(id, startSeconds) {
-            var url = 'https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0';
+            var url = 'https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0&enablejsapi=1';
             if (startSeconds) url += '&start=' + startSeconds;
             // Add captions for true marathons OR series flagged for CC
             if (currentAnime && (currentAnime.marathon_video_id || currentAnime.use_cc)) {
@@ -255,6 +258,8 @@
         }
 
         function playEpisode(epNum) {
+            if (typeof ContinueWatching !== 'undefined') ContinueWatching.stopPlayer();
+            ytPlayer = null;
             currentEpNumber = epNum;
             refreshAll();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -276,6 +281,15 @@
 
             renderEpisodeList();
             updateSortButtons();
+
+            // Track progress for "Continue Watching" feature
+            if (typeof BookmarkManager !== 'undefined') {
+                var epLabel = video.end_episode ? 'Episode ' + video.episode + '-' + video.end_episode : 'Episode ' + video.episode;
+                BookmarkManager.trackProgress(currentAnime.name, video.video_id, video.episode, epLabel);
+            }
+
+            // Re-attach YouTube Player API after iframe reload
+            setTimeout(attachYTPlayer, 1200);
         }
 
         function renderEpisodeList() {
@@ -298,6 +312,30 @@
 
         function updateSortButtons() {
             document.getElementById('sortToggle').classList.toggle('active', sortOrder === 'desc');
+        }
+
+        // ── YouTube IFrame API Integration ────────────────────────────────────
+        window.onYouTubeIframeAPIReady = function() {
+            ytApiReady = true;
+            attachYTPlayer();
+        };
+
+        function attachYTPlayer() {
+            if (!ytApiReady || ytPlayer) return;
+            const iframe = document.getElementById('videoPlayer');
+            if (!iframe) return;
+
+            ytPlayer = new YT.Player('videoPlayer', {
+                events: {
+                    'onReady': (event) => {
+                        if (typeof ContinueWatching !== 'undefined' && currentAnime) {
+                            const video = getVideoByEp(currentEpNumber);
+                            const epLabel = video.end_episode ? 'Episode ' + video.episode + '-' + video.end_episode : 'Episode ' + video.episode;
+                            ContinueWatching.initPlayer(currentAnime.name, video.episode, epLabel, () => ytPlayer);
+                        }
+                    }
+                }
+            });
         }
 
         async function loadAnimeData() {
@@ -332,5 +370,6 @@
 
         loadAnimeData();
     </script>
+    <script src="https://www.youtube.com/iframe_api" async></script>
 </body>
 </html>

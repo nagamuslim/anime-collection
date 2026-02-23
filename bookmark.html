@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Tontonan</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%); color: #e0e0e0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height: 100vh; }
+
+        .header { background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); padding: 15px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
+        .back-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; white-space: nowrap; }
+        .back-btn:hover { background: rgba(255,255,255,0.2); transform: translateX(-3px); }
+        .page-title { font-size: 1.5em; font-weight: 600; color: white; flex: 1; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .clear-btn { background: rgba(220,50,50,0.15); border: 1px solid rgba(220,50,50,0.3); color: #ff8a80; padding: 8px 16px; border-radius: 8px; font-size: 0.82em; font-weight: 600; cursor: pointer; transition: all 0.3s ease; white-space: nowrap; }
+        .clear-btn:hover { background: rgba(220,50,50,0.28); }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+
+        .anime-card { background: rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; border: 1px solid rgba(255,255,255,0.1); display: block; text-decoration: none; color: inherit; position: relative; }
+        .anime-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.6); border-color: rgba(102,126,234,0.5); }
+
+        /* Remove-from-history button */
+        .remove-btn { position: absolute; top: 10px; left: 10px; width: 28px; height: 28px; background: rgba(0,0,0,0.6); color: #aaa; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); cursor: pointer; z-index: 20; display: flex; align-items: center; justify-content: center; font-size: 0.75em; font-weight: bold; transition: all 0.2s ease; }
+        .remove-btn:hover { background: rgba(220,50,50,0.75); color: white; border-color: transparent; transform: scale(1.1); }
+
+        .thumbnail { position: relative; width: 100%; padding-top: 56.25%; overflow: hidden; }
+        .thumb-img { position: absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; display:block; }
+        .thumb-fallback { position: absolute; top:0; left:0; width:100%; height:100%; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .anime-icon { font-size: 4em; opacity: 0.9; }
+
+        /* "Terakhir ditonton" badge */
+        .badge-last { position: absolute; bottom: 8px; right: 8px; padding: 3px 8px; border-radius: 5px; font-size: 0.72em; font-weight: 600; color: white; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.15); white-space: nowrap; }
+
+        .info { padding: 14px 16px 16px; }
+        .title { color: #fff; font-size: 1.05em; font-weight: 600; margin-bottom: 10px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 3em; }
+
+        /* Progress / stats box */
+        .progress-box { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; gap: 5px; }
+        .stat-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.82em; color: #aaa; }
+        .stat-val { color: #a8e6cf; font-weight: 600; }
+        .stat-val.ep { color: #c3b1e1; }
+
+        /* "Lanjutkan" button inside card */
+        .resume-btn { display: block; margin-top: 12px; padding: 9px; border-radius: 8px; text-align: center; font-size: 0.83em; font-weight: 700; color: white; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); text-decoration: none; transition: opacity 0.2s; }
+        .resume-btn:hover { opacity: 0.82; }
+
+        .loading { text-align: center; padding: 60px; color: #b0b0b0; font-size: 1.2em; grid-column: 1 / -1; }
+        .no-results { text-align: center; padding: 60px; color: #888; grid-column: 1 / -1; }
+        .no-results-icon { font-size: 4em; margin-bottom: 16px; opacity: 0.5; }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+            .header-content { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="index.html" class="back-btn">&#8592; Beranda</a>
+            <div class="page-title">&#128250; Riwayat Tontonan</div>
+            <button class="clear-btn" id="clearAllBtn">&#128465; Hapus Semua</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="grid" id="historyGrid">
+            <div class="loading">&#9203; Memuat riwayat...</div>
+        </div>
+    </div>
+
+    <script src="bookmark.js" onerror="void 0"></script>
+    <script>
+        'use strict';
+
+        // For thumbnail lookups we need the master anime data
+        let animeDataMap = new Map();
+
+        const icons  = ['🎭','⚔️','⭐','🔥','💧','⚡','🎯','🌸','🎪','🎨','🎵','🎮','🌙','☀️','🎁'];
+        const colors = ['#ff6b6b','#4ecdc4','#ffe66d','#a8e6cf','#ffd93d','#6bcf7f','#95e1d3','#f38181','#aa96da','#fcbad3'];
+
+        function hashStr(s) {
+            let h = 0;
+            for (let i = 0; i < s.length; i++) h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
+            return Math.abs(h);
+        }
+
+        function timeAgo(ts) {
+            if (!ts) return '-';
+            const diff = Date.now() - ts;
+            const m = Math.floor(diff / 60000);
+            if (m < 1)  return 'Baru saja';
+            if (m < 60) return m + ' menit lalu';
+            const h = Math.floor(m / 60);
+            if (h < 24) return h + ' jam lalu';
+            const d = Math.floor(h / 24);
+            if (d < 7)  return d + ' hari lalu';
+            return new Date(ts).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function removeEntry(e, animeName) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (typeof BookmarkManager === 'undefined') return;
+            BookmarkManager.clearEntry(animeName);
+            renderHistory();
+        }
+
+        function createCard(entry) {
+            const name     = entry.name;
+            const animeObj = animeDataMap.get(name);
+            const thumbId  = animeObj ? animeObj.thumbnail_video_id : null;
+            const hqUrl    = thumbId ? 'https://img.youtube.com/vi/' + thumbId + '/hqdefault.jpg' : null;
+            const mqUrl    = thumbId ? 'https://img.youtube.com/vi/' + thumbId + '/mqdefault.jpg' : null;
+
+            const h     = hashStr(name);
+            const icon  = icons[h % icons.length];
+            const color = colors[h % colors.length];
+
+            const epNum   = entry.lastWatchedEpisodeNumber;
+            const epTitle = entry.lastWatchedEpisodeTitle || (epNum ? 'Episode ' + epNum : null);
+            const visits  = entry.visitCount || 1;
+
+            // Player URL — link to the episode they stopped at if known
+            const playerUrl = 'player.html?anime=' + encodeURIComponent(name) +
+                              (epNum ? '&episode=' + epNum : '');
+
+            // Card is a <div> not an <a> so the remove button doesn't bubble
+            const card = document.createElement('div');
+            card.className = 'anime-card';
+            card.style.cursor = 'pointer';
+
+            const lastSeenBadge = entry.lastWatchedAt
+                ? '<div class="badge-last">' + timeAgo(entry.lastWatchedAt) + '</div>'
+                : '';
+
+            card.innerHTML =
+                '<button class="remove-btn" title="Hapus dari riwayat">&#10005;</button>' +
+                '<div class="thumbnail">' +
+                (hqUrl
+                    ? '<img class="thumb-img" src="' + hqUrl + '" alt="' + name.replace(/"/g,'&quot;') + '"' +
+                      ' onerror="this.src=\'' + mqUrl + '\';this.onerror=function(){this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';}"/>'
+                    : '') +
+                '<div class="thumb-fallback" style="background:linear-gradient(135deg,' + color + '33 0%,' + color + '66 100%);' + (hqUrl ? '' : 'display:flex;') + '">' +
+                '<div class="anime-icon">' + icon + '</div></div>' +
+                lastSeenBadge +
+                '</div>' +
+                '<div class="info">' +
+                  '<div class="title">' + name + '</div>' +
+                  '<div class="progress-box">' +
+                    (epTitle
+                        ? '<div class="stat-row"><span>Terakhir ditonton</span><span class="stat-val ep">' + epTitle + '</span></div>'
+                        : '') +
+                    '<div class="stat-row"><span>Episode dibuka</span><span class="stat-val">' + visits + 'x</span></div>' +
+                  '</div>' +
+                  '<a href="' + playerUrl + '" class="resume-btn">&#9654; Lanjutkan Menonton</a>' +
+                '</div>';
+
+            // Clicking anywhere on the card (except the remove button) → player
+            card.addEventListener('click', function (e) {
+                if (e.target.closest('.remove-btn')) return;
+                window.location.href = playerUrl;
+            });
+
+            card.querySelector('.remove-btn').addEventListener('click', function (e) {
+                removeEntry(e, name);
+            });
+
+            return card;
+        }
+
+        function renderHistory() {
+            const grid = document.getElementById('historyGrid');
+
+            if (typeof BookmarkManager === 'undefined') {
+                grid.innerHTML = '<div class="no-results"><div class="no-results-icon">&#128274;</div>' +
+                    '<h2>BookmarkManager tidak tersedia</h2>' +
+                    '<p>Pastikan bookmark.js ada di direktori yang sama.</p></div>';
+                return;
+            }
+
+            const history = BookmarkManager.getWatchHistory();
+
+            if (history.length === 0) {
+                grid.innerHTML = '<div class="no-results"><div class="no-results-icon">&#128250;</div>' +
+                    '<h2>Belum Ada Riwayat</h2>' +
+                    '<p>Buka anime dan putar episode untuk mulai melacak tontonanmu.</p></div>';
+                return;
+            }
+
+            grid.innerHTML = '';
+            history.forEach(entry => grid.appendChild(createCard(entry)));
+        }
+
+        async function loadMasterData() {
+            // Try to load thumbnail / episode-count info from master data.
+            // Failure here is non-fatal — cards still render without thumbnails.
+            try {
+                let data = null;
+                const raw = localStorage.getItem('anime_data');
+                if (raw) data = JSON.parse(raw);
+                if (!data) data = await (await fetch('anime_data.json')).json();
+                if (data && data.anime_list) {
+                    data.anime_list.forEach(a => animeDataMap.set(a.name, a));
+                }
+            } catch (e) {
+                // silent — thumbnails won't load but everything else works
+            }
+
+            renderHistory();
+        }
+
+        document.getElementById('clearAllBtn').addEventListener('click', function () {
+            if (typeof BookmarkManager === 'undefined') return;
+            const history = BookmarkManager.getWatchHistory();
+            if (history.length === 0) return;
+            if (confirm('Hapus seluruh riwayat tontonan (' + history.length + ' anime)?\nData ini tidak bisa dikembalikan.')) {
+                BookmarkManager.clearAll();
+                renderHistory();
+            }
+        });
+
+        loadMasterData();
+    </script>
+</body>
+</html>
