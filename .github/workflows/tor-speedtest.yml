@@ -1,50 +1,41 @@
 name: Tor ID Exit Node Speedtest
 
 on:
-  workflow_dispatch: # Allows you to trigger this workflow manually
+  workflow_dispatch:
 
 jobs:
   tor_speedtest:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install Tor, Torsocks, and Speedtest-CLI
+      - name: Install Tor and Speedtest-CLI
         run: |
           sudo apt-get update
-          sudo apt-get install -y tor torsocks speedtest-cli curl jq
+          sudo apt-get install -y tor speedtest-cli curl jq
 
-      - name: Configure Tor to use Indonesian (ID) Exit Nodes
+      - name: Configure Tor
         run: |
-          # Append the specific country preference to the torrc file
           echo "ExitNodes {id}" | sudo tee -a /etc/tor/torrc
-          # StrictNodes 0 allows fallback to other nodes if ID nodes are down/unavailable
           echo "StrictNodes 0" | sudo tee -a /etc/tor/torrc
-          
-          # Restart the Tor service to apply changes
           sudo systemctl restart tor
-
-          # Give Tor time to bootstrap and build circuits 
-          echo "Waiting 45 seconds for Tor to bootstrap circuits..."
-          sleep 45
-
-      - name: Verify IP and Location
-        run: |
-          echo "Checking connection through Tor (Retrying up to 3 times)..."
-          for i in {1..3}; do
-            RESPONSE=$(torsocks curl -s --max-time 15 https://ipinfo.io)
-            if echo "$RESPONSE" | jq . > /dev/null 2>&1; then
-              echo "$RESPONSE" | jq .
-              exit 0
+          
+          echo "Waiting 60 seconds for Tor to initialize..."
+          for i in {1..6}; do
+            echo "Checking Tor status... ($((i*10))s)"
+            if curl -s --socks5-hostname 127.0.0.1:9050 https://check.torproject.org/ | grep -q "Congratulations"; then
+              echo "Tor is ready!"
+              break
             fi
-            echo "Attempt $i failed, waiting before retry..."
             sleep 10
           done
-          echo "Failed to get valid JSON from ipinfo.io after 3 attempts."
-          exit 1
 
       - name: Run Speedtest through Tor
         run: |
-          echo "Starting speedtest via torsocks..."
-          # Run the speedtest CLI routed through the Tor network
-          # We use --secure to avoid some HTTPS issues with certain nodes
+          echo "Starting speedtest via Tor SOCKS proxy..."
+          # Speedtest-cli doesn't support SOCKS5 directly, so we use proxychains
+          sudo apt-get install -y proxychains4
+          # Configure proxychains to use Tor
+          sudo sed -i 's/socks4 \t127.0.0.1 9050/socks5 \t127.0.0.1 9050/' /etc/proxychains4.conf
+          
+          proxychains4 speedtest-cli --simple --secure || echo "Speedtest failed, attempting with torsocks fallback..."
           torsocks speedtest-cli --simple --secure
