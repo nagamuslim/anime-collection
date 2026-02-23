@@ -70,8 +70,16 @@
     // ── 2. Dub Parser (moved to top) ───────────────────────────────────────────
     // Dub Parser — adds " (Dub Indo)" suffix and handles brackets
     const parseDub = (t, url, block) => {
-        // Try to capture "Takarir" style first
-        const takarirM = t.match(/^(.+?)\s+-\s+Episode\s*(\d+)\s*\[Takarir Indonesia\]/i);
+        // TROPICS Dub Style: 【Dub Indonesia】《WITCH WATCH วิทช์วอทช์》｜ตอนที่ 25｜TROPICS ENTERTAINMENT
+        const tropicsM = t.match(/【Dub Indonesia】《(.+?)》｜(?:Episode|ตอนที่)\s*(\d+)｜/i);
+        if (tropicsM) {
+            const animeName = cleanTitle(tropicsM[1]).replace(/[《》]/g, '').trim();
+            const episode = parseInt(tropicsM[2], 10);
+            return [{ animeName: animeName + ' (Dub Indo)', episode, title: t, url, video_id: extractVideoId(url) }];
+        }
+
+        // Try to capture "Takarir" or "Bahasa Indonesia" style
+        const takarirM = t.match(/^(.+?)\s+-\s+Episode\s*(\d+)\s*\[(?:Takarir Indonesia|Bahasa Indonesia)\]/i);
         if (takarirM) {
             const animeNameRaw = takarirM[1];
             const animeName = cleanTitle(animeNameRaw);
@@ -253,7 +261,7 @@
             let parsedArray = null;
 
             // 1. Route ALL Indonesian dubs to parseDub first
-            if (/(id\s*dub|id-dub|bahasa\s*indonesia)/i.test(title)) {
+            if (/(id\s*dub|id-dub|bahasa\s*indonesia)/i.test(title) || /【Dub Indonesia】/.test(title)) {
                 parsedArray = parseDub(title, url, rawBlock);
             }
             // 2. Channel Specific Routing (now allow JP dub only when dub present)
