@@ -15,26 +15,36 @@ jobs:
 
       - name: Configure Tor to use Indonesian (ID) Exit Nodes
         run: |
-          # Append the specific exit node configuration to the torrc file
+          # Append the specific country preference to the torrc file
           echo "ExitNodes {id}" | sudo tee -a /etc/tor/torrc
-          echo "StrictNodes 1" | sudo tee -a /etc/tor/torrc
+          # StrictNodes 0 allows fallback to other nodes if ID nodes are down/unavailable
+          echo "StrictNodes 0" | sudo tee -a /etc/tor/torrc
           
           # Restart the Tor service to apply changes
           sudo systemctl restart tor
 
           # Give Tor time to bootstrap and build circuits 
-          # Finding specific country nodes can sometimes take a moment
-          echo "Waiting 30 seconds for Tor to bootstrap circuits..."
-          sleep 30
+          echo "Waiting 45 seconds for Tor to bootstrap circuits..."
+          sleep 45
 
       - name: Verify IP and Location
         run: |
-          echo "Checking connection through Tor..."
-          # Fetch IP info to prove the traffic is routing through Indonesia
-          torsocks curl -s https://ipinfo.io | jq .
+          echo "Checking connection through Tor (Retrying up to 3 times)..."
+          for i in {1..3}; do
+            RESPONSE=$(torsocks curl -s --max-time 15 https://ipinfo.io)
+            if echo "$RESPONSE" | jq . > /dev/null 2>&1; then
+              echo "$RESPONSE" | jq .
+              exit 0
+            fi
+            echo "Attempt $i failed, waiting before retry..."
+            sleep 10
+          done
+          echo "Failed to get valid JSON from ipinfo.io after 3 attempts."
+          exit 1
 
       - name: Run Speedtest through Tor
         run: |
           echo "Starting speedtest via torsocks..."
           # Run the speedtest CLI routed through the Tor network
-          torsocks speedtest-cli --simple
+          # We use --secure to avoid some HTTPS issues with certain nodes
+          torsocks speedtest-cli --simple --secure
