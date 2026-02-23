@@ -278,29 +278,41 @@
             } catch(e) { return null; }
         }
 
-        // ── Data loading: localStorage → combined.txt (lokal) → combined.txt (GitHub) → anime_data.json ──
+        // ── Data loading: localStorage → anime_data.json → combined.txt (lokal) → combined.txt (GitHub) ──
         async function loadAnimeData() {
             let data = null;
 
             if (typeof AnimeUpdater !== 'undefined') {
                 // 1. localStorage
                 data = AnimeUpdater.loadLocal();
+                if (data) console.log('Loaded from localStorage');
 
-                // 2. combined.txt lokal (direktori yang sama)
+                // 2. anime_data.json (server)
                 if (!data) {
-                    data = await tryFetchCombinedTxt('combined.txt');
+                    try {
+                        console.log('Fetching anime_data.json...');
+                        const res = await fetch('anime_data.json', { cache: 'no-cache' });
+                        if (res.ok) {
+                            data = await res.json();
+                            console.log('Loaded from server JSON');
+                        } else {
+                            console.warn('anime_data.json fetch failed:', res.status);
+                        }
+                    } catch(e) { console.warn('anime_data.json error:', e); }
                 }
 
-                // 3. combined.txt dari GitHub (fallback remote)
+                // 3. combined.txt lokal
+                if (!data) {
+                    data = await tryFetchCombinedTxt('combined.txt');
+                    if (data) console.log('Loaded from local combined.txt');
+                }
+
+                // 4. combined.txt dari GitHub
                 if (!data) {
                     data = await tryFetchCombinedTxt(
                         'https://raw.githubusercontent.com/nagamuslim/anime-collection/refs/heads/main/combined.txt'
                     );
-                }
-
-                // 4. anime_data.json
-                if (!data) {
-                    try { data = await (await fetch('anime_data.json')).json(); } catch(e) {}
+                    if (data) console.log('Loaded from GitHub combined.txt');
                 }
             } else {
                 // AnimeUpdater tidak tersedia — fallback sederhana
