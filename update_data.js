@@ -463,11 +463,8 @@
         } catch(e) { return null; }
     };
 
-    const loadData = async (serverJsonUrl) => {
-        const local = loadLocal();
-        if (local && local.anime_list) return local;
-
-        // Try combined.txt from server
+    const loadData = async () => {
+        // 1. Try combined.txt from relative dir
         if (typeof fetch !== 'undefined') {
             try {
                 const base = (typeof location !== 'undefined') ? location.href.replace(/\/[^\/]*$/, '/') : '';
@@ -475,21 +472,30 @@
                 if (r2.ok) {
                     const txt = await r2.text();
                     const groups = parseContent(txt);
-                    const existing = loadLocal();
-                    const merged = mergeData(existing, groups);
+                    const merged = mergeData(null, groups);
+                    console.log('AnimeUpdater: Loaded from relative combined.txt');
                     saveLocal(merged.data);
                     return merged.data;
                 }
             } catch(e) {}
         }
 
-        // Fall back to server JSON
-        if (typeof fetch !== 'undefined' && serverJsonUrl) {
+        // 2. Try combined.txt from GitHub
+        if (typeof fetch !== 'undefined') {
             try {
-                const res = await fetch(serverJsonUrl);
-                return await res.json();
-            } catch(e) { return null; }
+                const githubUrl = 'https://raw.githubusercontent.com/nagamuslim/anime-collection/refs/heads/main/combined.txt';
+                const r3 = await fetch(githubUrl, { cache: 'no-cache' });
+                if (r3.ok) {
+                    const txt = await r3.text();
+                    const groups = parseContent(txt);
+                    const merged = mergeData(null, groups);
+                    console.log('AnimeUpdater: Loaded from GitHub combined.txt');
+                    saveLocal(merged.data);
+                    return merged.data;
+                }
+            } catch(e) {}
         }
+
         return null;
     };
 

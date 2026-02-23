@@ -264,65 +264,38 @@
                 data.total_series + ' Anime • ' + totalEps + ' Episode';
         }
 
-        // ── Helper: ambil & parse combined.txt dari URL tertentu ──────────────
-        async function tryFetchCombinedTxt(url) {
-            try {
-                const r = await fetch(url, { cache: 'no-cache' });
-                if (!r.ok) return null;
-                const txt = await r.text();
-                if (!txt.trim()) return null;
-                const groups = AnimeUpdater.parseMultiple([txt]);
-                const merged = AnimeUpdater.mergeData(null, groups);
-                AnimeUpdater.saveLocal(merged.data);
-                return merged.data;
-            } catch(e) { return null; }
-        }
-
-        // ── Data loading: localStorage → anime_data.json → combined.txt (lokal) → combined.txt (GitHub) ──
+        // ── Data loading: localStorage → anime_data.json → combined.txt (fallback via updater) ──
         async function loadAnimeData() {
             let data = null;
 
             if (typeof AnimeUpdater !== 'undefined') {
-                // 1. localStorage
+                // 1. Try LocalStorage
                 data = AnimeUpdater.loadLocal();
                 if (data) console.log('Loaded from localStorage');
 
-                // 2. anime_data.json (server)
+                // 2. Try server anime_data.json
                 if (!data) {
                     try {
-                        console.log('Fetching anime_data.json...');
                         const res = await fetch('anime_data.json', { cache: 'no-cache' });
                         if (res.ok) {
                             data = await res.json();
-                            console.log('Loaded from server JSON');
-                        } else {
-                            console.warn('anime_data.json fetch failed:', res.status);
+                            console.log('Loaded from server anime_data.json');
+                            AnimeUpdater.saveLocal(data);
                         }
-                    } catch(e) { console.warn('anime_data.json error:', e); }
+                    } catch(e) {}
                 }
 
-                // 3. combined.txt lokal
+                // 3. Fallback to combined.txt (local/remote) via updater
                 if (!data) {
-                    data = await tryFetchCombinedTxt('combined.txt');
-                    if (data) console.log('Loaded from local combined.txt');
-                }
-
-                // 4. combined.txt dari GitHub
-                if (!data) {
-                    data = await tryFetchCombinedTxt(
-                        'https://raw.githubusercontent.com/nagamuslim/anime-collection/refs/heads/main/combined.txt'
-                    );
-                    if (data) console.log('Loaded from GitHub combined.txt');
+                    data = await AnimeUpdater.loadData();
                 }
             } else {
-                // AnimeUpdater tidak tersedia — fallback sederhana
+                // Updater not available - basic fallback
                 try {
                     const r = localStorage.getItem('anime_data');
                     if (r) data = JSON.parse(r);
+                    if (!data) data = await (await fetch('anime_data.json')).json();
                 } catch(e) {}
-                if (!data) {
-                    try { data = await (await fetch('anime_data.json')).json(); } catch(e) {}
-                }
             }
 
             if (!data || !data.anime_list) {
