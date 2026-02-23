@@ -178,7 +178,7 @@
                 '<div class="thumb-fallback" style="background:linear-gradient(135deg,' + color + '33 0%,' + color + '66 100%);' + (hqUrl ? '' : 'display:flex;') + '">' +
                 '<div class="anime-icon">' + icon + '</div></div></div>' +
                 '<div class="info"><div class="title">' + anime.name + '</div>' +
-                '<div class="meta">' + anime.episode_count + ' Episodes &bull; Sub Indo</div></div>';
+                '<div class="meta">' + anime.episode_count + ' Episodes &bull; ' + (anime.is_donghua ? 'Dub Indo' : 'Sub Indo') + '</div></div>';
             return card;
         }
 
@@ -215,14 +215,27 @@
             return qIdx === qClean.length;
         }
 
-        function applyFilterAndSort() {
-            const term = document.getElementById('searchInput').value;
-            const sortMode = document.getElementById('sortSelect').value;
-
-            let filtered = animeData.filter(a => fuzzyMatch(term, a.name));
-
-            filtered.sort((a, b) => {
-                if (sortMode === 'donghua') {
+                function applyFilterAndSort() {
+                    const term = document.getElementById('searchInput').value;
+                    const sortMode = document.getElementById('sortSelect').value;
+                    
+                    // 1. Filter by search term
+                    let filtered = animeData.filter(a => fuzzyMatch(term, a.name));
+        
+                                // 2. Prefer Ani-One Indonesia over Ani-One Asia
+                                const idSeriesNames = new Set(
+                                    animeData
+                                        .filter(a => a.videos.some(v => (v.title && v.title.includes('【Ani-One Indonesia】')) || (v.chapter_title && v.chapter_title.includes('【Ani-One Indonesia】'))))
+                                        .map(a => a.name.toLowerCase())
+                                );
+                    
+                                filtered = filtered.filter(a => {
+                                    const isAsiaOnly = a.videos.every(v => (v.title && v.title.includes('【Ani-One Asia】')) || (v.chapter_title && v.chapter_title.includes('【Ani-One Asia】')));
+                                    if (isAsiaOnly && idSeriesNames.has(a.name.toLowerCase())) return false;
+                                    return true;
+                                });        
+                    // 3. Sort
+                    filtered.sort((a, b) => {                if (sortMode === 'donghua') {
                     if (a.is_donghua !== b.is_donghua) return a.is_donghua ? -1 : 1;
                 } else if (sortMode === 'dub') {
                     const aDub = a.name.includes('Dub Indo');

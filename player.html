@@ -273,7 +273,7 @@
             document.getElementById('videoPlayer').src = embedUrl(video.video_id, video.start_seconds);
             document.getElementById('currentTitle').textContent = currentAnime.name;
             var epLabel = video.end_episode ? 'Episode ' + video.episode + '-' + video.end_episode : 'Episode ' + video.episode;
-            document.getElementById('currentMeta').textContent = epLabel + ' \u2022 Sub Indonesia';
+            document.getElementById('currentMeta').textContent = epLabel + ' \u2022 ' + (currentAnime.is_donghua ? 'Dub Indonesia' : 'Sub Indonesia');
 
             // Update prev/next — purely based on whether a lower/higher episode exists
             document.getElementById('prevBtn').disabled = prevEpNumber() === null;
