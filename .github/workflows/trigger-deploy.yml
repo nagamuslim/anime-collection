@@ -15,6 +15,6 @@ jobs:
     steps:
       - name: Trigger nagamuslim.github.io sync
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SUBMODULE_UPDATE_TOKEN }}
         run: |
           gh workflow run sync-submodule.yml --repo nagamuslim/nagamuslim.github.io
