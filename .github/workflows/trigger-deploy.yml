@@ -17,4 +17,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.SUBMODULE_UPDATE_TOKEN }}
         run: |
-          gh workflow run sync-submodule.yml --repo nagamuslim/nagamuslim.github.io
+          gh workflow run sync-submodule.yml --repo nagamuslim/nagamuslim.github.io --ref main
