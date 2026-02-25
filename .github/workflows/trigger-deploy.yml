@@ -1,4 +1,4 @@
-name: Trigger Website Deploy
+name: Trigger Website Sync
 
 on:
   push:
@@ -10,11 +10,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  trigger-deploy:
+  trigger-sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger nagamuslim.github.io workflow
+      - name: Trigger nagamuslim.github.io sync
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh workflow run deploy.yml --repo nagamuslim/nagamuslim.github.io
+          gh workflow run sync-submodule.yml --repo nagamuslim/nagamuslim.github.io
