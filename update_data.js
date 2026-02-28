@@ -255,8 +255,8 @@
         for (const pair of pairs) {
             const { title, url, rawBlock } = pair;
 
-            // Global Drop Filter: skip explicit English dubs and PVs
-            if (/(en\s*dub|en-dub|\bpv\b)/i.test(title)) continue;
+            // Global Drop Filter: skip explicit English dubs, PVs, and membership (ULTRA)
+            if (/(en\s*dub|en-dub|\bpv\b|ULTRA】)/i.test(title)) continue;
 
             let parsedArray = null;
 
