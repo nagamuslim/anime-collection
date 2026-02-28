@@ -202,6 +202,7 @@
 
     const parseTropics = (t, url, block) => {
         if (/Members Only/i.test(t)) return null;
+        if (/(english\s*sub|en\s*sub|en-sub)/i.test(t)) return null;
 
         const nameM = t.match(/《(.+?)》/);
         if (!nameM) return null;
