@@ -268,10 +268,10 @@
             else if (/【Ani-One Indonesia】/.test(title)) {
                 if (/\b\w+\s*dub\b/i.test(title) && !/(jp\s*dub|japanese\s*dub)/i.test(title)) continue;
                 parsedArray = parseAniOne(title, url, rawBlock);
-            } else if (/【Ani-One Asia】/i.test(title)) {
+            } else if (/【Ani-One Asia】|【Ani-One】/i.test(title)) {
                 if (/\b\w+\s*dub\b/i.test(title) && !/(jp\s*dub|japanese\s*dub)/i.test(title)) continue;
                 parsedArray = parseAniOneAsia(title, url, rawBlock);
-            } else if (/【Ani-Mi Asia】/i.test(title)) {
+            } else if (/【Ani-Mi Asia】/.test(title)) {
                 if (/\b\w+\s*dub\b/i.test(title) && !/(jp\s*dub|japanese\s*dub)/i.test(title)) continue;
                 parsedArray = parseAniMiAsia(title, url, rawBlock);
             }
