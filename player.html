@@ -358,9 +358,50 @@
 
             ytPlayer = new YT.Player('videoPlayer', {
                 events: {
-                    'onReady': () => startTracking(),  // fires on first load
+                    'onReady': () => startTracking(),
                     'onStateChange': (e) => {
-                        if (e.data === 1) startTracking(); // fires reliably on every new video
+                        // state 1 = playing — fires reliably even after src swap + re-wrap
+                        if (e.data === 1) startTracking();
+
+                        // state 0 = ended — clear saved time so next visit starts fresh
+                        if (e.data === 0 && typeof BookmarkManager !== 'undefined' && currentAnime) {
+                            const d = BookmarkManager.getAnimeData(currentAnime.name);
+                            if (d) {
+                                delete d.lastWatchedTime;
+                                // re-save without time by passing null
+                                const video = getVideoByEp(currentEpNumber);
+                                if (video) BookmarkManager.trackProgress(
+                                    currentAnime.name, video.video_id,
+                                    video.episode,
+                                    video.end_episode ? 'Episode '+video.episode+'-'+video.end_episode : 'Episode '+video.episode,
+                                    null
+                                );
+                            }
+                        }
+
+                        // Near-end guard: if within 30s of duration, also clear saved time
+                        if (e.data === 1 && ytPlayer && typeof ytPlayer.getDuration === 'function') {
+                            const dur = ytPlayer.getDuration();
+                            if (dur > 0) {
+                                clearInterval(window._nearEndCheck);
+                                window._nearEndCheck = setInterval(() => {
+                                    if (!ytPlayer) { clearInterval(window._nearEndCheck); return; }
+                                    const t = ytPlayer.getCurrentTime();
+                                    if (dur - t < 30) {
+                                        // Near end — wipe the time so next resume starts from chapter start
+                                        if (typeof BookmarkManager !== 'undefined' && currentAnime) {
+                                            const video = getVideoByEp(currentEpNumber);
+                                            if (video) BookmarkManager.trackProgress(
+                                                currentAnime.name, video.video_id, video.episode,
+                                                video.end_episode ? 'Episode '+video.episode+'-'+video.end_episode : 'Episode '+video.episode,
+                                                null
+                                            );
+                                        }
+                                        clearInterval(window._nearEndCheck);
+                                    }
+                                }, 5000);
+                            }
+                        }
                     }
                 }
             });
