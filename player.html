@@ -340,6 +340,17 @@
             attachYTPlayer();
         };
 
+        // ── Add this helper above attachYTPlayer ──────────────────────────
+        function startTracking() {
+            if (typeof ContinueWatching === 'undefined' || !currentAnime) return;
+            const video = getVideoByEp(currentEpNumber);
+            if (!video) return;
+            const epLabel = video.end_episode
+                ? 'Episode ' + video.episode + '-' + video.end_episode
+                : 'Episode ' + video.episode;
+            ContinueWatching.initPlayer(currentAnime.name, video.episode, epLabel, () => ytPlayer);
+        }
+
         function attachYTPlayer() {
             if (!ytApiReady || ytPlayer) return;
             const iframe = document.getElementById('videoPlayer');
@@ -347,12 +358,9 @@
 
             ytPlayer = new YT.Player('videoPlayer', {
                 events: {
-                    'onReady': (event) => {
-                        if (typeof ContinueWatching !== 'undefined' && currentAnime) {
-                            const video = getVideoByEp(currentEpNumber);
-                            const epLabel = video.end_episode ? 'Episode ' + video.episode + '-' + video.end_episode : 'Episode ' + video.episode;
-                            ContinueWatching.initPlayer(currentAnime.name, video.episode, epLabel, () => ytPlayer);
-                        }
+                    'onReady': () => startTracking(),  // fires on first load
+                    'onStateChange': (e) => {
+                        if (e.data === 1) startTracking(); // fires reliably on every new video
                     }
                 }
             });
