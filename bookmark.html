@@ -125,8 +125,10 @@
             const visits  = entry.visitCount || 1;
 
             // Player URL — link to the episode they stopped at if known
+            const savedTime = entry.lastWatchedTime && entry.lastWatchedTime > 5 ? entry.lastWatchedTime : null;
             const playerUrl = 'player.html?anime=' + encodeURIComponent(name) +
-                              (epNum ? '&episode=' + epNum : '');
+                              (epNum ? '&episode=' + epNum : '') +
+                              (savedTime ? '&time=' + savedTime : '');
 
             // Card is a <div> not an <a> so the remove button doesn't bubble
             const card = document.createElement('div');
