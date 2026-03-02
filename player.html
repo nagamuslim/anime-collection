@@ -130,6 +130,7 @@
         let currentAnime = null;
         let ytPlayer = null;
         let ytApiReady = false;
+        let isInitialLoad = true;
 
         // currentAnime.videos is ALWAYS sorted ascending by episode number (ep 1 first).
         // currentEpNumber is the episode number of whatever is playing right now.
@@ -269,8 +270,27 @@
             const video = getVideoByEp(currentEpNumber);
             if (!video) return;
 
+            // ── Time-resume: use saved position on initial load only ──
+            let startSecs = video.start_seconds || 0;
+            if (isInitialLoad) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const timeParam = parseInt(urlParams.get('time') || '0');
+                
+                if (timeParam > 5) {
+                    startSecs = timeParam;
+                } else if (typeof BookmarkManager !== 'undefined') {
+                    const saved = BookmarkManager.getAnimeData(currentAnime.name);
+                    if (saved && saved.lastWatchedEpisodeNumber === currentEpNumber
+                              && saved.lastWatchedTime > 5) {
+                        startSecs = saved.lastWatchedTime;
+                    }
+                }
+                isInitialLoad = false;
+            }
+            // ─────────────────────────────────────────────────────────
+
             // Update player
-            document.getElementById('videoPlayer').src = embedUrl(video.video_id, video.start_seconds);
+            document.getElementById('videoPlayer').src = embedUrl(video.video_id, startSecs);
             document.getElementById('currentTitle').textContent = currentAnime.name;
             var epLabel = video.end_episode ? 'Episode ' + video.episode + '-' + video.end_episode : 'Episode ' + video.episode;
             document.getElementById('currentMeta').textContent = epLabel + ' \u2022 ' + (currentAnime.name.includes('Dub Indo') ? 'Dub Indonesia' : 'Sub Indonesia');
