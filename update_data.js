@@ -247,6 +247,300 @@
         return null;
     };
 
+    // ── 3b. YOUKU Parser ─────────────────────────────────────────────────────
+    //
+    // Handles YOUKU ANIMATION / 优酷动漫 / Animation-YOUKU channel titles.
+    //
+    // Formats handled:
+    //   A. ENGSUB/MULTISUB 【Chinese English Title】EPxx ...
+    //   B. 【Chinese Title】EPxx ...                (no sub-type prefix)
+    //   C. 【ENG SUB】English Title EPxx ...        (label-only bracket)
+    //   D. ENGSUB/MULTISUB [English Title] EPxx ... (ASCII brackets)
+    //   E. 《Title》第N集 [English] Episode N ...   (Animation-YOUKU format)
+    //      also handles 第N季第M集 (season+episode) with Chinese numerals
+    //
+    // Filtered out:
+    //   Highlight (精彩片段/精彩看点), Trailer (预告), 精华版 digests,
+    //   OP/ED, 合集/全集 compilations, EP range videos (EPxx-yy),
+    //   VIETDUB, JPN DUB, and hashtag-only social posts
+
+    const parseYouku = (t, url, block) => {
+        // ── Content filters ──────────────────────────────────────────────
+        if (/Highlight|精彩片段|精彩看点/i.test(t)) return null;
+        if (/Trailer|Tralier|预告/i.test(t)) return null;   // covers 预告话 too
+        if (/^精华版/.test(t)) return null;                  // digest/recap versions
+        if (/\b(OP|ED|Opening|Ending)\b/i.test(t)) return null;
+        if (/全漫同庆|合集|全集/.test(t)) return null;        // promos / batch compilations
+        if (/EP\d+[-–]\d+|\d+[-–]\d+集/i.test(t)) return null; // EP range videos (EP01-66 etc)
+        if (/VIETDUB|JPN\s*DUB/i.test(t)) return null;      // non-sub dubs we don't want
+        // Must have a structured bracket title
+        if (!/[【《\[]/.test(t)) return null;
+
+        const video_id = extractVideoId(url);
+        if (!video_id) return null;
+
+        let animeName = null;
+        let episode   = null;
+
+        const cnToNum = {'一':1,'二':2,'三':3,'四':4,'五':5,'六':6,'七':7,'八':8,'九':9,'十':10};
+        const toN = (s) => cnToNum[s] ?? parseInt(s, 10);
+
+        // ── Helper: extract best English name from bracket inner content ─
+        // Splits on ALL CJK runs (handles embedded CJK like 第一季, 动画 etc.)
+        // then picks the last Latin-containing segment as the English title.
+        const getEng = (inner) => {
+            let s = inner.trim()
+                .replace(/^(ENGSUB|MULTISUB|ENG\s*SUB|MULTI\s*SUB)\s*/i, '')
+                .trim();
+            if (!s) return null;
+            const parts = s
+                .split(/[\u4e00-\u9fff\u3000-\u303f\u2e80-\u2eff]+/)
+                .map(p => p.replace(/^[\s\-_]+|[\s\-_\]】]+$/g, '').trim())
+                .filter(p => p.length > 1 && /[A-Za-z]/.test(p));
+            if (!parts.length) return null;
+            // Strip leading digit artefacts (e.g. "3 Apotheosis3" → "Apotheosis3")
+            const best = parts[parts.length - 1].replace(/^\d+\s+/, '').trim();
+            return best ? cleanTitle(best) : null;
+        };
+
+        // ── Path 1: 【...】 or ASCII [...] format ─────────────────────────
+        const squareM = t.match(/【([^】]+)】/) || t.match(/\[([^\]]+)\]/);
+        if (squareM) {
+            const inner = squareM[1];
+
+            // Special sub-case: 【ENG SUB】English Title EP(\d+)
+            if (/^ENG\s*SUB$/i.test(inner.trim())) {
+                const after = t.slice(squareM.index + squareM[0].length).trim();
+                const m = after.match(/^(.+?)\s+EP(\d+)/i);
+                if (m) {
+                    animeName = cleanTitle(m[1]);
+                    episode   = parseInt(m[2], 10);
+                }
+            } else {
+                animeName = getEng(inner);
+                const epM = t.match(/EP(\d+)/i);
+                if (epM) episode = parseInt(epM[1], 10);
+            }
+        }
+
+        // ── Path 2: 《...》 format (Animation-YOUKU older / webtoon series) ─
+        if (!animeName || !episode) {
+            const angles = [...t.matchAll(/《([^》]+)》/g)];
+            if (angles.length > 0) {
+                const last  = angles[angles.length - 1];
+                const inner = last[1].trim();
+                const after = t.slice(last.index + last[0].length);
+
+                // Try English from inside brackets first
+                animeName = getEng(inner) || null;
+
+                // If still CJK/null, look for English after the bracket
+                // e.g. "第7季第5集 Miss Puff Season 7 | ..."
+                if (!animeName || /[\u4e00-\u9fff]/.test(animeName)) {
+                    const engM = after.match(
+                        /(?:第[一二三四五六七八九十\d]+[季集话])+\s*([A-Za-z][A-Za-z0-9!?:'\-\s]+?)(?:\s+(?:Season\s*\d+\s+)?Episode\s+\d+|\s*[\|｜]|$)/
+                    );
+                    if (engM) {
+                        const candidate = cleanTitle(
+                            engM[1].replace(/\s+Season\s*\d+\s*$/i, '').trim()
+                        );
+                        // "Episode N" alone is the episode label, NOT a series name
+                        if (!/^Episode\s*\d+$/i.test(candidate)) animeName = candidate;
+                    }
+                    // Final fallback: use Chinese title as-is
+                    if (!animeName || /[\u4e00-\u9fff]/.test(animeName)) {
+                        animeName = cleanTitle(inner);
+                    }
+                }
+
+                // Season + episode: 第N季第M集  (supports Chinese numerals: 第一季 etc.)
+                const seEpM = t.match(/第([一二三四五六七八九十\d]+)季第([一二三四五六七八九十\d]+)[集话]/);
+                if (seEpM) {
+                    episode = toN(seEpM[2]);
+                    const sn = toN(seEpM[1]);
+                    if (sn > 1 && animeName) animeName += ` Season ${sn}`;
+                } else {
+                    // Plain 第N集 or 第N话
+                    const ep集M = t.match(/第([一二三四五六七八九十\d]+)[集话]/);
+                    if (ep集M) episode = toN(ep集M[1]);
+                }
+
+                if (!episode) {
+                    const eM = t.match(/Episode\s+(\d+)/i);
+                    if (eM) episode = parseInt(eM[1], 10);
+                }
+            }
+        }
+
+        if (!animeName || !episode || isNaN(episode)) return null;
+        return [{ animeName, episode, title: t, url, video_id, is_donghua: true, is_marathon: true }];
+    };
+
+    // ── 3c. YUEWEN Parser ────────────────────────────────────────────────────
+    //
+    // Handles YUEWEN ANIMATION / Yuewen Animation Indonesia channel titles.
+    //
+    // Formats handled:
+    //   A. INDOSUB 【Chinese English】Season[N] Ep[N] |YUEWEN...  (bracket variant)
+    //   B. [emoji][4K | ]I?NDOSUB | Series Name[ S[N]] EP[N][(skip)] | Yuewen...
+    //      Sub-variants:
+    //        B1. S[N]EP[N] compact  — "Title S9EP254(185)"
+    //        B2. S[N] EP[N] spaced  — "Title S6 EP11"
+    //        B3. plain EP[N]        — "Title EP26" / "Title EP 69"
+    //      Also handles: "4K | Title S6 EP12" (no INDOSUB label)
+    //      Also handles: "NDOSUB" typo (missing leading I)
+    //
+    // Filtered out:
+    //   Trailer, Highlight, Clip, Versi Lengkap/Full/Lengkep (Indonesian "full"),
+    //   FULL (catches FULL EPISODE, S3 FULL, (FULL) compilations),
+    //   EP range videos (EPxx-yy), descriptive clips with no episode number
+
+    const parseYuewen = (t, url, block) => {
+        // ── Content filters ──────────────────────────────────────────────────
+        if (/Trailer|TRAILER/i.test(t)) return null;
+        if (/Highlight|HIGHLIGHT/i.test(t)) return null;
+        if (/\bClip\b|\bCLIP\b/i.test(t)) return null;
+        if (/Versi Lengkap|Versi Full|Versi Lengkep/i.test(t)) return null;
+        if (/\bFULL\b/i.test(t)) return null;         // compilations: FULL EPISODE, S3 FULL, (FULL)
+        if (/EP\s?\d+\s?[-–]\s?\d+/i.test(t)) return null; // EP ranges like EP01-10
+
+        // Must mention Yuewen and have a valid video ID
+        if (!/YUEWEN|Yuewen/i.test(t)) return null;
+
+        const video_id = extractVideoId(url);
+        if (!video_id) return null;
+
+        let animeName = null;
+        let episode   = null;
+
+        // ── Path A: 【Chinese English】 bracket format ─────────────────────────
+        // e.g. "INDOSUB 【生死回放 Life and Death Replay】Season1 Ep14"
+        const bracketM = t.match(/【([^】]+)】/);
+        if (bracketM) {
+            const inner = bracketM[1].trim();
+            // Split on CJK runs → keep last Latin-containing segment
+            const parts = inner.split(/[\u4e00-\u9fff]+/)
+                               .map(p => p.trim())
+                               .filter(p => p.length > 1 && /[A-Za-z]/.test(p));
+            if (parts.length > 0) animeName = cleanTitle(parts[parts.length - 1]);
+            const seasonM = t.match(/Season\s*(\d+)\s+Ep\s*(\d+)/i);
+            if (seasonM) {
+                const sn = parseInt(seasonM[1], 10);
+                episode = parseInt(seasonM[2], 10);
+                if (sn > 1 && animeName) animeName += ` Season ${sn}`;
+            } else {
+                const epM = t.match(/Ep\s*(\d+)/i);
+                if (epM) episode = parseInt(epM[1], 10);
+            }
+        }
+
+        // ── Path B: pipe-delimited format ─────────────────────────────────────
+        // e.g. "🌟4K | INDOSUB | Battle Through the Heavens S9EP254(185) | Yuewen Animation"
+        // e.g. "💕 INDOSUB | Fox Spirit Matchmaker EP 69 | Yuewen Animation Indonesia"
+        if (!animeName || !episode) {
+            // Strip leading emoji(s) then split by pipe
+            const stripped = t.replace(
+                /^[\u{1F300}-\u{1FFFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\s]+/u, ''
+            );
+            const segments = stripped.split(/\s*\|\s*/).map(s => s.trim()).filter(Boolean);
+
+            // Skip known non-series segments; stop at first segment with an EP pattern
+            const skipLabels = /^(I?NDOSUB|4K|\d+K|Yuewen.*|YUEWEN.*|Baru.*|.*Indonesia.*)$/i;
+            let seriesSegment = null;
+            for (const seg of segments) {
+                if (skipLabels.test(seg)) continue;
+                if (/EP\s*\d+|Ep\s*\d+|S\d+EP\d+/i.test(seg)) { seriesSegment = seg; break; }
+            }
+
+            if (seriesSegment) {
+                // B1: S[N]EP[N] compact — "Battle Through the Heavens S9EP254(185)"
+                const compactM = seriesSegment.match(/^(.+?)\s+S(\d+)EP(\d+)(?:\(\d+\))?/i);
+                if (compactM) {
+                    animeName = cleanTitle(compactM[1]);
+                    const sn = parseInt(compactM[2], 10);
+                    episode  = parseInt(compactM[3], 10);
+                    if (sn > 1 && animeName) animeName += ` Season ${sn}`;
+                }
+
+                // B2: S[N] EP[N] spaced — "Martial Universe S6 EP11" / "Versatile Mage S6 EP 12"
+                if (!animeName || !episode) {
+                    const spacedM = seriesSegment.match(/^(.+?)\s+S(\d+)\s+EP\s*(\d+)/i);
+                    if (spacedM) {
+                        animeName = cleanTitle(spacedM[1]);
+                        const sn = parseInt(spacedM[2], 10);
+                        episode  = parseInt(spacedM[3], 10);
+                        if (sn > 1 && animeName) animeName += ` Season ${sn}`;
+                    }
+                }
+
+                // B3: plain EP[N] — "The Ace Censor EP26" / "Fox Spirit Matchmaker EP 69"
+                if (!animeName || !episode) {
+                    const plainM = seriesSegment.match(
+                        /^(.+?)\s+EP\s*(\d+)(?:\s*Part\s*\d+)?(?:\(\d+\))?/i
+                    );
+                    if (plainM) {
+                        animeName = cleanTitle(plainM[1]);
+                        episode   = parseInt(plainM[2], 10);
+                    }
+                }
+            }
+        }
+
+        if (!animeName || !episode || isNaN(episode)) return null;
+        return [{ animeName, episode, title: t, url, video_id, is_donghua: true, is_marathon: true }];
+    };
+
+    // ── 3d. POPS Movingtoon Parser ────────────────────────────────────────────
+    //
+    // Handles POPS Movingtoon channel (Detective Conan, Kizuna no Allele,
+    // My Brother is A T-Rex, Bad Luck, Survival Diary of a Villainess,
+    // The Flower of Dynasties, The Lost).
+    //
+    // All parseable titles share a single pattern:
+    //   SeriesName [Part N | N] [ - ] Eps[.]? N[.] : Episode Title
+    //
+    // The episode title is stored as chapter_title so the player can display
+    // it in the episode list alongside the number — each episode has its own
+    // named title just like a real anime episode listing.
+    //
+    // Filtered: COMBINED EPISODE, UNCUT VERSION, SPESIAL EPISODE (multi-ep),
+    //   [FULL EPISODE], Trailer/Teaser, BEST/TOP SCENE/MOMENT/CUT, HIGHLIGHT,
+    //   Horror Animation / Animasi Horor, SEGERA TAYANG, Sunday Morning, OFFICIAL
+
+    const parseConan = (t, url, block) => {
+        // ── Content filters ───────────────────────────────────────────────────
+        if (/COMBINED EPISODE/i.test(t)) return null;
+        if (/UNCUT VERSION/i.test(t)) return null;
+        if (/SPESIAL EPISODE/i.test(t)) return null;      // multi-ep number ranges
+        if (/\[FULL EPISODE\]/i.test(t)) return null;
+        if (/Trailer|TRAILER|Teaser|TEASER/i.test(t)) return null;
+        if (/BEST SCENE|TOP SCENE|TOP MOMENT|BEST CUT|HIGHLIGHT/i.test(t)) return null;
+        if (/Horror Animation|Animasi Horor/i.test(t)) return null;
+        if (/SEGERA TAYANG/i.test(t)) return null;
+        if (/Sunday Morning|SMA TALKS/i.test(t)) return null;
+        if (/OFFICIAL/i.test(t)) return null;
+
+        const video_id = extractVideoId(url);
+        if (!video_id) return null;
+
+        // Strip "Anime - " prefix noise (e.g. "Anime - Bad Luck Eps 29: ...")
+        let s = t.replace(/^Anime\s*-\s*/i, '').trim();
+
+        // ── Core match ────────────────────────────────────────────────────────
+        // Matches:  SeriesName [ - ] Eps[.]? N[.] : Episode Title
+        // Handles Ep/Eps, optional dot, optional leading dash separator
+        const m = s.match(/^(.+?)\s+(?:-\s+)?Eps?\.?\s*(\d+)\.?\s*:\s*(.+)/i);
+        if (!m) return null;
+
+        let animeName      = m[1].replace(/\s+-\s*$/, '').trim(); // trim trailing dash if any
+        const episode      = parseInt(m[2], 10);
+        const chapter_title = m[3].trim();
+
+        if (isNaN(episode) || !chapter_title) return null;
+
+        return [{ animeName, episode, chapter_title, title: t, url, video_id }];
+    };
+
     // ── 4. Pipeline Dispatcher ────────────────────────────────────────────────
 
     const parseContent = (content) => {
@@ -286,6 +580,16 @@
                 parsedArray = parseItsAnime(title, url, rawBlock);
             } else if (/TROPICS ENTERTAINMENT/.test(title) || /【Subtitle Indonesia】/.test(title)) {
                 parsedArray = parseTropics(title, url, rawBlock);
+            } else if (/YOUKU ANIMATION|YOUKU ANIME|优酷动漫|Animation-YOUKU|\| YOUKU\b/i.test(title)) {
+                parsedArray = parseYouku(title, url, rawBlock);
+            } else if (/YUEWEN ANIMATION|Yuewen Animation/i.test(title)) {
+                parsedArray = parseYuewen(title, url, rawBlock);
+            } else if (
+                /^DETECTIVE CONAN\b|^KIZUNA NO ALLELE\b|^My Brother is.+T-Rex\b|^My Brother Is.+T-Rex\b/i.test(title) ||
+                /^Bad Luck\s+Eps?\b|^Anime\s*-\s*Bad Luck\b/i.test(title) ||
+                /^Survival Diary of a Villainess\b|^The Flower of Dynasties\b|^The Lost\s+Eps?\b/i.test(title)
+            ) {
+                parsedArray = parseConan(title, url, rawBlock);
             }
 
             if (parsedArray) flatVideos.push(...parsedArray);
