@@ -281,6 +281,7 @@ var ContinueWatching = (function () {
                 var videoId = null;
                 try { videoId = p.getVideoData().video_id; } catch (e) {}
                 BookmarkManager.trackProgress(animeName, videoId, epNumber, epTitle, t);
+                console.log('[BookmarkManager] Saved time:', Math.floor(t) + 's', 'for', animeName, 'ep', epNumber);
             } else if (state === 0) {
                 var videoId = null;
                 try { videoId = p.getVideoData().video_id; } catch (e) {}
