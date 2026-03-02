@@ -17,7 +17,7 @@
  * SEPARATE from key  "anime_data"  (managed by update_data.js).
  *
  * ── BookmarkManager API ─────────────────────────────────────────────
- *   trackProgress(animeName, videoId, epNumber, epTitle)
+ *   trackProgress(animeName, videoId, epNumber, epTitle, timeSeconds)
  *       Call when user opens/switches to an episode.
  *
  *   getAnimeData(animeName)    → object | null
@@ -74,7 +74,7 @@ var BookmarkManager = (function () {
          * (i.e. actually switching to a different episode, not just
          * re-entering the same one on page reload).
          */
-        trackProgress: function (animeName, videoId, epNumber, epTitle) {
+        trackProgress: function (animeName, videoId, epNumber, epTitle, timeSeconds) {
             var data = getData();
             if (!data[animeName]) data[animeName] = { visitCount: 0 };
 
@@ -85,6 +85,11 @@ var BookmarkManager = (function () {
             data[animeName].lastWatchedEpisodeNumber = epNumber;
             data[animeName].lastWatchedEpisodeTitle  = epTitle;
             data[animeName].lastWatchedAt            = Date.now();
+            
+            if (typeof timeSeconds === 'number' && timeSeconds > 5) {
+                data[animeName].lastWatchedTime = Math.floor(timeSeconds);
+            }
+            
             saveData(data);
         },
 
@@ -201,7 +206,8 @@ var ContinueWatching = (function () {
               (item.lastWatchedEpisodeTitle ? ' \u00b7 ' + item.lastWatchedEpisodeTitle : '')
             : 'Terakhir ditonton';
 
-        var url = 'player.html?anime=' + encodeURIComponent(item.name);
+        var url = 'player.html?anime=' + encodeURIComponent(item.name) +
+                  (item.lastWatchedEpisodeNumber ? '&episode=' + item.lastWatchedEpisodeNumber : '');
 
         var popup = document.createElement('div');
         popup.id = 'cw-popup';
@@ -244,7 +250,7 @@ var ContinueWatching = (function () {
     var _interval  = null;
     var _lastSaved = -1;
     var POLL_MS      = 5000; // poll interval in ms
-    var SAVE_EVERY_S = 30;   // save every 30 s of actual playback
+    var SAVE_EVERY_S = 15;   // save every 15 s of actual playback
 
     /**
      * Begin tracking. Call from player.html's onPlayerReady callback.
@@ -268,16 +274,17 @@ var ContinueWatching = (function () {
             // Only track while playing (1) or immediately on end (0)
             if (state !== 1 && state !== 0) return;
 
-            var shouldSave =
-                state === 0 ||                    // video just ended
-                _lastSaved < 0 ||                 // very first save this session
-                (t - _lastSaved) >= SAVE_EVERY_S; // 30 s of real play elapsed
+            var shouldSave = (_lastSaved < 0 || (t - _lastSaved) >= SAVE_EVERY_S) && state === 1;
 
             if (shouldSave) {
                 _lastSaved = t;
                 var videoId = null;
                 try { videoId = p.getVideoData().video_id; } catch (e) {}
-                BookmarkManager.trackProgress(animeName, videoId, epNumber, epTitle);
+                BookmarkManager.trackProgress(animeName, videoId, epNumber, epTitle, t);
+            } else if (state === 0) {
+                var videoId = null;
+                try { videoId = p.getVideoData().video_id; } catch (e) {}
+                BookmarkManager.trackProgress(animeName, videoId, epNumber, epTitle, null);
             }
         }, POLL_MS);
     }
