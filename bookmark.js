@@ -88,6 +88,10 @@ var BookmarkManager = (function () {
             
             if (typeof timeSeconds === 'number' && timeSeconds > 5) {
                 data[animeName].lastWatchedTime = Math.floor(timeSeconds);
+            } else if (timeSeconds === null || timeSeconds === 0) {
+                // Explicit clear — near-end or episode finished; delete saved position
+                // so next resume starts from the chapter start, not the very end.
+                delete data[animeName].lastWatchedTime;
             }
             
             saveData(data);
@@ -154,7 +158,7 @@ var ContinueWatching = (function () {
             '#cw-popup{position:fixed;bottom:24px;right:24px;z-index:9998;',
                 'background:rgba(15,12,41,0.96);',
                 'border:1px solid rgba(255,255,255,0.13);border-radius:16px;',
-                'padding:16px 18px 14px;width:300px;',
+                'padding:166px 18px 14px;width:300px;',
                 'box-shadow:0 12px 40px rgba(0,0,0,0.6);',
                 'backdrop-filter:blur(16px);',
                 'font-family:"Segoe UI",Tahoma,sans-serif;',
@@ -280,7 +284,11 @@ var ContinueWatching = (function () {
                 _lastSaved = t;
                 var videoId = null;
                 try { videoId = p.getVideoData().video_id; } catch (e) {}
-                BookmarkManager.trackProgress(animeName, videoId, epNumber, epTitle, t);
+                // Don't persist a timestamp that's within 60 s of the end —
+                // pass null so trackProgress clears any previously saved time.
+                var dur = (typeof p.getDuration === 'function') ? p.getDuration() : 0;
+                var nearEnd = dur > 0 && (dur - t) < 60;
+                BookmarkManager.trackProgress(animeName, videoId, epNumber, epTitle, nearEnd ? null : t);
                 console.log('[BookmarkManager] Saved time:', Math.floor(t) + 's', 'for', animeName, 'ep', epNumber);
             } else if (state === 0) {
                 var videoId = null;

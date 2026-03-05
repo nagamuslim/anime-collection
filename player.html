@@ -125,90 +125,209 @@
         <div id="content"><div class="loading">&#9203; Memuat anime...</div></div>
     </div>
 
+    <!--
+        bookmark.js MUST be synchronous (no defer) so BookmarkManager
+        exists before the inline script's first synchronous execution.
+    -->
     <script src="bookmark.js" onerror="void 0"></script>
     <script>
-        let currentAnime = null;
-        let ytPlayer = null;
-        let ytApiReady = false;
-        let isInitialLoad = true;
+        'use strict';
 
-        // currentAnime.videos is ALWAYS sorted ascending by episode number (ep 1 first).
-        // currentEpNumber is the episode number of whatever is playing right now.
-        // sortOrder only affects the display list — it NEVER changes what prev/next do.
-        // Prev = always go to the episode with the next LOWER number than currentEpNumber.
-        // Next = always go to the episode with the next HIGHER number than currentEpNumber.
+        // ── State ─────────────────────────────────────────────────────────────
+        let currentAnime   = null;
+        let ytPlayer       = null;  // YT.Player instance — kept alive across episodes
+        let ytApiReady     = false;
+        let isInitialLoad  = true;
+        let loadedVideoId  = null;  // video_id currently loaded in the YT player
+        let nearEndTimer   = null;  // interval for near-end detection
 
-        let currentEpNumber = null; // the episode number currently playing
-        let sortOrder = 'asc';      // 'asc' = default (1,2,3...), 'desc' = newest (N,...,2,1)
+        let currentEpNumber = null;
+        let sortOrder = 'asc';
 
-        function embedUrl(id, startSeconds) {
-            var url = 'https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0&enablejsapi=1';
-            if (startSeconds) url += '&start=' + startSeconds;
-            // Add captions for true marathons OR series flagged for CC
-            if (currentAnime && (currentAnime.marathon_video_id || currentAnime.use_cc)) {
-                url += '&cc_load_policy=1&cc_lang_pref=id';
-            }
+        // ── Helpers ───────────────────────────────────────────────────────────
+
+        function epLabel(video) {
+            return video.end_episode
+                ? 'Episode ' + video.episode + '-' + video.end_episode
+                : 'Episode ' + video.episode;
+        }
+
+        function needsCC() {
+            return currentAnime && (currentAnime.marathon_video_id || currentAnime.use_cc);
+        }
+
+        // Initial embed URL — only used for the very first load.
+        // autoplay=1, enablejsapi=1 always present.
+        // CC flags appended if marathon or use_cc.
+        function initialEmbedUrl(videoId, startSeconds) {
+            let url = 'https://www.youtube.com/embed/' + videoId
+                    + '?autoplay=1&rel=0&enablejsapi=1';
+            if (startSeconds) url += '&start=' + Math.floor(startSeconds);
+            if (needsCC())    url += '&cc_load_policy=1&cc_lang_pref=id';
             return url;
         }
 
-        // Episodes sorted for display only
         function getDisplayList() {
-            const vids = currentAnime.videos.slice(); // already asc from JSON
+            const vids = currentAnime.videos.slice();
             if (sortOrder === 'desc') vids.reverse();
             return vids;
         }
 
-        // Find the video object for a given episode number
         function getVideoByEp(epNum) {
             return currentAnime.videos.find(v => v.episode === epNum) || null;
         }
 
-        // All episode numbers, always ascending
         function allEpNumbers() {
-            return currentAnime.videos.map(v => v.episode).sort((a,b) => a - b);
+            return currentAnime.videos.map(v => v.episode).sort((a, b) => a - b);
         }
 
         function prevEpNumber() {
-            const nums = allEpNumbers();
-            const idx = nums.indexOf(currentEpNumber);
+            const nums = allEpNumbers(), idx = nums.indexOf(currentEpNumber);
             return idx > 0 ? nums[idx - 1] : null;
         }
 
         function nextEpNumber() {
-            const nums = allEpNumbers();
-            const idx = nums.indexOf(currentEpNumber);
+            const nums = allEpNumbers(), idx = nums.indexOf(currentEpNumber);
             return idx !== -1 && idx < nums.length - 1 ? nums[idx + 1] : null;
         }
 
+        // ── Resolve start position ────────────────────────────────────────────
+        // On the very first page load, check URL ?time= param then localStorage.
+        // On episode switches, use video.start_seconds (chapter start) only.
+        function resolveStartSecs(video) {
+            let secs = video.start_seconds || 0;
+
+            if (isInitialLoad) {
+                isInitialLoad = false;
+                const urlParams = new URLSearchParams(window.location.search);
+                const timeParam = parseInt(urlParams.get('time') || '0');
+
+                if (timeParam > 5) {
+                    secs = timeParam;
+                } else if (typeof BookmarkManager !== 'undefined') {
+                    const saved = BookmarkManager.getAnimeData(currentAnime.name);
+                    if (saved
+                        && saved.lastWatchedEpisodeNumber === currentEpNumber
+                        && saved.lastWatchedTime > 5) {
+                        secs = saved.lastWatchedTime;
+                    }
+                }
+            }
+            return secs;
+        }
+
+        // ── Tracking helpers ─────────────────────────────────────────────────
+
+        function startTracking() {
+            if (typeof ContinueWatching === 'undefined' || !currentAnime) return;
+            const video = getVideoByEp(currentEpNumber);
+            if (!video) return;
+            ContinueWatching.initPlayer(
+                currentAnime.name, video.episode, epLabel(video), () => ytPlayer
+            );
+        }
+
+        function clearNearEndTimer() {
+            if (nearEndTimer) { clearInterval(nearEndTimer); nearEndTimer = null; }
+        }
+
+        function startNearEndTimer() {
+            clearNearEndTimer();
+            nearEndTimer = setInterval(() => {
+                if (!ytPlayer || typeof ytPlayer.getDuration !== 'function') return;
+                const dur = ytPlayer.getDuration();
+                const t   = ytPlayer.getCurrentTime();
+                if (dur > 0 && (dur - t) < 60) {
+                    // Within 30 s of end — wipe saved time so next resume starts fresh
+                    if (typeof BookmarkManager !== 'undefined' && currentAnime) {
+                        const video = getVideoByEp(currentEpNumber);
+                        if (video) {
+                            BookmarkManager.trackProgress(
+                                currentAnime.name, video.video_id,
+                                video.episode, epLabel(video),
+                                null  // null = clear saved time
+                            );
+                        }
+                    }
+                    clearNearEndTimer();
+                }
+            }, 5000);
+        }
+
+        // ── YT Player: switch episode without destroying the player ──────────
+        //
+        // Three strategies, chosen based on situation:
+        //
+        //   A) seekTo          — same video_id (always the case for marathon).
+        //                        Instant; no network round-trip; no re-buffer.
+        //
+        //   B) loadVideoById   — different video_id (non-marathon episode switch).
+        //                        Player stays alive, new video loads + autoplays.
+        //                        onStateChange(1) fires → startTracking() called.
+        //                        CC re-applied via setOption after load.
+        //
+        //   C) iframe src set  — only happens once, on the very first load,
+        //                        before the YT.Player object exists.
+        //
+        function switchEpisodeInPlayer(video, startSecs) {
+            if (!ytPlayer || typeof ytPlayer.getPlayerState !== 'function') {
+                // Player not ready yet — src is already being set by refreshAll
+                return;
+            }
+
+            const isSameVideo = (loadedVideoId === video.video_id);
+
+            if (isSameVideo) {
+                // ── Strategy A: seekTo ────────────────────────────────────────
+                // Marathon: all episodes share one video_id, just seek.
+                ytPlayer.seekTo(startSecs, true);
+                ytPlayer.playVideo(); // ensure playing after seek
+                // Tracking already running; ContinueWatching.initPlayer restarts it
+                // with the new episode number/title.
+                startTracking();
+                // Re-arm the near-end timer for this episode's new duration window.
+                // (onStateChange won't re-fire for a seekTo, so we do it manually.)
+                startNearEndTimer();
+
+            } else {
+                // ── Strategy B: loadVideoById ─────────────────────────────────
+                // Non-marathon: different video. Player reuses same iframe.
+                ytPlayer.loadVideoById({ videoId: video.video_id, startSeconds: startSecs });
+                loadedVideoId = video.video_id;
+
+                // Re-apply CC for series that need it (undocumented but working)
+                if (needsCC()) {
+                    try {
+                        ytPlayer.setOption('captions', 'track', { languageCode: 'id' });
+                    } catch(e) {}
+                }
+                // Tracking will be restarted by onStateChange(1) firing when
+                // the new video begins playing — no need to call startTracking() here.
+            }
+        }
+
+        // ── Build UI ─────────────────────────────────────────────────────────
+
         function buildPlayerUI() {
             const urlParams = new URLSearchParams(window.location.search);
-
-            // Determine starting episode
-            const count = currentAnime.videos.length;
             const nums = allEpNumbers();
+            const count = currentAnime.videos.length;
 
             if (count < 12) {
-                // Short series: start at the highest episode number, show newest first
                 currentEpNumber = nums[nums.length - 1];
                 sortOrder = 'desc';
             } else {
-                // Long series: start at the lowest episode number
                 currentEpNumber = nums[0];
                 sortOrder = 'asc';
             }
 
-            // URL episode override
             const epParam = urlParams.get('episode');
             if (epParam) {
                 const n = parseInt(epParam);
-                if (nums.includes(n)) {
-                    currentEpNumber = n;
-                    sortOrder = 'asc';
-                }
+                if (nums.includes(n)) { currentEpNumber = n; sortOrder = 'asc'; }
             }
 
-            const content = document.getElementById('content');
-            content.innerHTML =
+            document.getElementById('content').innerHTML =
                 '<div class="player-section">' +
                   '<div>' +
                     '<div class="video-container">' +
@@ -239,14 +358,14 @@
                 '</div>';
 
             document.getElementById('prevBtn').addEventListener('click', () => {
-                const p = prevEpNumber();
-                if (p !== null) playEpisode(p);
+                const p = prevEpNumber(); if (p !== null) playEpisode(p);
             });
             document.getElementById('nextBtn').addEventListener('click', () => {
-                const n = nextEpNumber();
-                if (n !== null) playEpisode(n);
+                const n = nextEpNumber(); if (n !== null) playEpisode(n);
             });
-            document.getElementById('sortToggle').addEventListener('click', () => setSort(sortOrder === 'asc' ? 'desc' : 'asc'));
+            document.getElementById('sortToggle').addEventListener('click', () =>
+                setSort(sortOrder === 'asc' ? 'desc' : 'asc')
+            );
 
             refreshAll();
         }
@@ -258,58 +377,54 @@
             updateSortButtons();
         }
 
+        // ── playEpisode: switch episode ───────────────────────────────────────
+        // Note: we do NOT null ytPlayer here — we want to keep it alive!
         function playEpisode(epNum) {
             if (typeof ContinueWatching !== 'undefined') ContinueWatching.stopPlayer();
-            ytPlayer = null;
+            clearNearEndTimer();
             currentEpNumber = epNum;
             refreshAll();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // ── refreshAll: update UI + video ─────────────────────────────────────
         function refreshAll() {
             const video = getVideoByEp(currentEpNumber);
             if (!video) return;
 
-            // ── Time-resume: use saved position on initial load only ──
-            let startSecs = video.start_seconds || 0;
-            if (isInitialLoad) {
-                const urlParams = new URLSearchParams(window.location.search);
-                const timeParam = parseInt(urlParams.get('time') || '0');
-                
-                if (timeParam > 5) {
-                    startSecs = timeParam;
-                } else if (typeof BookmarkManager !== 'undefined') {
-                    const saved = BookmarkManager.getAnimeData(currentAnime.name);
-                    if (saved && saved.lastWatchedEpisodeNumber === currentEpNumber
-                              && saved.lastWatchedTime > 5) {
-                        startSecs = saved.lastWatchedTime;
-                    }
-                }
-                isInitialLoad = false;
-            }
-            // ─────────────────────────────────────────────────────────
+            const startSecs = resolveStartSecs(video);
 
-            // Update player
-            document.getElementById('videoPlayer').src = embedUrl(video.video_id, startSecs);
+            // Update info panel
             document.getElementById('currentTitle').textContent = currentAnime.name;
-            var epLabel = video.end_episode ? 'Episode ' + video.episode + '-' + video.end_episode : 'Episode ' + video.episode;
-            document.getElementById('currentMeta').textContent = epLabel + ' \u2022 ' + (currentAnime.name.includes('Dub Indo') ? 'Dub Indonesia' : 'Sub Indonesia');
+            document.getElementById('currentMeta').textContent =
+                epLabel(video) + ' \u2022 ' +
+                (currentAnime.name.includes('Dub Indo') ? 'Dub Indonesia' : 'Sub Indonesia');
 
-            // Update prev/next — purely based on whether a lower/higher episode exists
             document.getElementById('prevBtn').disabled = prevEpNumber() === null;
             document.getElementById('nextBtn').disabled = nextEpNumber() === null;
 
             renderEpisodeList();
             updateSortButtons();
 
-            // Track progress for "Continue Watching" feature
+            // Bookmark: record episode open (time saved separately by polling)
             if (typeof BookmarkManager !== 'undefined') {
-                var epLabel = video.end_episode ? 'Episode ' + video.episode + '-' + video.end_episode : 'Episode ' + video.episode;
-                BookmarkManager.trackProgress(currentAnime.name, video.video_id, video.episode, epLabel);
+                BookmarkManager.trackProgress(
+                    currentAnime.name, video.video_id, video.episode, epLabel(video)
+                );
             }
 
-            // Re-attach YouTube Player API after iframe reload
-            setTimeout(attachYTPlayer, 1200);
+            if (ytPlayer && typeof ytPlayer.getPlayerState === 'function') {
+                // ── Player already exists → use API (no src change) ───────────
+                switchEpisodeInPlayer(video, startSecs);
+            } else {
+                // ── First load → set src, then YT API will wrap it ────────────
+                document.getElementById('videoPlayer').src =
+                    initialEmbedUrl(video.video_id, startSecs);
+                loadedVideoId = video.video_id;
+                // attachYTPlayer will be called once onYouTubeIframeAPIReady fires
+                // (or immediately if the API script already loaded)
+                setTimeout(attachYTPlayer, 1200);
+            }
         }
 
         function renderEpisodeList() {
@@ -318,88 +433,64 @@
             getDisplayList().forEach(video => {
                 const item = document.createElement('div');
                 item.className = 'episode-item' + (video.episode === currentEpNumber ? ' active' : '');
-                const epLabel = video.end_episode ? 'Episode ' + video.episode + '-' + video.end_episode : 'Episode ' + video.episode;
-                const cleanTitle = video.chapter_title || epLabel;
+                const label = video.chapter_title || epLabel(video);
                 item.innerHTML =
                     '<div class="ep-num">EP ' + video.episode + '</div>' +
-                    '<div class="ep-title">' + cleanTitle + '</div>';
+                    '<div class="ep-title">' + label + '</div>';
                 item.addEventListener('click', () => playEpisode(video.episode));
                 list.appendChild(item);
             });
-            const activeItem = list.querySelector('.episode-item.active');
-            if (activeItem) activeItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const active = list.querySelector('.episode-item.active');
+            if (active) active.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         function updateSortButtons() {
             document.getElementById('sortToggle').classList.toggle('active', sortOrder === 'desc');
         }
 
-        // ── YouTube IFrame API Integration ────────────────────────────────────
+        // ── YT IFrame API ─────────────────────────────────────────────────────
+
         window.onYouTubeIframeAPIReady = function() {
             ytApiReady = true;
             attachYTPlayer();
         };
 
-        // ── Add this helper above attachYTPlayer ──────────────────────────
-        function startTracking() {
-            if (typeof ContinueWatching === 'undefined' || !currentAnime) return;
-            const video = getVideoByEp(currentEpNumber);
-            if (!video) return;
-            const epLabel = video.end_episode
-                ? 'Episode ' + video.episode + '-' + video.end_episode
-                : 'Episode ' + video.episode;
-            ContinueWatching.initPlayer(currentAnime.name, video.episode, epLabel, () => ytPlayer);
-        }
-
         function attachYTPlayer() {
+            // Guard: only create once; skip if API not ready or player exists
             if (!ytApiReady || ytPlayer) return;
             const iframe = document.getElementById('videoPlayer');
             if (!iframe) return;
 
             ytPlayer = new YT.Player('videoPlayer', {
                 events: {
-                    'onReady': () => startTracking(),
+                    // onReady: fires once when the player is first constructed.
+                    'onReady': () => {
+                        startTracking();
+                        startNearEndTimer();
+                    },
+
+                    // onStateChange: fires on EVERY video event including after
+                    // loadVideoById completes and starts playing (state 1).
+                    // This is how tracking restarts after a non-marathon switch.
                     'onStateChange': (e) => {
-                        // state 1 = playing — fires reliably even after src swap + re-wrap
-                        if (e.data === 1) startTracking();
-
-                        // state 0 = ended — clear saved time so next visit starts fresh
-                        if (e.data === 0 && typeof BookmarkManager !== 'undefined' && currentAnime) {
-                            const d = BookmarkManager.getAnimeData(currentAnime.name);
-                            if (d) {
-                                delete d.lastWatchedTime;
-                                // re-save without time by passing null
-                                const video = getVideoByEp(currentEpNumber);
-                                if (video) BookmarkManager.trackProgress(
-                                    currentAnime.name, video.video_id,
-                                    video.episode,
-                                    video.end_episode ? 'Episode '+video.episode+'-'+video.end_episode : 'Episode '+video.episode,
-                                    null
-                                );
-                            }
+                        if (e.data === YT.PlayerState.PLAYING) {
+                            // (Re)start tracking with current episode context
+                            startTracking();
+                            startNearEndTimer();
                         }
-
-                        // Near-end guard: if within 30s of duration, also clear saved time
-                        if (e.data === 1 && ytPlayer && typeof ytPlayer.getDuration === 'function') {
-                            const dur = ytPlayer.getDuration();
-                            if (dur > 0) {
-                                clearInterval(window._nearEndCheck);
-                                window._nearEndCheck = setInterval(() => {
-                                    if (!ytPlayer) { clearInterval(window._nearEndCheck); return; }
-                                    const t = ytPlayer.getCurrentTime();
-                                    if (dur - t < 30) {
-                                        // Near end — wipe the time so next resume starts from chapter start
-                                        if (typeof BookmarkManager !== 'undefined' && currentAnime) {
-                                            const video = getVideoByEp(currentEpNumber);
-                                            if (video) BookmarkManager.trackProgress(
-                                                currentAnime.name, video.video_id, video.episode,
-                                                video.end_episode ? 'Episode '+video.episode+'-'+video.end_episode : 'Episode '+video.episode,
-                                                null
-                                            );
-                                        }
-                                        clearInterval(window._nearEndCheck);
-                                    }
-                                }, 5000);
+                        if (e.data === YT.PlayerState.ENDED) {
+                            // Video ended — clear saved time so next resume
+                            // starts from chapter start, not the very end
+                            clearNearEndTimer();
+                            if (typeof BookmarkManager !== 'undefined' && currentAnime) {
+                                const video = getVideoByEp(currentEpNumber);
+                                if (video) {
+                                    BookmarkManager.trackProgress(
+                                        currentAnime.name, video.video_id,
+                                        video.episode, epLabel(video),
+                                        null
+                                    );
+                                }
                             }
                         }
                     }
@@ -407,13 +498,14 @@
             });
         }
 
+        // ── Load data ─────────────────────────────────────────────────────────
+
         async function loadAnimeData() {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 const animeName = urlParams.get('anime');
                 if (!animeName) throw new Error('No anime specified');
 
-                // Load priority: localStorage first → server JSON fallback
                 let data = null;
                 try {
                     const raw = localStorage.getItem('anime_data');
