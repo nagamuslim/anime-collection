@@ -1,0 +1,52 @@
+name: Remote Update Shared Repo
+
+on:
+  workflow_dispatch: # Bisa dijalankan manual lewat tombol di tab Actions
+  schedule:
+    - cron: '0 0 1 * *' # Berjalan otomatis setiap tanggal 1 setiap bulannya
+
+jobs:
+  push-to-shared:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download latest database
+        run: |
+          # 1. Cari URL download untuk versi minified dari rilis terbaru Manami Project
+          LATEST_URL=$(curl -s https://api.github.com/repos/manami-project/anime-offline-database/releases/latest \
+            | grep "browser_download_url.*anime-offline-database-minified.json" \
+            | cut -d '"' -f 4)
+          
+          echo "Mendownload database dari: $LATEST_URL"
+          
+          # 2. Download file JSON-nya
+          curl -L -o anime-offline-database-minified.json "$LATEST_URL"
+
+      - name: Deploy to Shared Repo
+        env:
+          # Gunakan PAT lama milikmu (tidak perlu buat baru)
+          GH_TOKEN: ${{ secrets.SUBMODULE_UPDATE_TOKEN }}
+        run: |
+          # 3. Set identitas akun sebagai bot resmi GitHub Actions
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # 4. Biarkan GitHub CLI (gh) mengatur autentikasinya secara otomatis pakai GH_TOKEN
+          gh auth setup-git
+          
+          # 5. Buat folder baru yang benar-benar bersih agar riwayat git lama tidak ikut
+          mkdir shared-upload
+          mv anime-offline-database-minified.json shared-upload/
+          cd shared-upload
+          
+          # 6. Inisialisasi Git dari nol (sehingga repo ini hanya akan punya 1 commit)
+          git init
+          git checkout -b main
+          git add anime-offline-database-minified.json
+          git commit -m "Auto-update database: $(date +%F)"
+          
+          # 7. Tambahkan URL repo 'shared' milikmu
+          git remote add origin https://github.com/nagamuslim/shared.git
+          
+          # 8. Force push! (Menimpa file lama dan menghapus riwayat agar ukuran repo tetap kecil)
+          git push --force origin main
