@@ -14,13 +14,14 @@
         }
         .header {
             background: rgba(0,0,0,0.3); backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             position: sticky; top: 0; z-index: 100;
         }
         .header-content { max-width: 1400px; margin: 0 auto; position: relative; }
         h1 { color: #fff; font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 6px; }
         .stats { color: #b0b0b0; font-size: 0.95em; margin-bottom: 14px; }
-        
+
         .controls-row { display: flex; gap: 12px; max-width: 600px; }
         .search-input {
             flex: 1; padding: 12px 20px;
@@ -31,7 +32,7 @@
         }
         .search-input:focus { outline: none; border-color: rgba(102,126,234,0.5); background: rgba(255,255,255,0.08); }
         .search-input::placeholder { color: #888; }
-        
+
         .sort-select {
             padding: 12px 16px; border-radius: 25px;
             border: 2px solid rgba(255,255,255,0.1);
@@ -42,7 +43,7 @@
         .sort-select:focus { border-color: rgba(102,126,234,0.5); }
         .sort-select option { background: #24243e; color: white; }
 
-        /* ── Update row: kolom di pojok kanan ─────────────────────────────── */
+        /* Update row */
         #updateRow {
             position: absolute; top: 0; right: 0;
             display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
@@ -62,7 +63,7 @@
         .bookmark-btn:hover { background: rgba(246,211,101,0.22); }
         .update-status { font-size: 0.78em; color: #a0a0a0; text-align: right; max-width: 220px; }
 
-        /* ── Cards ──────────────────────────────────────────────────────────── */
+        /* Cards */
         .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
         .anime-card {
@@ -93,16 +94,109 @@
         .no-results { text-align: center; padding: 60px; color: #888; }
         .no-results-icon { font-size: 4em; margin-bottom: 166px; opacity: 0.5; }
 
-        /* ── Responsive ─────────────────────────────────────────────────────── */
+        /* Genre filter button */
+        .filter-btn {
+            padding: 12px 16px; border-radius: 25px;
+            border: 2px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: white; font-size: 1em; cursor: pointer;
+            outline: none; transition: all 0.3s ease;
+            font-family: inherit; font-weight: 500; white-space: nowrap;
+            display: flex; align-items: center; gap: 7px; position: relative;
+        }
+        .filter-btn:hover, .filter-btn.open { border-color: rgba(102,126,234,0.5); background: rgba(255,255,255,0.08); }
+        .filter-btn.has-active { border-color: #667eea; background: rgba(102,126,234,0.15); color: #c3b8ff; }
+        .filter-btn .fb-badge {
+            background: linear-gradient(135deg,#667eea,#764ba2); color: #fff;
+            border-radius: 50%; width: 20px; height: 20px;
+            font-size: 0.72em; font-weight: 700;
+            display: none; align-items: center; justify-content: center;
+        }
+        .filter-btn.has-active .fb-badge { display: flex; }
+
+        /* Floating genre panel — matches header: rgba(0,0,0,0.3) + blur(10px) */
+        #genrePanel {
+            position: fixed; z-index: 9990;
+            right: 12px; left: auto;
+            width: min(420px, calc(100vw - 24px));
+            max-height: calc(100vh - var(--header-h, 140px) - 24px);
+            overflow-y: auto;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.13);
+            border-radius: 16px;
+            padding: 16px 18px 18px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: none;
+            animation: gp-in .22s cubic-bezier(.22,.68,0,1.15) both;
+        }
+        #genrePanel.open { display: block; }
+        @keyframes gp-in { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+        #genrePanel::-webkit-scrollbar { width: 5px; }
+        #genrePanel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 3px; }
+
+        /* Panel header + controls — needs stronger text since bg is transparent */
+        .gp-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .gp-title { font-size: 0.8em; font-weight: 700; color: rgba(255,255,255,0.75); text-transform: uppercase; letter-spacing: 1.1px; }
+        .gp-actions { display: flex; gap: 8px; align-items: center; }
+        .gp-clear {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.85);
+            padding: 3px 10px; border-radius: 6px; font-size: 0.75em; cursor: pointer;
+            transition: all 0.2s; display: none;
+        }
+        .gp-clear:hover { background: rgba(255,100,100,0.3); color: #fff; border-color: rgba(255,100,100,0.5); }
+        .gp-close {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.85); width: 26px; height: 26px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8em; cursor: pointer; transition: all 0.2s;
+        }
+        .gp-close:hover { background: rgba(255,255,255,0.22); color: white; }
+
+        /* Pills */
+        #genrePills { display: flex; flex-wrap: wrap; gap: 6px; }
+        .genre-pill {
+            padding: 5px 12px; border-radius: 20px; font-size: 0.78em; font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.9);
+            cursor: pointer; transition: all 0.18s; user-select: none; white-space: nowrap;
+        }
+        .genre-pill:hover { background: rgba(102,126,234,0.35); border-color: rgba(102,126,234,0.6); color: #fff; }
+        .genre-pill.active { background: linear-gradient(135deg,#667eea,#764ba2); border-color: transparent; color: #fff; box-shadow: 0 2px 8px rgba(102,126,234,0.4); }
+        .genre-pill .pill-count { opacity: 0.7; font-size: 0.87em; margin-left: 3px; }
+
+        /* Not-found + upload states */
+        .gp-not-found { color: rgba(255,255,255,0.8); font-size: 0.88em; padding: 8px 0 4px; line-height: 1.7; }
+        .gp-not-found b { color: #fff; }
+        .gp-not-found code { color: #a8e6cf; font-size: 0.92em; background: rgba(0,0,0,0.3); padding: 1px 5px; border-radius: 4px; }
+        .gp-link { color: #93c5fd; text-decoration: none; word-break: break-all; font-size: 0.85em; }
+        .gp-link:hover { color: #bfdbfe; text-decoration: underline; }
+
+        .gp-upload-btn {
+            display: inline-block; margin-top: 12px;
+            background: rgba(102,126,234,0.25); border: 1px solid rgba(102,126,234,0.5);
+            color: #c3cfff; padding: 8px 14px; border-radius: 8px;
+            font-size: 0.82em; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; user-select: none;
+        }
+        .gp-upload-btn:hover { background: rgba(102,126,234,0.4); color: #fff; }
+        .gp-upload-progress {
+            margin-top: 10px; font-size: 0.8em; color: rgba(255,255,255,0.7);
+            display: none; line-height: 1.5;
+        }
+
+        /* Backdrop */
+        #genreBackdrop { position: fixed; inset: 0; z-index: 9989; display: none; }
+        #genreBackdrop.open { display: block; }
+
         @media (max-width: 768px) {
             h1 { font-size: 2em; }
             .grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
-            #updateRow {
-                position: static;
-                flex-direction: row; flex-wrap: wrap;
-                align-items: center; justify-content: flex-end;
-                margin-bottom: 12px;
-            }
+            #updateRow { position: static; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: flex-end; margin-bottom: 12px; }
             .update-status { flex-basis: 100%; text-align: right; }
         }
     </style>
@@ -113,18 +207,12 @@
             <h1>Anime Collection</h1>
             <div class="stats" id="stats">Loading...</div>
 
-            <!-- Tombol update & bookmark — pojok kanan, tersembunyi sampai JS siap -->
             <div id="updateRow" style="display:none;">
-                <!-- Baris tombol atas: Update file -->
                 <label style="cursor:pointer;">
                     <input type="file" id="txtFileInput" accept=".txt,.zip" multiple style="display:none;" />
                     <span class="update-btn" id="updateBtn">📄 Update .txt/.zip</span>
                 </label>
-
-                <!-- Baris tombol bawah: Bookmark -->
                 <a href="bookmark.html" class="update-btn bookmark-btn">⭐ Bookmark</a>
-
-                <!-- Status teks di bawah kedua tombol -->
                 <span class="update-status" id="updateStatus"></span>
             </div>
 
@@ -135,8 +223,25 @@
                     <option value="donghua">Donghua</option>
                     <option value="dub">Dub Indo</option>
                 </select>
+                <button class="filter-btn" id="filterBtn" title="Filter berdasarkan genre">
+                    &#127981; Filter
+                    <span class="fb-badge" id="filterBadge">0</span>
+                </button>
             </div>
         </div>
+    </div>
+
+    <div id="genreBackdrop"></div>
+
+    <div id="genrePanel" role="dialog" aria-label="Filter Genre">
+        <div class="gp-header">
+            <span class="gp-title">&#127981; Filter Genre</span>
+            <div class="gp-actions">
+                <button class="gp-clear" id="clearGenresBtn">&#10005; Hapus semua</button>
+                <button class="gp-close" id="closePanelBtn" aria-label="Tutup">&#10005;</button>
+            </div>
+        </div>
+        <div id="genrePills"></div>
     </div>
 
     <div class="container">
@@ -145,13 +250,18 @@
         </div>
     </div>
 
-    <!-- JSZip untuk dukungan .zip (opsional — graceful fallback jika gagal load) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" onerror="void 0"></script>
-    <script src="update_data.js"       onerror="void 0"></script>
-    <script src="bookmark.js"         defer onerror="void 0"></script>
+    <script src="fuse.js" onerror="this.onerror=null; this.src='https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js';"></script>
+    <script src="metadata.js"    onerror="void 0"></script>
+    <script src="update_data.js" onerror="void 0"></script>
+    <script src="bookmark.js" defer onerror="void 0"></script>
     <script>
         'use strict';
-        let animeData = [];
+        let animeData         = [];
+        let fuseIndex         = null;
+        let activeGenres      = new Set();
+        let metadataAvailable = false;
+
         const icons  = ['🎭','⚔️','⭐','🔥','💧','⚡','🎯','🌸','🎪','🎨','🎵','🎮','🌙','☀️','🎁'];
         const colors = ['#ff6b6b','#4ecdc4','#ffe66d','#a8e6cf','#ffd93d','#6bcf7f','#95e1d3','#f38181','#aa96da','#fcbad3'];
 
@@ -182,68 +292,248 @@
             return card;
         }
 
-        function levenshtein(s1, s2) {
-            if (s1.length < s2.length) [s1, s2] = [s2, s1];
-            if (s2.length === 0) return s1.length;
-            let prev = Array.from({length: s2.length + 1}, (_, i) => i);
-            for (let i = 0; i < s1.length; i++) {
-                let curr = [i + 1];
-                for (let j = 0; j < s2.length; j++) {
-                    curr.push(Math.min(prev[j + 1] + 1, curr[j] + 1, prev[j] + (s1[i] === s2[j] ? 0 : 1)));
-                }
-                prev = curr;
-            }
-            return prev[s2.length];
-        }
-
-        function fuzzyMatch(query, text) {
-            const q = query.toLowerCase().trim();
-            const t = text.toLowerCase().trim();
-            if (!q) return true;
-            if (t.includes(q)) return true; // Direct match
-
-            // Levenshtein (typo tolerance up to 3)
-            if (levenshtein(q, t) <= 3) return true;
-
-            // Subsequence match fallback
-            const qClean = q.replace(/[^a-z0-9]/g, '');
-            const tClean = t.replace(/[^a-z0-9]/g, '');
-            let qIdx = 0;
-            for (let i = 0; i < tClean.length && qIdx < qClean.length; i++) {
-                if (tClean[i] === qClean[qIdx]) qIdx++;
-            }
-            return qIdx === qClean.length;
-        }
-
-                function applyFilterAndSort() {
-                    const term = document.getElementById('searchInput').value;
-                    const sortMode = document.getElementById('sortSelect').value;
-                    
-                    // 1. Filter by search term
-                    let filtered = animeData.filter(a => fuzzyMatch(term, a.name));
-        
-                                // 2. Prefer Ani-One Indonesia over Ani-One Asia
-                                const idSeriesNames = new Set(
-                                    animeData
-                                        .filter(a => a.videos.some(v => (v.title && v.title.includes('【Ani-One Indonesia】')) || (v.chapter_title && v.chapter_title.includes('【Ani-One Indonesia】'))))
-                                        .map(a => a.name.toLowerCase())
-                                );
-                    
-                                filtered = filtered.filter(a => {
-                                    const isAsiaOnly = a.videos.every(v => (v.title && v.title.includes('【Ani-One Asia】')) || (v.chapter_title && v.chapter_title.includes('【Ani-One Asia】')));
-                                    if (isAsiaOnly && idSeriesNames.has(a.name.toLowerCase())) return false;
-                                    return true;
-                                });        
-                    // 3. Sort
-                    filtered.sort((a, b) => {                if (sortMode === 'donghua') {
-                    if (a.is_donghua !== b.is_donghua) return a.is_donghua ? -1 : 1;
-                } else if (sortMode === 'dub') {
-                    const aDub = a.name.includes('Dub Indo');
-                    const bDub = b.name.includes('Dub Indo');
-                    if (aDub !== bDub) return aDub ? -1 : 1;
-                }
-                return a.name.localeCompare(b.name);
+        function buildFuseIndex() {
+            if (typeof Fuse === 'undefined') return;
+            fuseIndex = new Fuse(animeData, {
+                keys: [{ name: 'name', weight: 2 }, { name: 'allTitles', weight: 1 }],
+                threshold: 0.35, ignoreLocation: true, minMatchCharLength: 2, includeScore: true
             });
+        }
+
+        // ── Floating genre panel ──────────────────────────────────────────────
+        const filterBtn     = document.getElementById('filterBtn');
+        const genrePanel    = document.getElementById('genrePanel');
+        const genreBackdrop = document.getElementById('genreBackdrop');
+        const filterBadge   = document.getElementById('filterBadge');
+
+        function openPanel() {
+            const header  = document.querySelector('.header');
+            const headerH = header ? header.getBoundingClientRect().bottom : 80;
+            document.documentElement.style.setProperty('--header-h', headerH + 'px');
+            genrePanel.style.top = (headerH + 8) + 'px';
+            genrePanel.classList.add('open');
+            genreBackdrop.classList.add('open');
+            filterBtn.classList.add('open');
+        }
+
+        function closePanel() {
+            genrePanel.classList.remove('open');
+            genreBackdrop.classList.remove('open');
+            filterBtn.classList.remove('open');
+        }
+
+        filterBtn.addEventListener('click', () => {
+            genrePanel.classList.contains('open') ? closePanel() : openPanel();
+        });
+        document.getElementById('closePanelBtn').addEventListener('click', closePanel);
+        genreBackdrop.addEventListener('click', closePanel);
+
+        function updateFilterBtnState() {
+            const count = activeGenres.size;
+            filterBadge.textContent = count;
+            filterBtn.classList.toggle('has-active', count > 0);
+            const clearBtn = document.getElementById('clearGenresBtn');
+            if (clearBtn) clearBtn.style.display = count > 0 ? 'inline-block' : 'none';
+        }
+
+        function toggleGenre(tag) {
+            if (activeGenres.has(tag)) activeGenres.delete(tag);
+            else                        activeGenres.add(tag);
+            document.querySelectorAll('.genre-pill').forEach(p => {
+                p.classList.toggle('active', activeGenres.has(p.dataset.tag));
+            });
+            updateFilterBtnState();
+            applyFilterAndSort();
+        }
+
+        document.getElementById('clearGenresBtn').addEventListener('click', () => {
+            activeGenres.clear();
+            document.querySelectorAll('.genre-pill.active').forEach(p => p.classList.remove('active'));
+            updateFilterBtnState();
+            applyFilterAndSort();
+        });
+
+        // ── Offline DB upload handler ─────────────────────────────────────────
+        // Called when user uploads anime-offline-database-minified.json (or .zip).
+        // Injects the data into AnimeMetadata, then re-runs enrich + re-renders.
+        async function handleOfflineDbUpload(file) {
+            const progress = document.getElementById('gpUploadProgress');
+            const setStatus = msg => { if (progress) { progress.style.display = 'block'; progress.textContent = msg; } };
+
+            setStatus('📂 Membaca file...');
+            try {
+                let jsonText = null;
+
+                if (/\.zip$/i.test(file.name)) {
+                    if (typeof JSZip === 'undefined') throw new Error('JSZip tidak tersedia — coba refresh halaman.');
+                    setStatus('📦 Membuka arsip ZIP...');
+                    const zip = await JSZip.loadAsync(file);
+                    for (const [name, entry] of Object.entries(zip.files)) {
+                        if (!entry.dir && /anime-offline-database.*\.json$/i.test(name)) {
+                            setStatus('🔍 Ditemukan: ' + name);
+                            jsonText = await entry.async('text');
+                            break;
+                        }
+                    }
+                    if (!jsonText) {
+                        // Try any .json file if specific name not found
+                        for (const [name, entry] of Object.entries(zip.files)) {
+                            if (!entry.dir && /\.json$/i.test(name)) {
+                                jsonText = await entry.async('text');
+                                break;
+                            }
+                        }
+                    }
+                    if (!jsonText) throw new Error('File JSON tidak ditemukan di dalam ZIP.');
+                } else {
+                    jsonText = await file.text();
+                }
+
+                setStatus('⚙️ Memproses database (' + (jsonText.length / 1024 / 1024).toFixed(1) + ' MB)...');
+                const parsed = JSON.parse(jsonText);
+                const arr = parsed.data || parsed;
+                if (!Array.isArray(arr)) throw new Error('Format tidak valid — bukan array.');
+
+                if (typeof AnimeMetadata === 'undefined') throw new Error('metadata.js tidak dimuat.');
+
+                // Inject into the module and rebuild the title index
+                AnimeMetadata.injectOfflineDb(arr);
+                setStatus('🔗 Mencocokkan ' + animeData.length + ' anime...');
+
+                // Run phase1 matching (uses the injected DB, skips the HTTP fetch)
+                await AnimeMetadata.batchProcess(
+                    animeData,
+                    { onLog: () => {}, onStatus: s => setStatus('⚙️ ' + s), onProgress: () => {} },
+                    'phase1'
+                );
+
+                // Re-enrich and rebuild
+                const raw = animeData.map(a => currentAnimeRaw[a.name] || a);
+                animeData = AnimeMetadata.enrichAnimeList(raw.length ? raw : animeData.map(a => ({ ...a, allTitles: [], tags: [] })));
+                metadataAvailable = (AnimeMetadata.enrichAnimeList.lastCount || 0) > 0;
+                buildFuseIndex();
+                buildGenrePills();
+                applyFilterAndSort();
+
+                const count = AnimeMetadata.enrichAnimeList.lastCount || 0;
+                setStatus('✅ Selesai! ' + count + ' anime berhasil dicocokkan.');
+            } catch(e) {
+                setStatus('❌ Error: ' + e.message);
+                console.error('[OfflineDB Upload]', e);
+            }
+        }
+
+        // ── Build genre pill content ──────────────────────────────────────────
+        function buildGenrePills() {
+            const container = document.getElementById('genrePills');
+
+            if (!metadataAvailable) {
+                const GITHUB_URL = 'https://github.com/manami-project/anime-offline-database/releases/latest/download/anime-offline-database-minified.json';
+                container.innerHTML =
+                    '<div class="gp-not-found">' +
+                    '<b>&#9888;&#65039; Database genre tidak ditemukan.</b><br>' +
+                    'Filter genre membutuhkan file <code>anime-offline-database-minified.json</code>.<br><br>' +
+                    'Unduh dari:<br>' +
+                    '<a class="gp-link" href="' + GITHUB_URL + '" target="_blank" rel="noopener">&#8599; ' + GITHUB_URL + '</a><br><br>' +
+                    'Lalu taruh di folder yang sama dengan <code>index.html</code>, ' +
+                    'atau upload langsung di sini:' +
+                    '</div>' +
+                    '<label>' +
+                    '<input type="file" id="dbFileInput" accept=".json,.zip" style="display:none;" />' +
+                    '<span class="gp-upload-btn">&#128193; Upload anime-offline-database-minified.json / .zip</span>' +
+                    '</label>' +
+                    '<div class="gp-upload-progress" id="gpUploadProgress"></div>';
+
+                // Attach the file input handler after injecting HTML
+                const dbInput = document.getElementById('dbFileInput');
+                if (dbInput) {
+                    dbInput.addEventListener('change', async function() {
+                        if (this.files && this.files[0]) await handleOfflineDbUpload(this.files[0]);
+                        this.value = '';
+                    });
+                }
+                return;
+            }
+
+            // Build pills from tag frequency
+            const freq = new Map();
+            for (const a of animeData) {
+                for (const t of (a.tags || [])) freq.set(t, (freq.get(t) || 0) + 1);
+            }
+            if (freq.size === 0) {
+                container.innerHTML = '<div class="gp-not-found">Belum ada tag. Jalankan <code>node metadata.js --phase1</code> untuk memuat genre.</div>';
+                return;
+            }
+
+            const sorted = [...freq.entries()]
+                .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+                .slice(0, 40);
+
+            container.innerHTML = '';
+            for (const [tag, count] of sorted) {
+                const pill = document.createElement('button');
+                pill.className = 'genre-pill' + (activeGenres.has(tag) ? ' active' : '');
+                pill.dataset.tag = tag;
+                pill.innerHTML = tag + '<span class="pill-count">(' + count + ')</span>';
+                pill.addEventListener('click', () => toggleGenre(tag));
+                container.appendChild(pill);
+            }
+        }
+
+        // ── Ani-One dedup ─────────────────────────────────────────────────────
+        function dedupeAniOne(list, fullList) {
+            const idSeriesNames = new Set(
+                fullList
+                    .filter(a => a.videos.some(v =>
+                        (v.title && v.title.includes('\u3010Ani-One Indonesia\u3011')) ||
+                        (v.chapter_title && v.chapter_title.includes('\u3010Ani-One Indonesia\u3011'))
+                    ))
+                    .map(a => a.name.toLowerCase())
+            );
+            return list.filter(a => {
+                const isAsiaOnly = a.videos.every(v =>
+                    (v.title && v.title.includes('\u3010Ani-One Asia\u3011')) ||
+                    (v.chapter_title && v.chapter_title.includes('\u3010Ani-One Asia\u3011'))
+                );
+                return !(isAsiaOnly && idSeriesNames.has(a.name.toLowerCase()));
+            });
+        }
+
+        // ── Main filter + sort ────────────────────────────────────────────────
+        function applyFilterAndSort() {
+            const term      = document.getElementById('searchInput').value.trim();
+            const sortMode  = document.getElementById('sortSelect').value;
+            const useSearch = term.length >= 2;
+
+            let filtered;
+            if (useSearch && fuseIndex) {
+                filtered = fuseIndex.search(term).map(r => r.item);
+            } else if (useSearch) {
+                const q = term.toLowerCase();
+                filtered = animeData.filter(a =>
+                    a.name.toLowerCase().includes(q) ||
+                    (a.allTitles || []).some(t => t.toLowerCase().includes(q))
+                );
+            } else {
+                filtered = [...animeData];
+            }
+
+            if (activeGenres.size > 0) {
+                filtered = filtered.filter(a => (a.tags || []).some(t => activeGenres.has(t)));
+            }
+
+            filtered = dedupeAniOne(filtered, animeData);
+
+            if (!useSearch) {
+                filtered.sort((a, b) => {
+                    if (sortMode === 'donghua' && a.is_donghua !== b.is_donghua) return a.is_donghua ? -1 : 1;
+                    if (sortMode === 'dub') {
+                        const aDub = a.name.includes('Dub Indo'), bDub = b.name.includes('Dub Indo');
+                        if (aDub !== bDub) return aDub ? -1 : 1;
+                    }
+                    return a.name.localeCompare(b.name);
+                });
+            }
 
             renderAnime(filtered);
         }
@@ -251,7 +541,7 @@
         function renderAnime(list) {
             const grid = document.getElementById('animeGrid');
             if (list.length === 0) {
-                grid.innerHTML = '<div class="no-results"><div class="no-results-icon">🔍</div><h2>Tidak ditemukan</h2><p>Coba kata kunci lain</p></div>';
+                grid.innerHTML = '<div class="no-results"><div class="no-results-icon">🔍</div><h2>Tidak ditemukan</h2><p>Coba kata kunci lain atau hapus filter genre</p></div>';
                 return;
             }
             grid.innerHTML = '';
@@ -260,37 +550,26 @@
 
         function showStats(data) {
             const totalEps = data.anime_list.reduce((s, a) => s + a.episode_count, 0);
-            document.getElementById('stats').textContent =
-                data.total_series + ' Anime • ' + totalEps + ' Episode';
+            document.getElementById('stats').textContent = data.total_series + ' Anime \u2022 ' + totalEps + ' Episode';
         }
 
-        // ── Data loading: localStorage → anime_data.json → combined.txt (fallback via updater) ──
+        // Keep a raw (unenriched) copy so we can re-enrich after DB upload
+        let currentAnimeRaw = {};
+
+        // ── Data loading ──────────────────────────────────────────────────────
         async function loadAnimeData() {
             let data = null;
 
             if (typeof AnimeUpdater !== 'undefined') {
-                // 1. Try LocalStorage
                 data = AnimeUpdater.loadLocal();
-                if (data) console.log('Loaded from localStorage');
-
-                // 2. Try server anime_data.json
                 if (!data) {
                     try {
                         const res = await fetch('anime_data.json', { cache: 'no-cache' });
-                        if (res.ok) {
-                            data = await res.json();
-                            console.log('Loaded from server anime_data.json');
-                            AnimeUpdater.saveLocal(data);
-                        }
+                        if (res.ok) { data = await res.json(); AnimeUpdater.saveLocal(data); }
                     } catch(e) {}
                 }
-
-                // 3. Fallback to combined.txt (local/remote) via updater
-                if (!data) {
-                    data = await AnimeUpdater.loadData();
-                }
+                if (!data) data = await AnimeUpdater.loadData();
             } else {
-                // Updater not available - basic fallback
                 try {
                     const r = localStorage.getItem('anime_data');
                     if (r) data = JSON.parse(r);
@@ -300,125 +579,151 @@
 
             if (!data || !data.anime_list) {
                 document.getElementById('animeGrid').innerHTML =
-                    '<div class="loading">❌ Tidak ada data. Upload file .txt atau .zip untuk memulai.</div>';
+                    '<div class="loading">&#10060; Tidak ada data. Upload file .txt atau .zip untuk memulai.</div>';
+                buildGenrePills();
                 return;
             }
 
-            animeData = data.anime_list;
+            // Store raw list for re-enrichment after DB upload
+            currentAnimeRaw = {};
+            data.anime_list.forEach(a => { currentAnimeRaw[a.name] = a; });
+
+            if (typeof AnimeMetadata !== 'undefined') {
+                await AnimeMetadata.setupMetadata(data.anime_list);
+                animeData = AnimeMetadata.enrichAnimeList(data.anime_list);
+                metadataAvailable = (AnimeMetadata.enrichAnimeList.lastCount || 0) > 0;
+            } else {
+                animeData = data.anime_list.map(a => ({ ...a, allTitles: [], tags: [] }));
+                metadataAvailable = false;
+            }
+
+            buildFuseIndex();
+            buildGenrePills();
             showStats(data);
             applyFilterAndSort();
+
+            const c = AnimeMetadata?.enrichAnimeList?.lastCount || 0;
+            console.log(c > 0
+                ? `[Metadata] ${c}/${animeData.length} anime enriched`
+                : '[Metadata] No metadata — run: node metadata.js --phase1  or upload anime-offline-database-minified.json');
         }
 
-        // ── Extractor .zip ────────────────────────────────────────────────────
+        // ── Zip extractor ─────────────────────────────────────────────────────
         async function extractZip(file) {
             if (typeof JSZip === 'undefined') throw new Error('JSZip tidak tersedia — coba refresh halaman.');
             const zip = await JSZip.loadAsync(file);
             const txtContents = [];
             for (const [filename, entry] of Object.entries(zip.files)) {
-                if (!entry.dir && /\.txt$/i.test(filename)) {
-                    txtContents.push(await entry.async('text'));
-                }
+                if (!entry.dir && /\.txt$/i.test(filename)) txtContents.push(await entry.async('text'));
             }
             return txtContents;
         }
 
-        // ── Setup tombol update ───────────────────────────────────────────────
+        // ── Updater setup ─────────────────────────────────────────────────────
         function setupUpdater() {
             if (typeof AnimeUpdater === 'undefined') return;
             document.getElementById('updateRow').style.display = 'flex';
 
             const btn = document.getElementById('updateBtn');
             let longPressTimer = null;
-
             const clearLS = () => {
                 if (confirm('Hapus semua data localStorage dan reload dari server?')) {
                     localStorage.removeItem('anime_data');
-                    document.getElementById('updateStatus').textContent = '✓ localStorage dihapus';
+                    document.getElementById('updateStatus').textContent = '\u2713 localStorage dihapus';
                     setTimeout(() => location.reload(), 600);
                 }
             };
+            btn.addEventListener('contextmenu', e => { e.preventDefault(); clearLS(); });
+            btn.addEventListener('touchstart',  () => { longPressTimer = setTimeout(clearLS, 800); });
+            btn.addEventListener('touchend',    () => { clearTimeout(longPressTimer); longPressTimer = null; });
+            btn.addEventListener('touchmove',   () => { clearTimeout(longPressTimer); longPressTimer = null; });
 
-            // Desktop: klik kanan = hapus localStorage
-            btn.addEventListener('contextmenu', function(e) { e.preventDefault(); clearLS(); });
-
-            // Mobile: tahan 800ms = hapus localStorage
-            btn.addEventListener('touchstart', function() {
-                longPressTimer = setTimeout(clearLS, 800);
-            });
-            btn.addEventListener('touchend',  function() { clearTimeout(longPressTimer); longPressTimer = null; });
-            btn.addEventListener('touchmove', function() { clearTimeout(longPressTimer); longPressTimer = null; });
-
-            // ── Handler upload file ──────────────────────────────────────────
             document.getElementById('txtFileInput').addEventListener('change', async function() {
                 if (!this.files || this.files.length === 0) return;
                 const status = document.getElementById('updateStatus');
                 status.textContent = 'Membaca file...';
-
                 try {
                     const contents = [];
                     for (const file of this.files) {
                         if (/\.zip$/i.test(file.name)) {
                             status.textContent = 'Membaca ZIP: ' + file.name + '...';
-                            const extracted = await extractZip(file);
-                            contents.push(...extracted);
+                            contents.push(...await extractZip(file));
                         } else {
                             contents.push(await file.text());
                         }
                     }
-
-                    if (contents.length === 0) {
-                        status.textContent = '❌ Tidak ada file .txt ditemukan di dalam ZIP.';
-                        return;
-                    }
-
+                    if (contents.length === 0) { status.textContent = '\u274c Tidak ada file .txt di dalam ZIP.'; return; }
                     status.textContent = 'Memproses ' + contents.length + ' file...';
-
                     const groups   = AnimeUpdater.parseMultiple(contents);
-                    const existing = AnimeUpdater.loadLocal() || (animeData.length ? { anime_list: animeData } : null);
-
+                    const existing = AnimeUpdater.loadLocal() || (animeData.length ? { anime_list: Object.values(currentAnimeRaw) } : null);
                     let finalGroups = groups;
-                    if (existing && existing.anime_list && existing.anime_list.length > 0) {
+                    if (existing?.anime_list?.length > 0) {
                         const newNames = new Set(Array.from(groups.keys()).map(n => n.toLowerCase()));
                         const wouldRemove = existing.anime_list.filter(a => !newNames.has(a.name.toLowerCase())).length;
-
                         if (wouldRemove > 0) {
-                            const syncMode = confirm(
-                                'Mode SYNC?\n\n' +
-                                'OK  = Hapus ' + wouldRemove + ' anime yang tidak ada di file ini\n' +
-                                'Batal = Tambahkan/update saja (append mode, aman)'
-                            );
+                            const syncMode = confirm('Mode SYNC?\n\nOK = Hapus ' + wouldRemove + ' anime\nBatal = Append saja (aman)');
                             if (!syncMode) {
                                 existing.anime_list.forEach(anime => {
-                                    if (!newNames.has(anime.name.toLowerCase())) {
+                                    if (!newNames.has(anime.name.toLowerCase()))
                                         finalGroups.set(anime.name, new Map(anime.videos.map(v => [v.video_id, v])));
-                                    }
                                 });
                             }
                         }
                     }
-
                     const { data, stats } = AnimeUpdater.mergeData(existing, finalGroups);
                     const saved = AnimeUpdater.saveLocal(data);
-
-                    animeData = data.anime_list;
-                    showStats(data);
-                    renderAnime(animeData);
-
-                    status.textContent =
-                        '✓ +' + stats.added + ' baru, −' + stats.removed + ' dihapus, ' + stats.updated + ' diperbarui' +
-                        (saved ? '' : ' (localStorage penuh — file diunduh)');
-
+                    currentAnimeRaw = {};
+                    data.anime_list.forEach(a => { currentAnimeRaw[a.name] = a; });
+                    if (typeof AnimeMetadata !== 'undefined') {
+                        animeData = AnimeMetadata.enrichAnimeList(data.anime_list);
+                        metadataAvailable = (AnimeMetadata.enrichAnimeList.lastCount || 0) > 0;
+                    } else {
+                        animeData = data.anime_list.map(a => ({ ...a, allTitles: [], tags: [] }));
+                        metadataAvailable = false;
+                    }
+                    buildFuseIndex(); buildGenrePills(); showStats(data); applyFilterAndSort();
+                    status.textContent = '\u2713 +' + stats.added + ' baru, \u2212' + stats.removed + ' dihapus, ' + stats.updated + ' diperbarui' + (saved ? '' : ' (localStorage penuh)');
                     if (!saved) AnimeUpdater.saveData(data);
-
-                } catch(e) {
-                    status.textContent = '❌ ' + e.message;
-                    console.error(e);
-                }
+                } catch(e) { status.textContent = '\u274c ' + e.message; console.error(e); }
                 this.value = '';
             });
         }
 
-        // ── Search & Sort ─────────────────────────────────────────────────────
+        // ── Filter long-hold → clear metadata cache ───────────────────────────
+        (function setupFilterLongPress() {
+            let _timer = null;
+            const clearMetadataCache = () => {
+                let count = 0;
+                try { for (let i = 0; i < localStorage.length; i++) if (localStorage.key(i)?.startsWith('meta_')) count++; } catch(e) {}
+                if (!confirm(
+                    (count > 0 ? 'Hapus ' + count + ' entri metadata dari localStorage?\n\n' : 'Cache metadata di memori akan dihapus.\n\n') +
+                    'Halaman akan mencoba memuat ulang dari:\n' +
+                    '1. metadata.json (server, in-memory)\n' +
+                    '2. anime-offline-database-minified.json (offline DB)'
+                )) return;
+                if (typeof AnimeMetadata !== 'undefined') AnimeMetadata.clearAll();
+                else {
+                    try { const keys = []; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k?.startsWith('meta_')) keys.push(k); } keys.forEach(k => localStorage.removeItem(k)); } catch(e) {}
+                }
+                loadAnimeData();
+            };
+            filterBtn.addEventListener('contextmenu', e => { e.preventDefault(); clearMetadataCache(); });
+            filterBtn.addEventListener('touchstart',  () => { _timer = setTimeout(clearMetadataCache, 800); });
+            filterBtn.addEventListener('touchend',    () => { clearTimeout(_timer); _timer = null; });
+            filterBtn.addEventListener('touchmove',   () => { clearTimeout(_timer); _timer = null; });
+        })();
+
+        // ── Escape / resize / orientation ─────────────────────────────────────
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+        let _resizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(_resizeTimer);
+            _resizeTimer = setTimeout(() => { if (genrePanel.classList.contains('open')) openPanel(); }, 100);
+        });
+        window.addEventListener('orientationchange', () => {
+            if (genrePanel.classList.contains('open')) setTimeout(openPanel, 200);
+        });
+
         document.getElementById('searchInput').addEventListener('input', applyFilterAndSort);
         document.getElementById('sortSelect').addEventListener('change', applyFilterAndSort);
 
@@ -426,4 +731,3 @@
         setupUpdater();
     </script>
 </body>
-</html>
