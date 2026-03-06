@@ -139,10 +139,10 @@
         let ytApiReady     = false;
         let isInitialLoad  = true;
         let loadedVideoId  = null;  // video_id currently loaded in the YT player
-        let nearEndTimer   = null;  // interval for near-end detection
 
         let currentEpNumber = null;
-        let sortOrder = 'asc';
+        let sortOrder       = 'asc';
+        let _timeObserver   = null;  // unified marathon-transition + near-end observer
 
         // ── Helpers ───────────────────────────────────────────────────────────
 
@@ -227,31 +227,124 @@
             );
         }
 
-        function clearNearEndTimer() {
-            if (nearEndTimer) { clearInterval(nearEndTimer); nearEndTimer = null; }
+        function stopTimeObserver() {
+            if (_timeObserver) { clearInterval(_timeObserver); _timeObserver = null; }
         }
 
-        function startNearEndTimer() {
-            clearNearEndTimer();
-            nearEndTimer = setInterval(() => {
-                if (!ytPlayer || typeof ytPlayer.getDuration !== 'function') return;
-                const dur = ytPlayer.getDuration();
-                const t   = ytPlayer.getCurrentTime();
-                if (dur > 0 && (dur - t) < 60) {
-                    // Within 30 s of end — wipe saved time so next resume starts fresh
-                    if (typeof BookmarkManager !== 'undefined' && currentAnime) {
-                        const video = getVideoByEp(currentEpNumber);
-                        if (video) {
-                            BookmarkManager.trackProgress(
-                                currentAnime.name, video.video_id,
-                                video.episode, epLabel(video),
-                                null  // null = clear saved time
-                            );
+        // ── Unified Time-Range Observer ───────────────────────────────────────
+        //
+        // Replaces the old "near-end timer" with a single interval that handles
+        // both marathon auto-transitions and end-of-episode save clearing.
+        //
+        // Every 3 s while watching, it evaluates the CURRENT episode's "border":
+        //
+        //  Case A — Marathon middle episode (next ep shares same video_id):
+        //    • Border = nextEp.start_seconds
+        //    • currentTime ≥ border   → marathonTransitionUI()  (no video reload)
+        //    • border - currentTime < 60s → clear saved time (prevent mid-credits resume)
+        //
+        //  Case B — Last marathon episode OR non-marathon:
+        //    • Border = getDuration()
+        //    • getDuration() - currentTime < 60s → clear saved time, stop observer
+        //
+        function startTimeObserver() {
+            stopTimeObserver();
+            _timeObserver = setInterval(() => {
+                if (!ytPlayer || typeof ytPlayer.getCurrentTime !== 'function') return;
+                const state = ytPlayer.getPlayerState();
+                // Only act while playing (1) or just ended (0)
+                if (state !== 1 && state !== 0) return;
+
+                const t     = ytPlayer.getCurrentTime();
+                const video = getVideoByEp(currentEpNumber);
+                if (!video) return;
+
+                const nextEpNum = nextEpNumber();
+
+                if (nextEpNum !== null) {
+                    const nextVid = getVideoByEp(nextEpNum);
+                    const isMarathon = nextVid
+                        && nextVid.video_id === video.video_id
+                        && nextVid.start_seconds > 0;
+
+                    if (isMarathon) {
+                        if (t >= nextVid.start_seconds) {
+                            // ── Auto-transition ───────────────────────────────
+                            marathonTransitionUI(nextEpNum);
+                            return; // observer restarts inside marathonTransitionUI
                         }
+                        if ((nextVid.start_seconds - t) < 60) {
+                            // Near border — clear saved time for this episode so
+                            // a resume after closing doesn't land in the credits gap.
+                            _clearSavedTime(video);
+                        }
+                        return;
                     }
-                    clearNearEndTimer();
                 }
-            }, 5000);
+
+                // Case B: last marathon ep or non-marathon — use getDuration()
+                const dur = (typeof ytPlayer.getDuration === 'function') ? ytPlayer.getDuration() : 0;
+                if (dur > 0 && (dur - t) < 60) {
+                    _clearSavedTime(video);
+                    stopTimeObserver();
+                }
+            }, 3000);
+        }
+
+        function _clearSavedTime(video) {
+            if (typeof BookmarkManager !== 'undefined' && currentAnime) {
+                BookmarkManager.trackProgress(
+                    currentAnime.name, video.video_id,
+                    video.episode, epLabel(video),
+                    null   // null = delete lastWatchedTime
+                );
+            }
+        }
+
+        // ── Marathon seamless UI transition ───────────────────────────────────
+        //
+        // Called when the playback position crosses a chapter border inside a
+        // marathon video. The video keeps playing untouched — only the UI syncs.
+        //
+        //  1. Update currentEpNumber (guard against double-fire on next poll)
+        //  2. Refresh info panel, prev/next buttons, sidebar highlight
+        //  3. Save bookmark for the new episode (no timestamp = clean resume)
+        //  4. Restart ContinueWatching tracking with new episode context
+        //  5. Re-arm observer for the NEXT border
+        //
+        function marathonTransitionUI(nextEpNum) {
+            if (typeof ContinueWatching !== 'undefined') ContinueWatching.stopPlayer();
+            currentEpNumber = nextEpNum;          // update FIRST to guard re-entry
+
+            const video = getVideoByEp(currentEpNumber);
+            if (!video) return;
+
+            // Sync info panel
+            document.getElementById('currentTitle').textContent = currentAnime.name;
+            document.getElementById('currentMeta').textContent =
+                epLabel(video) + ' \u2022 ' +
+                (currentAnime.name.includes('Dub Indo') ? 'Dub Indonesia' : 'Sub Indonesia');
+            document.getElementById('prevBtn').disabled = prevEpNumber() === null;
+            document.getElementById('nextBtn').disabled = nextEpNumber() === null;
+
+            // Highlight new episode in sidebar (no page scroll — video is playing)
+            renderEpisodeList();
+
+            // Bookmark: record new episode, no timestamp (clean resume if reopened)
+            if (typeof BookmarkManager !== 'undefined') {
+                BookmarkManager.trackProgress(
+                    currentAnime.name, video.video_id,
+                    video.episode, epLabel(video)
+                );
+            }
+
+            // Restart polling with new episode number/title
+            startTracking();
+
+            // Re-arm for the next chapter border (or last-episode end)
+            startTimeObserver();
+
+            console.log('[Marathon] \u2192 EP', nextEpNum, '|', epLabel(video));
         }
 
         // ── YT Player: switch episode without destroying the player ──────────
@@ -279,15 +372,14 @@
 
             if (isSameVideo) {
                 // ── Strategy A: seekTo ────────────────────────────────────────
-                // Marathon: all episodes share one video_id, just seek.
+                // Marathon manual switch: user clicked prev/next/list.
+                // Video keeps playing, we just seek to the chapter start.
                 ytPlayer.seekTo(startSecs, true);
-                ytPlayer.playVideo(); // ensure playing after seek
-                // Tracking already running; ContinueWatching.initPlayer restarts it
-                // with the new episode number/title.
+                ytPlayer.playVideo();
                 startTracking();
-                // Re-arm the near-end timer for this episode's new duration window.
-                // (onStateChange won't re-fire for a seekTo, so we do it manually.)
-                startNearEndTimer();
+                // onStateChange(PLAYING) may or may not re-fire after seekTo,
+                // so explicitly re-arm the observer here.
+                startTimeObserver();
 
             } else {
                 // ── Strategy B: loadVideoById ─────────────────────────────────
@@ -381,7 +473,7 @@
         // Note: we do NOT null ytPlayer here — we want to keep it alive!
         function playEpisode(epNum) {
             if (typeof ContinueWatching !== 'undefined') ContinueWatching.stopPlayer();
-            clearNearEndTimer();
+            stopTimeObserver();
             currentEpNumber = epNum;
             refreshAll();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -463,34 +555,21 @@
 
             ytPlayer = new YT.Player('videoPlayer', {
                 events: {
-                    // onReady: fires once when the player is first constructed.
                     'onReady': () => {
                         startTracking();
-                        startNearEndTimer();
+                        startTimeObserver();
                     },
 
-                    // onStateChange: fires on EVERY video event including after
-                    // loadVideoById completes and starts playing (state 1).
-                    // This is how tracking restarts after a non-marathon switch.
                     'onStateChange': (e) => {
                         if (e.data === YT.PlayerState.PLAYING) {
-                            // (Re)start tracking with current episode context
                             startTracking();
-                            startNearEndTimer();
+                            startTimeObserver();
                         }
                         if (e.data === YT.PlayerState.ENDED) {
-                            // Video ended — clear saved time so next resume
-                            // starts from chapter start, not the very end
-                            clearNearEndTimer();
+                            stopTimeObserver();
                             if (typeof BookmarkManager !== 'undefined' && currentAnime) {
                                 const video = getVideoByEp(currentEpNumber);
-                                if (video) {
-                                    BookmarkManager.trackProgress(
-                                        currentAnime.name, video.video_id,
-                                        video.episode, epLabel(video),
-                                        null
-                                    );
-                                }
+                                if (video) _clearSavedTime(video);
                             }
                         }
                     }
