@@ -158,7 +158,7 @@ var ContinueWatching = (function () {
             '#cw-popup{position:fixed;bottom:24px;right:24px;z-index:9998;',
                 'background:rgba(15,12,41,0.96);',
                 'border:1px solid rgba(255,255,255,0.13);border-radius:16px;',
-                'padding:166px 18px 14px;width:300px;',
+                'padding:16px 18px 14px;width:300px;',
                 'box-shadow:0 12px 40px rgba(0,0,0,0.6);',
                 'backdrop-filter:blur(16px);',
                 'font-family:"Segoe UI",Tahoma,sans-serif;',
@@ -205,13 +205,43 @@ var ContinueWatching = (function () {
 
         injectStyles();
 
-        var epText = item.lastWatchedEpisodeNumber
-            ? 'Episode ' + item.lastWatchedEpisodeNumber +
-              (item.lastWatchedEpisodeTitle ? ' \u00b7 ' + item.lastWatchedEpisodeTitle : '')
-            : 'Terakhir ditonton';
+        // Format saved playback position as "M:SS"
+        function fmtTime(secs) {
+            var m = Math.floor(secs / 60);
+            var s = Math.floor(secs % 60);
+            return m + ':' + (s < 10 ? '0' : '') + s;
+        }
 
+        var epNum     = item.lastWatchedEpisodeNumber;
+        var rawTitle  = item.lastWatchedEpisodeTitle || '';
+        var savedTime = (item.lastWatchedTime && item.lastWatchedTime > 5)
+                        ? item.lastWatchedTime : null;
+
+        // epLabel() in player.html builds titles like "Episode 12" or "Episode 3-4"
+        // when there's no real chapter name. Detect that default pattern so we
+        // don't append "Episode 12 · Episode 12" (the bug in the screenshot).
+        var isDefaultLabel = !rawTitle ||
+            /^Episode\s+[\d]+(\s*[-–]\s*[\d]+)?$/i.test(rawTitle.trim());
+
+        var epText;
+        if (epNum) {
+            epText = 'Episode ' + epNum;
+            if (savedTime) {
+                // User stopped mid-episode — show where they left off
+                epText += ' \u00b7 ' + fmtTime(savedTime);
+            } else if (!isDefaultLabel) {
+                // Real chapter title from the source (ItsAnime, etc.)
+                epText += ' \u00b7 ' + rawTitle;
+            }
+            // Otherwise: no time, no real title → plain "Episode N" (no duplication)
+        } else {
+            epText = 'Terakhir ditonton';
+        }
+
+        // Pass saved time to player so it can seek immediately on resume
+        var timeParam = savedTime ? '&time=' + savedTime : '';
         var url = 'player.html?anime=' + encodeURIComponent(item.name) +
-                  (item.lastWatchedEpisodeNumber ? '&episode=' + item.lastWatchedEpisodeNumber : '');
+                  (epNum ? '&episode=' + epNum : '') + timeParam;
 
         var popup = document.createElement('div');
         popup.id = 'cw-popup';
@@ -263,7 +293,7 @@ var ContinueWatching = (function () {
      * @param {string}          animeName  - Series name
      * @param {number}          epNumber   - Episode number now playing
      * @param {string}          epTitle    - Human-readable label
-     * @param {Function|Object} getPlayer  - () => YT.Player instance
+     * @param {Function|Object} getPlayer  - () => YT.Player object
      */
     function initPlayer(animeName, epNumber, epTitle, getPlayer) {
         stopPlayer(); // always clear previous interval first
