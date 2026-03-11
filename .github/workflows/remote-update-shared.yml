@@ -20,7 +20,7 @@ jobs:
           echo "Mendownload database dari: $LATEST_URL"
           
           # 2. Download file JSON-nya
-          curl -L -o anime-offline-database-minified.json "$LATEST_URL"
+          curl -L -o anime-offline-database-minified.json "https://github.com/manami-project/anime-offline-database/releases/latest/download/anime-offline-database-minified.json"
 
       - name: Deploy to Shared Repo
         env:
