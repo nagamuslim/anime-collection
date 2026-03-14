@@ -1,3 +1,3 @@
-[submodule "shared_db"]
-	path = shared_db
+[submodule "db"]
+	path = db
 	url = https://github.com/nagamuslim/shared.git
