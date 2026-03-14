@@ -37,7 +37,7 @@ jobs:
           # 5. Force push
           git push --force origin main
 
-  # JOB 2: Check, Add, and Sync the Submodule & Symlink
+  # JOB 2: Check, Add, and Sync the Submodule
   sync-submodule:
     needs: push-to-shared # Waits for Job 1 to finish
     runs-on: ubuntu-latest
@@ -54,10 +54,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # 1. The submodule folder (cannot be '.')
-          SUB_DIR="shared_db"
+          # Changed to just 'db'
+          SUB_DIR="db"
           SUB_URL="https://github.com/nagamuslim/shared.git"
-          FILE_NAME="anime-offline-database-minified.json"
           
           # Check if .gitmodules exists AND contains our submodule path
           if ! grep -q "path = $SUB_DIR" .gitmodules 2>/dev/null; then
@@ -68,23 +67,11 @@ jobs:
             git submodule update --init --remote --force "$SUB_DIR"
           fi
           
-          # 2. CREATE SYMLINK TRICK FOR metadata.js
-          # If the physical 40MB file exists from an old manual upload, delete it first
-          if [ -f "$FILE_NAME" ] && [ ! -L "$FILE_NAME" ]; then
-            rm -f "$FILE_NAME"
-          fi
-          
-          # Create a root symlink pointing inside the submodule folder
-          if [ ! -L "$FILE_NAME" ]; then
-            ln -s "$SUB_DIR/$FILE_NAME" "$FILE_NAME"
-            git add "$FILE_NAME"
-          fi
-          
-          # 3. Commit the changes if there are any
+          # Commit the changes if there are any
           if git diff --quiet && git diff --cached --quiet; then
             echo "No changes found. Submodule already up to date."
           else
-            git add .gitmodules "$SUB_DIR" "$FILE_NAME"
-            git commit -m "Auto-sync: attach latest database and root symlink"
+            git add .gitmodules "$SUB_DIR"
+            git commit -m "Auto-sync: attach latest database to db/ folder"
             git push origin main
           fi
