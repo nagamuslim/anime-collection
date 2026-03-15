@@ -14,9 +14,15 @@
 
     const isLargeRange = (start, end) => (end - start) > 3;
 
-    const cleanTitle = (name) => name.replace(/[\.\-~]+$/, '').trim();
+    const cleanTitle = (name) => name.replace(/\.{2,}/g, ' ').replace(/[\-~]+$/, '').replace(/ {2,}/g, ' ').trim();
 
-    const normalizeForCompare = (name) => name.toLowerCase().replace(/[^a-z0-9]/g, '');
+    // Bug 1 fix: CJK names must not collapse to '' or they all land in one bucket
+    // and ''.includes(x) === true always, merging CJK with everything (Bug 2).
+    const normalizeForCompare = (name) => {
+        const latin = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (latin.length > 0) return latin;
+        return name.toLowerCase().replace(/[\s\-_.,!?\u300a\u300b\u3010\u3011\u300c\u300d\u300e\u300f\u3008\u3009\uff08\uff09()\[\]\'"\u00b7\u30fb\u2022\uff5e~]/g, '');
+    };
 
     const levenshtein = (s1, s2) => {
         if (s1.length < s2.length) [s1, s2] = [s2, s1];
@@ -73,7 +79,7 @@
         // TROPICS Dub Style: 【Dub Indonesia】《WITCH WATCH วิทช์วอทช์》｜ตอนที่ 25｜TROPICS ENTERTAINMENT
         const tropicsM = t.match(/【Dub Indonesia】《(.+?)》｜(?:Episode|ตอนที่)\s*(\d+)｜/i);
         if (tropicsM) {
-            const animeName = cleanTitle(tropicsM[1]).replace(/[《》]/g, '').trim();
+            const animeName = cleanTitle(tropicsM[1]).replace(/[《》]/g, ' ').replace(/ {2,}/g, ' ').trim();
             const episode = parseInt(tropicsM[2], 10);
             return [{ animeName: animeName + ' (Dub Indo)', episode, title: t, url, video_id: extractVideoId(url) }];
         }
@@ -90,7 +96,7 @@
         // Generic dub format: handle optional brackets and #N
         const m = t.match(/^(.+?)\s+#(\d+(?:\.\d+)?)/);
         if (m) {
-            let animeName = cleanTitle(m[1]).replace(/[《》]/g, '').trim();
+            let animeName = cleanTitle(m[1]).replace(/[《》]/g, ' ').replace(/ {2,}/g, ' ').trim();
             const episode = parseFloat(m[2]);
             return [{ animeName: animeName + ' (Dub Indo)', episode, title: t, url, video_id: extractVideoId(url) }];
         }
@@ -98,7 +104,7 @@
         // Try a looser fallback: title with " (ID Dub)" style or bracketed dub tags
         const looseM = t.match(/^(.+?)\s*\((?:ID|ID\s*Dub|ID\s*Sub|dub)\)/i);
         if (looseM) {
-            let animeName = cleanTitle(looseM[1]).replace(/[《》]/g, '').trim();
+            let animeName = cleanTitle(looseM[1]).replace(/[《》]/g, ' ').replace(/ {2,}/g, ' ').trim();
             // no episode info -> skip if can't extract episode number
             const epM = t.match(/#(\d+(?:\.\d+)?)/);
             if (!epM) return null;
@@ -131,25 +137,36 @@
         if (isSpecial) animeName += ' (Special)';
         if (isEncore) animeName += ' (Encore)';
 
-        return [{ animeName, episode, title: t, url, video_id: extractVideoId(url) }];
+        return [{ animeName, episode, title: t, url, video_id: extractVideoId(url), _aniOneId: true }];
     };
 
     const parseAniOneAsia = (t, url, block) => {
         if (/^FULL EPISODE/i.test(t)) return null;
+        if (/Highlight/i.test(t)) return null;
 
-        const nameM = t.match(/《(.+?)》/);
-        if (!nameM) return null;
-        let animeName = cleanTitle(nameM[1]);
+        let animeName, episode;
 
-        const epM = t.match(/#(\d+(?:\.\d+)?)/);
-        if (!epM) return null;
-        const episode = parseFloat(epM[1]);
+        const bracketM = t.match(/《(.+?)》/);
+        if (bracketM) {
+            // Standard Ani-One Asia format: 《Title》#N
+            animeName = cleanTitle(bracketM[1]);
+            const epM = t.match(/#(\d+(?:\.\d+)?)/);
+            if (!epM) return null;
+            episode = parseFloat(epM[1]);
+            const between = t.substring(t.indexOf('》') + 1, t.indexOf('#')).trim();
+            const seasonM = between.match(/Season\s+(\d+)/i);
+            if (seasonM) animeName += ` Season ${seasonM[1]}`;
+        } else {
+            // No-bracket format: "Title Arc #N (ENG sub | JP dub)" (e.g. Sengoku Youko S1)
+            // Strip leading/trailing quotation marks then capture name before " #N"
+            const stripped = t.replace(/^[\u201c\u201d"']+|[\u201c\u201d"']+$/g, '').trim();
+            const noM = stripped.match(/^(.+?)\s+#(\d+(?:\.\d+)?)\b/);
+            if (!noM) return null;
+            animeName = cleanTitle(noM[1]);
+            episode   = parseFloat(noM[2]);
+        }
 
-        const betweenNameAndEp = t.substring(t.indexOf('》') + 1, t.indexOf('#')).trim();
-        const seasonM = betweenNameAndEp.match(/Season\s+(\d+)/i);
-        if (seasonM) animeName += ` Season ${seasonM[1]}`;
-
-        // keep same shape, Ani-One Asia treated as marathon in earlier refactor where appropriate
+        if (!animeName || isNaN(episode)) return null;
         return [{ animeName, episode, title: t, url, video_id: extractVideoId(url), is_marathon: true }];
     };
 
@@ -550,8 +567,8 @@
         for (const pair of pairs) {
             const { title, url, rawBlock } = pair;
 
-            // Global Drop Filter: skip explicit English dubs, PVs, and membership (ULTRA)
-            if (/(en\s*dub|en-dub|\bpv\b|ULTRA】)/i.test(title)) continue;
+            // Global Drop Filter: skip English dubs, PVs, membership walls (ULTRA), and members-only content
+            if (/(en\s*dub|en-dub|\bpv\b|ULTRA】|members?\s*only)/i.test(title)) continue;
 
             let parsedArray = null;
 
@@ -600,9 +617,49 @@
 
     // ── 5. Intelligent Grouping ───────────────────────────────────────────────
 
-    const groupVideos = (videos) => {
-        let buckets = [];
+    // ── _malResolver hook ─────────────────────────────────────────────────────
+    // Optional. Set from index.html BEFORE parseMultiple() is called:
+    //   AnimeUpdater.setMalResolver(name => AnimeMetadata.findRecord(name))
+    //
+    // When set, each video is pre-annotated with its MAL ID before bucketing.
+    // groupVideos then merges buckets sharing the same MAL ID (no conflict check
+    // needed — same MAL ID = same show). Fixes:
+    //   • Appraisal Skill: Ani-One Indonesia truncated name ≠ full Ani-One Asia name
+    //   • 多羅羅 ep9 vs Dororo (CJK ↔ Latin alias)
+    // update_data.js never requires metadata.js. Node CLI is unaffected.
+    let _malResolver = null;
+    const setMalResolver = (fn) => { _malResolver = (typeof fn === 'function') ? fn : null; };
 
+    const groupVideos = (videos) => {
+        // ── Phase 1: Annotate videos with MAL ID (video-level, before bucketing) ──
+        // If _malResolver is set, look up each video's animeName in the offline DB.
+        // We stamp only _malId — NOT _dbTitle — on each video.
+        //
+        // Why no _dbTitle: the DB canonical title is often Japanese ("Shiguang
+        // Dailiren", "Tensei Kizoku...") which would override the user-facing
+        // Indonesian channel name chosen later in Phase 5. The _malId is used
+        // exclusively for grouping (Phase 3); the display name always comes from
+        // the raw channel animeName (most-frequent Ani-One Indonesia name).
+        //
+        // Cache by animeName: 14K videos share ~600 unique names. Without a cache,
+        // each call scans 181K titleIndex keys → ~2.7B ops → timeout.
+        if (_malResolver) {
+            const resolverCache = new Map();
+            for (const v of videos) {
+                let malId;
+                if (resolverCache.has(v.animeName)) {
+                    malId = resolverCache.get(v.animeName);
+                } else {
+                    const rec = _malResolver(v.animeName) || null;
+                    malId = rec ? (rec.malId || null) : null;
+                    resolverCache.set(v.animeName, malId);
+                }
+                if (malId) v._malId = malId;
+            }
+        }
+
+        // ── Phase 2: Initial bucketing by normalised name ─────────────────────
+        let buckets = [];
         for (const v of videos) {
             const norm = normalizeForCompare(v.animeName);
             let found = buckets.find(b => b.norm === norm);
@@ -614,7 +671,40 @@
             found.videos.push(v);
         }
 
-        // Fuzzy Merging with conflict threshold
+        // ── Dub/sub bucket detector ───────────────────────────────────────────
+        // A bucket is a "dub" bucket if any of its videos has animeName that ends
+        // with "(Dub Indo)" or equivalent. Dub and sub buckets must NEVER merge —
+        // they are separate cards even when they share a MAL ID or episode range.
+        const bucketIsDub = b =>
+            b.videos.some(v => /\(dub\s*indo\)/i.test(v.animeName));
+
+        // ── Phase 3: MAL-ID merge (only when _malResolver was set) ────────────
+        // Merges buckets that the offline DB identifies as the same show.
+        // IMPORTANT: only merge sub+sub or dub+dub — never cross the dub/sub line.
+        // This lets Ani-One Asia sub fill gaps in Ani-One Indonesia sub (ep 15!)
+        // without accidentally joining dub eps 1-12 with sub eps 13-24.
+        if (_malResolver) {
+            // Separate MAL maps for sub and dub — they never share canonical slots
+            const malMapSub = new Map();
+            const malMapDub = new Map();
+            for (let i = 0; i < buckets.length; i++) {
+                const malId = buckets[i].videos.find(v => v._malId)?._malId;
+                if (!malId) continue;
+                const isDub = bucketIsDub(buckets[i]);
+                const malMap = isDub ? malMapDub : malMapSub;
+                if (!malMap.has(malId)) { malMap.set(malId, i); continue; }
+                const ci = malMap.get(malId);
+                buckets[i].displayNames.forEach(n => buckets[ci].displayNames.add(n));
+                buckets[ci].videos.push(...buckets[i].videos);
+                buckets.splice(i, 1);
+                i--;
+            }
+        }
+
+        // ── Phase 4: Fuzzy merge with conflict threshold ───────────────────────
+        // Bug 2 fix: guard includes() — ''.includes(x) === true always, so CJK
+        // buckets with empty latin-norm would otherwise merge with everything.
+        // Dub/sub guard: never fuzzy-merge a dub bucket with a sub bucket.
         let merged = true;
         while (merged) {
             merged = false;
@@ -622,12 +712,14 @@
                 for (let j = i + 1; j < buckets.length; j++) {
                     const b1 = buckets[i], b2 = buckets[j];
 
-                    // Direct containment OR fuzzy match (within 2 typos)
-                    let isRelated = b1.norm.includes(b2.norm) || b2.norm.includes(b1.norm);
+                    // Never merge dub bucket with sub bucket
+                    if (bucketIsDub(b1) !== bucketIsDub(b2)) continue;
+
+                    let isRelated = b1.norm.length > 0 && b2.norm.length > 0 &&
+                        (b1.norm.includes(b2.norm) || b2.norm.includes(b1.norm));
                     if (!isRelated && Math.abs(b1.norm.length - b2.norm.length) <= 3) {
                         if (levenshtein(b1.norm, b2.norm) <= 2) isRelated = true;
                     }
-
                     if (!isRelated) continue;
 
                     let conflicts = 0;
@@ -635,11 +727,9 @@
                     for (const v2 of b2.videos) {
                         if (epSet.has(v2.episode)) conflicts++;
                     }
-
                     if (conflicts < 2) {
                         b2.displayNames.forEach(name => b1.displayNames.add(name));
                         b1.videos.push(...b2.videos);
-                        // Pick the shortest normalized name as the representative
                         b1.norm = b1.norm.length < b2.norm.length ? b1.norm : b2.norm;
                         buckets.splice(j, 1);
                         merged = true;
@@ -650,22 +740,68 @@
             }
         }
 
+        // ── Phase 5: Build finalMap — canonical name + dedup ─────────────────
+        // ── Phase 5: Build finalMap — canonical name + dedup ─────────────────
         const finalMap = new Map();
         for (const b of buckets) {
-            const namesArr = Array.from(b.displayNames);
-            namesArr.sort((a, b) => a.length - b.length);
-            const bestName = namesArr[0];
-
-            const uniqueVideos = new Map();
+            // Name priority:
+            //   1. Offline DB canonical title (from MAL pre-annotation) — never truncated
+            //   2. First Ani-One Indonesia video's animeName — preferred regional name
+            //   3. Shortest displayName — legacy fallback
+            // ── Name selection ───────────────────────────────────────────────
+            // Priority:
+            //   1. Most-frequent Ani-One Indonesia animeName (_aniOneId flag)
+            //      - Frequency vote fixes minority variants (Shoshimin ep1 no-colon
+            //        loses to ep2-22 with colon; 多羅羅 ep9 loses to 23 Dororo eps)
+            //   2. Most-common displayName overall (fallback for non-Ani-One ID sources)
+            //
+            // _dbTitle is intentionally NOT used here. DB canonical titles are often
+            // Japanese ("Shiguang Dailiren", "Tensei Kizoku...") which would replace
+            // the user-facing Indonesian channel names. _malId is used only for
+            // grouping (Phase 3); the display name always comes from the raw data.
+            const aniOneFreq = new Map();
             for (const v of b.videos) {
-                const dedupKey = v.start_seconds !== undefined ? `${v.video_id}_ep${v.episode}` : v.video_id;
-                if (!uniqueVideos.has(dedupKey)) uniqueVideos.set(dedupKey, v);
+                if (!v._aniOneId) continue;
+                aniOneFreq.set(v.animeName, (aniOneFreq.get(v.animeName) || 0) + 1);
             }
-            finalMap.set(bestName, uniqueVideos);
+            const aniOneIdName = aniOneFreq.size > 0
+                ? [...aniOneFreq.entries()].sort((a, b) => b[1] - a[1])[0][0]
+                : null;
+
+            // Most-common displayName fallback (frequency, not length)
+            const nameFreq = new Map();
+            for (const v of b.videos) nameFreq.set(v.animeName, (nameFreq.get(v.animeName) || 0) + 1);
+            const mostCommon = [...nameFreq.entries()].sort((a, b) => b[1] - a[1])[0]?.[0]
+                            || Array.from(b.displayNames)[0];
+
+            const bestName = aniOneIdName || mostCommon;
+
+            // Dedup by video_id. When NO episode conflict (multiple sources for
+            // the same episode number), prefer Ani-One Indonesia video for that slot.
+            const uniqueVideos = new Map();
+            // Pass 1: Ani-One Indonesia gets priority slots
+            for (const v of b.videos) {
+                if (!v._aniOneId) continue;
+                const k = v.start_seconds !== undefined ? `${v.video_id}_ep${v.episode}` : v.video_id;
+                if (!uniqueVideos.has(k)) uniqueVideos.set(k, v);
+            }
+            // Pass 2: fill remaining slots from other sources
+            for (const v of b.videos) {
+                const k = v.start_seconds !== undefined ? `${v.video_id}_ep${v.episode}` : v.video_id;
+                if (!uniqueVideos.has(k)) uniqueVideos.set(k, v);
+            }
+            // Strip internal flags before storing
+            const cleanVideos = new Map();
+            for (const [k, v] of uniqueVideos) {
+                const { _malId, _dbTitle, _aniOneId, ...rest } = v;
+                cleanVideos.set(k, rest);
+            }
+            finalMap.set(bestName, cleanVideos);
         }
 
         return finalMap;
     };
+
 
     const parseMultiple = (contentArray) => {
         // Process each file separately to preserve format detection
@@ -840,11 +976,30 @@
     };
 
     // ── Node.js auto-run ──────────────────────────────────────────────────────
+    //
+    // Supports two invocation styles:
+    //   1. node update_data.js              — __dirname = script folder
+    //   2. curl -sL .../update_data.js | node — __dirname is undefined (stdin)
+    //      Falls back to process.cwd() so the script reads filtered*.txt from
+    //      whichever directory you ran curl from.
+    //
+    // Optional metadata.js integration (MAL resolver):
+    //   If metadata.js exists in the same directory, the script loads it and
+    //   calls setMalResolver so groupVideos can merge buckets by MAL ID.
+    //   metadata.js handles its own DB loading (local file → GitHub download).
+    //   If metadata.js is unavailable or its DB load fails, parsing continues
+    //   without the resolver (standard fuzzy grouping only).
 
     if (typeof require !== 'undefined' && typeof module !== 'undefined' && require.main === module) {
-        const fs = require('fs');
+        const fs   = require('fs');
         const path = require('path');
-        const DIR = __dirname;
+
+        // __dirname is undefined when piped via stdin (curl | node).
+        // Fall back to process.cwd() so relative paths still resolve.
+        const DIR = (typeof __dirname !== 'undefined' && __dirname)
+            ? __dirname
+            : process.cwd();
+
         const JSON_FILE = path.join(DIR, 'anime_data.json');
 
         const txtFiles = fs.readdirSync(DIR)
@@ -865,33 +1020,75 @@
             return fs.readFileSync(f, 'utf8');
         });
 
-        const combinedGroups = parseMultiple(contents);
-        console.log('Parsed ' + combinedGroups.size + ' unique anime series.');
+        // ── Try to load metadata.js as MAL resolver ───────────────────────────
+        // metadata.js is a sibling UMD module. We attempt to require it, ask it
+        // to load the offline DB (with its own local→GitHub fallback), then wire
+        // it up as the resolver. If anything fails we log a warning and continue
+        // without the resolver.
+        const metaPath = path.join(DIR, 'metadata.js');
+        const _run = async () => {
+            let resolverReady = false;
 
-        let existingData = null;
-        if (fs.existsSync(JSON_FILE)) {
-            existingData = JSON.parse(fs.readFileSync(JSON_FILE, 'utf8'));
-            console.log('Loaded existing JSON: ' + existingData.anime_list.length + ' entries.');
-        } else {
-            console.log('No existing anime_data.json — creating fresh.');
-        }
+            if (fs.existsSync(metaPath)) {
+                try {
+                    const Meta = require(metaPath);
+                    console.log('[MAL] metadata.js found — loading offline DB...');
+                    await new Promise((resolve, reject) => {
+                        // loadOfflineDb accepts a logCallback and returns a Promise.
+                        // We pass a simple logger and give it 120 s to download.
+                        const timer = setTimeout(() => reject(new Error('timeout')), 120000);
+                        Meta.loadOfflineDb(msg => process.stdout.write('  ' + msg + '\n'))
+                            .then(db => { clearTimeout(timer); resolve(db); })
+                            .catch(err => { clearTimeout(timer); reject(err); });
+                    });
+                    // Wire up resolver. findRecord returns {malId, ...} or null.
+                    setMalResolver(name => Meta.findRecord(name));
+                    resolverReady = true;
+                    console.log('[MAL] Resolver active — grouping with MAL-ID merge.');
+                } catch(e) {
+                    console.warn('[MAL] metadata.js load failed (' + e.message + ') — using standard grouping.');
+                }
+            } else {
+                console.log('[MAL] metadata.js not found in ' + DIR + ' — using standard grouping.');
+            }
 
-        const existingMap = existingData
-            ? new Map(existingData.anime_list.map(e => [e.name, e]))
-            : new Map();
+            // ── Parse and merge ───────────────────────────────────────────────
+            const combinedGroups = parseMultiple(contents);
+            console.log('Parsed ' + combinedGroups.size + ' unique anime series.');
 
-        const result = mergeData(existingData, combinedGroups);
-        const data = result.data, stats = result.stats;
+            if (resolverReady) {
+                // After parsing with resolver active, clear it so future require()
+                // calls (if any) start fresh.
+                setMalResolver(null);
+            }
 
-        combinedGroups.forEach((_, name) => { if (!existingMap.has(name)) console.log('  + ADD: ' + name); });
-        existingMap.forEach((_, name) => { if (!combinedGroups.has(name)) console.log('  - REMOVE: ' + name); });
+            let existingData = null;
+            if (fs.existsSync(JSON_FILE)) {
+                existingData = JSON.parse(fs.readFileSync(JSON_FILE, 'utf8'));
+                console.log('Loaded existing JSON: ' + existingData.anime_list.length + ' entries.');
+            } else {
+                console.log('No existing anime_data.json — creating fresh.');
+            }
 
-        fs.writeFileSync(JSON_FILE, JSON.stringify(data, null, 2), 'utf8');
-        const totalEps = data.anime_list.reduce((s, a) => s + a.episode_count, 0);
-        console.log('\nDone! anime_data.json updated.');
-        console.log('  Series: ' + data.total_series + ' | Episodes: ' + totalEps);
-        console.log('  Added: ' + stats.added + ' | Updated: ' + stats.updated + ' | Removed: ' + stats.removed);
+            const existingMap = existingData
+                ? new Map(existingData.anime_list.map(e => [e.name, e]))
+                : new Map();
+
+            const result = mergeData(existingData, combinedGroups);
+            const data = result.data, stats = result.stats;
+
+            combinedGroups.forEach((_, name) => { if (!existingMap.has(name)) console.log('  + ADD: ' + name); });
+            existingMap.forEach((_, name) => { if (!combinedGroups.has(name)) console.log('  - REMOVE: ' + name); });
+
+            fs.writeFileSync(JSON_FILE, JSON.stringify(data, null, 2), 'utf8');
+            const totalEps = data.anime_list.reduce((s, a) => s + a.episode_count, 0);
+            console.log('\nDone! anime_data.json updated.');
+            console.log('  Series: ' + data.total_series + ' | Episodes: ' + totalEps);
+            console.log('  Added: ' + stats.added + ' | Updated: ' + stats.updated + ' | Removed: ' + stats.removed);
+        };
+
+        _run().catch(e => { console.error('Fatal:', e.message); process.exit(1); });
     }
 
-    return { parseContent, parseMultiple, mergeData, buildEntry, saveLocal, loadLocal, loadData, saveData };
+    return { parseContent, parseMultiple, mergeData, buildEntry, saveLocal, loadLocal, loadData, saveData, setMalResolver };
 }));

@@ -46,7 +46,8 @@
     // ── Storage ───────────────────────────────────────────────────────
     if (isNode) {
         const fs = require('fs'), path = require('path');
-        const CACHE_FILE = path.join(__dirname, 'metadata.json');
+        const _baseDir   = (typeof __dirname !== 'undefined' && __dirname) ? __dirname : process.cwd();
+        const CACHE_FILE = path.join(_baseDir, 'metadata.json');
         let cacheData = {};
         if (fs.existsSync(CACHE_FILE)) {
             try { cacheData = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8')); } catch(e) {}
@@ -186,7 +187,9 @@
 
             if (isNode) {
                 const fs = require('fs'), path = require('path');
-                const localPath = path.join(__dirname, 'anime-offline-database-minified.json');
+                // __dirname is undefined when piped via stdin (curl | node)
+                const _dir = (typeof __dirname !== 'undefined' && __dirname) ? __dirname : process.cwd();
+                const localPath = path.join(_dir, 'anime-offline-database-minified.json');
 
                 if (fs.existsSync(localPath)) {
                     try {
@@ -236,21 +239,48 @@
                 return download(GITHUB_DB);
             }
 
-            // Browser
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', LOCAL_DB, true);
-            xhr.responseType = 'json';
-            xhr.onprogress = e => { if (onProgress) onProgress(e.loaded, e.lengthComputable ? e.total : 61000000); };
-            xhr.onload = () => {
-                if (xhr.status !== 200) return reject(new Error('HTTP ' + xhr.status));
-                offlineDb = xhr.response?.data || xhr.response;
-                if (!Array.isArray(offlineDb)) return reject(new Error('Format tidak valid'));
-                buildIndex(offlineDb);
-                logCallback(`[SUCCESS] ${offlineDb.length} entri, ${titleIndex.size} judul.`);
-                resolve(offlineDb);
+            // Browser: try relative dir, then db/ subfolder, then ask user to upload
+            const BROWSER_PATHS = [
+                './anime-offline-database-minified.json',           // same folder as index.html
+                './db/anime-offline-database-minified.json',        // db/ subfolder
+            ];
+            const tryNext = (paths, idx) => {
+                if (idx >= paths.length) {
+                    // All paths failed — tell user to upload the file manually
+                    return reject(new Error(
+                        'File anime-offline-database-minified.json tidak ditemukan. ' +
+                        'Letakkan di folder yang sama dengan index.html atau di subfolder db/, ' +
+                        'atau gunakan tombol Upload DB untuk mengunggahnya secara manual.'
+                    ));
+                }
+                const url = paths[idx];
+                logCallback('[INFO] Mencoba: ' + url);
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', url, true);
+                xhr.responseType = 'json';
+                xhr.onprogress = e => { if (onProgress) onProgress(e.loaded, e.lengthComputable ? e.total : 61000000); };
+                xhr.onload = () => {
+                    if (xhr.status !== 200) {
+                        logCallback('[WARN] Tidak ditemukan di ' + url + ' — mencoba lokasi berikutnya...');
+                        return tryNext(paths, idx + 1);
+                    }
+                    const parsed = xhr.response?.data || xhr.response;
+                    if (!Array.isArray(parsed)) {
+                        logCallback('[WARN] Format tidak valid di ' + url + ' — mencoba lokasi berikutnya...');
+                        return tryNext(paths, idx + 1);
+                    }
+                    offlineDb = parsed;
+                    buildIndex(offlineDb);
+                    logCallback('[SUCCESS] Dimuat dari ' + url + ': ' + offlineDb.length + ' entri, ' + titleIndex.size + ' judul.');
+                    resolve(offlineDb);
+                };
+                xhr.onerror = () => {
+                    logCallback('[WARN] Error jaringan di ' + url + ' — mencoba lokasi berikutnya...');
+                    tryNext(paths, idx + 1);
+                };
+                xhr.send();
             };
-            xhr.onerror = () => reject(new Error('Network Error — jalankan: python -m http.server 8000'));
-            xhr.send();
+            tryNext(BROWSER_PATHS, 0);
         });
     };
 
@@ -617,17 +647,25 @@
         return out;
     };
 
-    // ── In-memory metadata snapshot ───────────────────────────────────────
-    // Populated by loadMetadataJson(). NEVER written to localStorage.
-    // This mirrors how index.html treats anime_data.json when loaded from
-    // the server without AnimeUpdater: loaded fresh each session, held only
-    // in RAM, gone on page close.
+    // ── In-memory metadata stores ─────────────────────────────────────────
+    //
+    // Priority 1 — localStorage (meta_<N>):
+    //   Written ONLY by Jikan on-demand fetch (player page opens an anime).
+    //   Contains curated TitleCase tags + synopsis + demographics.
+    //   Phase1 in BROWSER never writes here — only RAM.
+    //   Node CLI phase1 writes to LS to build metadata.json.
+    //
+    // Priority 2 — _inMemoryMeta  { LS_PREFIX+animeName → metadata }:
+    //   Loaded from server metadata.json (or browser RAM phase1 result).
+    //   Never written to localStorage — gone on page close.
+    //
+    // Priority 3 — titleIndex (offline DB in RAM):
+    //   Built by loadOfflineDb() / setupMetadata. Available to enrichAnimeList
+    //   AND to setMalResolver so update_data.js can pre-annotate videos.
     let _inMemoryMeta = null;
 
     // ── loadMetadataJson ──────────────────────────────────────────────────
-    // Browser-only. Fetches metadata.json from the relative server path.
-    // Populates _inMemoryMeta only — never touches localStorage.
-    // Returns true if data was successfully loaded.
+    // Browser-only. Fetches metadata.json → _inMemoryMeta (RAM, no LS write).
     const loadMetadataJson = async () => {
         if (isNode) return false;
         try {
@@ -641,27 +679,55 @@
     };
 
     // ── enrichAnimeList ───────────────────────────────────────────────────
-    // Attaches allTitles[] and normalised tags[] to each anime object.
-    // Per-entry lookup priority:
-    //   1. localStorage (meta_<name>) — written by batchProcess / Node run
-    //   2. _inMemoryMeta — loaded from server metadata.json (no LS write)
-    // Returns a new array; does not mutate the input.
-    // Sets enrichAnimeList.lastCount = number of entries that had metadata.
+    // Attaches allTitles[] and tags[] to every anime.
+    //
+    // Per-entry priority (ALWAYS checked independently — no list-level short-circuit):
+    //   1. localStorage  — Jikan curated TitleCase tags + synopsis
+    //   2. _inMemoryMeta — metadata.json (or browser RAM phase1)
+    //   3. titleIndex    — offline DB in RAM (built by setupMetadata)
+    //
+    // IMPORTANT: having even 1 LS entry must NOT block other entries from
+    // getting priority-2/3 data. The OLD bug was a list-level early-return in
+    // setupMetadata ("if any LS entry → return"). Fixed: setupMetadata now
+    // always loads ALL RAM sources; enrichAnimeList checks them per-entry.
     const enrichAnimeList = list => {
         let count = 0;
         const result = list.map(a => {
             try {
                 const key = LS_PREFIX + a.name;
-                let m = null;
+
+                // P1: localStorage (Jikan, written when user visits player page)
+                let lsData = null;
                 if (storage) {
                     const raw = storage.getItem(key);
-                    if (raw) m = JSON.parse(raw);
+                    if (raw) lsData = JSON.parse(raw);
                 }
-                if (!m && _inMemoryMeta && _inMemoryMeta[key]) m = _inMemoryMeta[key];
-                if (m && !m.not_found && (m.allTitles?.length || m.tags?.length)) {
-                    count++;
-                    return { ...a, allTitles: m.allTitles || [], tags: normalizeTags(m.tags || []) };
-                }
+                const lsOk = lsData && !lsData.not_found;
+
+                // P2: _inMemoryMeta (metadata.json loaded by setupMetadata)
+                const memData = _inMemoryMeta?.[key] || null;
+                const memOk   = memData && !memData.not_found;
+
+                // P3: titleIndex — offline DB already in RAM
+                const dbRec = titleIndex.size > 0 ? (findRecord(a.name) || null) : null;
+                const dbOk  = dbRec && !dbRec.not_found;
+
+                if (!lsOk && !memOk && !dbOk) return { ...a, allTitles: [], tags: [] };
+                count++;
+
+                // Tags: Jikan TitleCase wins over offline DB lowercase
+                let tags = [];
+                if      (lsOk  && lsData.tags?.length)  tags = lsData.tags;
+                else if (memOk && memData.tags?.length)  tags = memData.tags;
+                else if (dbOk  && dbRec.tags?.length)    tags = dbRec.tags;
+
+                // allTitles: offline DB has most synonyms (all languages)
+                let allTitles = [];
+                if      (dbOk  && dbRec.allTitles?.length)   allTitles = dbRec.allTitles;
+                else if (memOk && memData.allTitles?.length)  allTitles = memData.allTitles;
+                else if (lsOk  && lsData.allTitles?.length)  allTitles = lsData.allTitles;
+
+                return { ...a, allTitles, tags: normalizeTags(tags) };
             } catch(e) {}
             return { ...a, allTitles: [], tags: [] };
         });
@@ -670,41 +736,89 @@
     };
 
     // ── setupMetadata ─────────────────────────────────────────────────────
-    // Browser-only coordinator. Runs the metadata priority chain once per
-    // page load (before enrichAnimeList is called):
-    //   1. localStorage  — instant, already populated from a previous run
-    //   2. metadata.json — server file → _inMemoryMeta (no LS write)
-    //   3. batchProcess  — offline DB match in browser (writes to LS)
+    // Browser-only coordinator. Called once on page load.
+    //
+    // OLD BUG: returned early if ANY localStorage entry existed, so priority
+    // 2 (metadata.json) and 3 (offline DB) never loaded into RAM. New anime
+    // added since last Jikan run had no tags or synonyms.
+    //
+    // FIX: ALWAYS load both RAM sources regardless of LS state.
+    //   setupMetadata loads priority 2 + 3 into RAM.
+    //   enrichAnimeList picks LS > _inMemoryMeta > titleIndex per-entry.
+    //   Jikan on-demand (fetchJikanForAnime) writes to LS for that one anime.
     const setupMetadata = async animeList => {
         if (isNode) return;
 
-        // 1. localStorage already populated?
-        const hasLocal = animeList.some(a => {
-            try { return !!storage?.getItem(LS_PREFIX + a.name); } catch(e) { return false; }
-        });
-        if (hasLocal) {
-            console.log('[Metadata] Using cached localStorage data');
-            return;
-        }
-
-        // 2. Fetch metadata.json → in-memory only, no LS write
+        // Priority 2: always load metadata.json → _inMemoryMeta
         const loaded = await loadMetadataJson();
-        if (loaded) {
-            console.log('[Metadata] Loaded from server metadata.json (in-memory, no LS write)');
-            return;
+        console.log(loaded
+            ? '[Metadata] metadata.json → RAM (P2 active, ' + Object.keys(_inMemoryMeta).length + ' entries)'
+            : '[Metadata] metadata.json not available');
+
+        // Priority 3: always load offline DB → titleIndex
+        // Used by enrichAnimeList P3 AND by setMalResolver in update_data.js.
+        // If offline DB unavailable, gracefully skip — site still works via P1+P2.
+        if (!offlineDb) {
+            try {
+                await loadOfflineDb(() => {});
+                console.log('[Metadata] Offline DB → RAM (P3 active, ' + titleIndex.size + ' title keys)');
+            } catch(e) {
+                console.warn('[Metadata] Offline DB unavailable (place anime-offline-database-minified.json alongside):', e.message);
+            }
+        }
+        // P1 (localStorage) is read per-entry in enrichAnimeList — no batch needed here.
+        // New anime not in metadata.json get P3 coverage from titleIndex.
+    };
+
+    // ── fetchJikanForAnime ────────────────────────────────────────────────
+    // On-demand Jikan fetch for ONE anime. Call from player.html when an
+    // anime is opened (NOT from setupMetadata — no batch fetching).
+    //
+    // Writes to localStorage — overwrites phase1/metadata.json tags with
+    // curated TitleCase Jikan tags + adds synopsis + demographics.
+    // Returns the stored data object, or null on failure.
+    const fetchJikanForAnime = async (animeName) => {
+        if (isNode) return null;
+        const key = LS_PREFIX + animeName;
+
+        // Already have full Jikan data?
+        if (storage) {
+            const raw = storage.getItem(key);
+            if (raw) {
+                const d = JSON.parse(raw);
+                if (d.synopsis !== undefined) return d;  // already fetched
+            }
         }
 
-        // 3. Browser-side offline DB match (writes to LS for next visit)
+        // Find MAL ID — titleIndex first (loaded by setupMetadata), LS fallback
+        let malId = null;
+        const rec = titleIndex.size > 0 ? findRecord(animeName) : null;
+        if (rec) malId = rec.malId;
+        if (!malId && storage) {
+            const raw = storage.getItem(key);
+            if (raw) { const d = JSON.parse(raw); malId = d.malId || null; }
+        }
+        if (!malId && _inMemoryMeta?.[key]) malId = _inMemoryMeta[key].malId || null;
+        if (!malId) return null;
+
         try {
-            await batchProcess(
-                animeList,
-                { onLog: () => {}, onStatus: s => console.log('[Metadata]', s), onProgress: () => {} },
-                'phase1'
-            );
-            console.log('[Metadata] Browser phase1 complete');
+            const jikan = await fetchJikan(malId);
+            if (!jikan) return null;
+            // Merge with any existing P2/P3 data for allTitles/score
+            const base = rec || (_inMemoryMeta?.[key]) || {};
+            const toStore = {
+                malId,
+                tags:         jikan.tags         ?? base.tags         ?? [],
+                allTitles:    base.allTitles      ?? [],
+                score:        base.score          ?? null,
+                synopsis:     jikan.synopsis      ?? null,
+                demographics: jikan.demographics  ?? [],
+            };
+            if (storage) storage.setItem(key, JSON.stringify(toStore));
+            return toStore;
         } catch(e) {
-            console.warn('[Metadata] Phase1 failed:', e.message,
-                '— place anime-offline-database-minified.json in the same folder');
+            console.warn('[Metadata] Jikan failed for', animeName, ':', e.message);
+            return null;
         }
     };
 
@@ -723,5 +837,5 @@
 
     return { loadOfflineDb, getMetadata, batchProcess, findMalId, findRecord, clearAll,
              normalizeTag, normalizeTags, enrichAnimeList, loadMetadataJson, setupMetadata,
-             injectOfflineDb };
+             fetchJikanForAnime, injectOfflineDb };
 }));

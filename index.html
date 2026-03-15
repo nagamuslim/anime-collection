@@ -654,7 +654,15 @@
                     }
                     if (contents.length === 0) { status.textContent = '\u274c Tidak ada file .txt di dalam ZIP.'; return; }
                     status.textContent = 'Memproses ' + contents.length + ' file...';
+                    // 1. Before parsing: set the resolver
+                    if (typeof AnimeMetadata !== 'undefined' && typeof AnimeUpdater !== 'undefined') {
+                        AnimeUpdater.setMalResolver(name => AnimeMetadata.findRecord(name));
+                    }
+
                     const groups   = AnimeUpdater.parseMultiple(contents);
+
+                    // 2. After parsing: clear it
+                    if (typeof AnimeUpdater !== 'undefined') AnimeUpdater.setMalResolver(null);
                     const existing = AnimeUpdater.loadLocal() || (animeData.length ? { anime_list: Object.values(currentAnimeRaw) } : null);
                     let finalGroups = groups;
                     if (existing?.anime_list?.length > 0) {
@@ -731,3 +739,4 @@
         setupUpdater();
     </script>
 </body>
+</html>
