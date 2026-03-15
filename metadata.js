@@ -38,6 +38,7 @@
     const isNode     = typeof process !== 'undefined' && process.versions && process.versions.node;
     const LOCAL_DB   = './anime-offline-database-minified.json';
     const GITHUB_DB  = 'https://github.com/manami-project/anime-offline-database/releases/latest/download/anime-offline-database-minified.json';
+    const SHARED_DB  = 'https://raw.githubusercontent.com/nagamuslim/shared/main/anime-offline-database-minified.json';
 
     let offlineDb  = null;
     let titleIndex = new Map();  // cleanedTitle → record
@@ -241,8 +242,9 @@
 
             // Browser: try relative dir, then db/ subfolder, then ask user to upload
             const BROWSER_PATHS = [
-                './anime-offline-database-minified.json',           // same folder as index.html
-                './db/anime-offline-database-minified.json',        // db/ subfolder
+                './anime-offline-database-minified.json',
+                './db/anime-offline-database-minified.json',
+                SHARED_DB, // Your private repository fallback
             ];
             const tryNext = (paths, idx) => {
                 if (idx >= paths.length) {
