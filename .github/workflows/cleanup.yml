@@ -1,0 +1,32 @@
+name: Surgical Repo Cleanup
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Git Cleanup
+        run: |
+          git config user.name "nagamuslim"
+          git config user.email "93864268+nagamuslim@users.noreply.github.com"
+          
+          # Remove ALL traces of submodules
+          git rm -rf --cached shared_db || true
+          git rm -rf --cached db || true
+          rm -f .gitmodules || true
+          
+          # Re-initialize the correct one
+          git submodule add https://github.com/nagamuslim/shared.git db
+          
+          git add .
+          git commit -m "Surgical Fix: Clean submodules and re-initiate db" || echo "No changes"
+          git push origin main
