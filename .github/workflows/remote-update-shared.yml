@@ -29,7 +29,7 @@ jobs:
           # 3. Create clean git history
           git init
           git checkout -b main
-          git add anime-offline-database-minified.json
+          git add anime-offline-database-minified.json anime-offline-database-minified.zip
           git commit -m "Auto-update database: $(date +%F)"
           
           # 4. TRICK: Embed the token DIRECTLY into the URL so Git has permission to push!
