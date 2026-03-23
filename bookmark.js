@@ -353,3 +353,126 @@ var ContinueWatching = (function () {
 
     return { initIndex: initIndex, initPlayer: initPlayer, stopPlayer: stopPlayer };
 }());
+
+
+// ══════════════════════════════════════════════════════════════════════
+// 3. SPA Router  —  opt-in via  spa="1"  attribute on the script tag
+//
+//    Legacy mode (no change needed):
+//      <script src="bookmark.js" onerror="void 0"></script>
+//
+//    SPA mode (one attribute added):
+//      <script src="bookmark.js" spa="1" onerror="void 0"></script>
+//
+//    Works on ALL three pages (index, player, bookmark) because this
+//    file is already the only script loaded on every page.
+//
+//    Optional one-liner in player.html (add AFTER stopTimeObserver def):
+//      window.__spaStopTimeObserver = stopTimeObserver;
+//    That prevents the 3-second time-observer interval from leaking
+//    when the user navigates away mid-episode.
+// ══════════════════════════════════════════════════════════════════════
+(function () {
+    'use strict';
+
+    // ── Guard: only initialise the router once per real page load ──────────
+    // bookmark.js is re-executed by the router on every SPA navigation,
+    // so without this guard the listeners would stack up.
+    if (window.__spaInitialized) return;
+
+    // ── Check for opt-in attribute ─────────────────────────────────────────
+    // document.currentScript points to THIS <script> element while executing.
+    var me = document.currentScript ||
+             (document.querySelector('script[src*="bookmark.js"]'));
+    if (!me || !me.hasAttribute('spa')) return;
+
+    // ── Initialise ─────────────────────────────────────────────────────────
+    window.__spaInitialized = true;
+
+    // Seed with CDN scripts already present on the initial page load.
+    // These are skipped on every subsequent navigation (their globals persist).
+    window.__spaLoadedCdn = new Set(
+        [].slice.call(document.querySelectorAll('script[src]'))
+            .map(function (s) { return new URL(s.getAttribute('src'), location.href).href; })
+            .filter(function (u) { return /(?:cdnjs\.cloudflare\.com|cdn\.jsdelivr\.net|youtube\.com)/.test(u); })
+    );
+
+    // ── Click interceptor ──────────────────────────────────────────────────
+    document.addEventListener('click', function (e) {
+        var a = e.target.closest('a');
+        if (!a) return;
+        if (a.host !== location.host) return;
+        if (a.hasAttribute('download') || a.target === '_blank') return;
+        e.preventDefault();
+        var url = a.href;
+        if (url === location.href) return;
+        history.pushState({}, '', url);
+        _spaNavigate(url);
+    });
+
+    // ── Back / Forward buttons ─────────────────────────────────────────────
+    window.addEventListener('popstate', function () { _spaNavigate(location.href); });
+
+    // ── Core navigation ────────────────────────────────────────────────────
+    function _spaNavigate(url) {
+
+        // 1. Cleanup intervals before leaving current page
+        if (typeof ContinueWatching !== 'undefined') ContinueWatching.stopPlayer();
+        if (typeof window.__spaStopTimeObserver === 'function') {
+            window.__spaStopTimeObserver();
+            window.__spaStopTimeObserver = null;
+        }
+
+        fetch(url)
+            .then(function (res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.text();
+            })
+            .then(function (html) {
+                var doc = new DOMParser().parseFromString(html, 'text/html');
+
+                // 2. Swap page content
+                document.title = doc.title;
+                document.body.innerHTML = doc.body.innerHTML;
+
+                // 3. Re-execute scripts
+                var scripts = document.body.querySelectorAll('script');
+                [].forEach.call(scripts, function (old) {
+                    var rawSrc = old.getAttribute('src');
+                    var absSrc = rawSrc ? new URL(rawSrc, location.href).href : null;
+                    var isCdn  = absSrc && /(?:cdnjs\.cloudflare\.com|cdn\.jsdelivr\.net|youtube\.com)/.test(absSrc);
+
+                    // Skip already-loaded CDN libraries (Fuse, JSZip, YT API…)
+                    if (isCdn && window.__spaLoadedCdn.has(absSrc)) {
+                        old.remove();
+                        return;
+                    }
+
+                    var fresh = document.createElement('script');
+                    [].forEach.call(old.attributes, function (attr) {
+                        fresh.setAttribute(attr.name, attr.value);
+                    });
+                    if (!absSrc) fresh.textContent = old.textContent; // inline script
+                    if (isCdn) window.__spaLoadedCdn.add(absSrc);
+                    old.replaceWith(fresh);
+                });
+
+                // 4. Re-trigger YT API if already loaded (critical for player.html)
+                // The YT script fires onYouTubeIframeAPIReady only ONCE per real
+                // page load. On SPA revisits to player.html the inline script resets
+                // ytApiReady=false but YT never fires the callback again.
+                // We call it ourselves when YT is already ready.
+                if (typeof window.onYouTubeIframeAPIReady === 'function' &&
+                    typeof YT !== 'undefined' && typeof YT.Player === 'function') {
+                    setTimeout(window.onYouTubeIframeAPIReady, 0);
+                }
+
+                window.scrollTo(0, 0);
+            })
+            .catch(function (err) {
+                console.error('[bookmark.js/spa] Navigation failed, hard reload:', err);
+                location.assign(url);
+            });
+    }
+
+}());

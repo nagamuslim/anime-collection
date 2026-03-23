@@ -38,10 +38,17 @@
     const isNode     = typeof process !== 'undefined' && process.versions && process.versions.node;
     const LOCAL_DB   = './anime-offline-database-minified.json';
     const GITHUB_DB  = 'https://github.com/manami-project/anime-offline-database/releases/latest/download/anime-offline-database-minified.json';
-    const SHARED_DB  = 'https://raw.githubusercontent.com/nagamuslim/shared/main/anime-offline-database-minified.json';
 
-    let offlineDb  = null;
-    let titleIndex = new Map();  // cleanedTitle → record
+    // ── RAM persistence across SPA re-execution ───────────────────────
+    // metadata.js is re-executed on every SPA navigation. Module-level lets
+    // would reset to null each time, forcing a re-fetch of the 60MB DB.
+    // Storing on window survives re-execution — DB is only ever loaded once.
+    const _winMeta = (typeof window !== 'undefined')
+        ? (window.__animeMeta = window.__animeMeta || { db: null, index: new Map() })
+        : { db: null, index: new Map() };
+    let offlineDb  = _winMeta.db;
+    let titleIndex = _winMeta.index;  // cleanedTitle → record
+    const _setDb = arr => { offlineDb = arr; _winMeta.db = arr; };
     let storage    = null;
 
     // ── Storage ───────────────────────────────────────────────────────
@@ -240,41 +247,75 @@
                 return download(GITHUB_DB);
             }
 
-            // Browser: try relative dir, then db/ subfolder, then ask user to upload
+            // Browser: try JSON (root), then ZIP (root + db/), then JSON (db/)
             const BROWSER_PATHS = [
                 './anime-offline-database-minified.json',
+                './anime-offline-database-minified.zip',
+                './db/anime-offline-database-minified.zip',
                 './db/anime-offline-database-minified.json',
-                SHARED_DB, // Your private repository fallback
             ];
+
+            // Extract JSON array from a ZIP arraybuffer using JSZip (already loaded by index.html)
+            const extractZipDb = async (arrayBuffer) => {
+                if (typeof JSZip === 'undefined') throw new Error('JSZip tidak tersedia — coba refresh halaman.');
+                const zip = await JSZip.loadAsync(arrayBuffer);
+                for (const [name, entry] of Object.entries(zip.files)) {
+                    if (!entry.dir && /anime-offline-database.*\.json$/i.test(name)) {
+                        const text = await entry.async('text');
+                        const parsed = JSON.parse(text);
+                        return parsed.data || parsed;
+                    }
+                }
+                throw new Error('File JSON tidak ditemukan di dalam ZIP.');
+            };
+
             const tryNext = (paths, idx) => {
                 if (idx >= paths.length) {
                     // All paths failed — tell user to upload the file manually
                     return reject(new Error(
-                        'File anime-offline-database-minified.json tidak ditemukan. ' +
+                        'File anime-offline-database-minified.json/.zip tidak ditemukan. ' +
                         'Letakkan di folder yang sama dengan index.html atau di subfolder db/, ' +
                         'atau gunakan tombol Upload DB untuk mengunggahnya secara manual.'
                     ));
                 }
-                const url = paths[idx];
+                const url   = paths[idx];
+                const isZip = /\.zip$/i.test(url);
                 logCallback('[INFO] Mencoba: ' + url);
                 const xhr = new XMLHttpRequest();
                 xhr.open('GET', url, true);
-                xhr.responseType = 'json';
+                xhr.responseType = isZip ? 'arraybuffer' : 'json';
                 xhr.onprogress = e => { if (onProgress) onProgress(e.loaded, e.lengthComputable ? e.total : 61000000); };
                 xhr.onload = () => {
                     if (xhr.status !== 200) {
                         logCallback('[WARN] Tidak ditemukan di ' + url + ' — mencoba lokasi berikutnya...');
                         return tryNext(paths, idx + 1);
                     }
-                    const parsed = xhr.response?.data || xhr.response;
-                    if (!Array.isArray(parsed)) {
-                        logCallback('[WARN] Format tidak valid di ' + url + ' — mencoba lokasi berikutnya...');
-                        return tryNext(paths, idx + 1);
+                    if (isZip) {
+                        // ZIP path: decompress then parse JSON inside
+                        extractZipDb(xhr.response)
+                            .then(arr => {
+                                if (!Array.isArray(arr)) throw new Error('Format tidak valid');
+                                _setDb(arr);
+                                buildIndex(offlineDb);
+                                logCallback('[SUCCESS] Dimuat dari ' + url + ': ' + offlineDb.length + ' entri, ' + titleIndex.size + ' judul.');
+                                resolve(offlineDb);
+                            })
+                            .catch(err => {
+                                logCallback('[WARN] ZIP error di ' + url + ': ' + err.message + ' — mencoba lokasi berikutnya...');
+                                tryNext(paths, idx + 1);
+                            });
+                    } else {
+                        // JSON path: parse directly
+                        const parsed = xhr.response?.data || xhr.response;
+                        if (!Array.isArray(parsed)) {
+                            logCallback('[WARN] Format tidak valid di ' + url + ' — mencoba lokasi berikutnya...');
+                            return tryNext(paths, idx + 1);
+                        }
+                        _setDb(parsed);
+                        buildIndex(offlineDb);
+                        logCallback('[SUCCESS] Dimuat dari ' + url + ': ' + offlineDb.length + ' entri, ' + titleIndex.size + ' judul.');
+                        resolve(offlineDb);
                     }
-                    offlineDb = parsed;
-                    buildIndex(offlineDb);
-                    logCallback('[SUCCESS] Dimuat dari ' + url + ': ' + offlineDb.length + ' entri, ' + titleIndex.size + ' judul.');
-                    resolve(offlineDb);
                 };
                 xhr.onerror = () => {
                     logCallback('[WARN] Error jaringan di ' + url + ' — mencoba lokasi berikutnya...');
@@ -831,7 +872,7 @@
     // skip the HTTP fetch and use the injected data instead.
     const injectOfflineDb = (arr) => {
         if (!Array.isArray(arr)) throw new Error('injectOfflineDb: expected an array');
-        offlineDb = arr;
+        _setDb(arr);
         buildIndex(offlineDb);
         console.log('[AnimeMetadata] injectOfflineDb: ' + offlineDb.length + ' entries, ' + titleIndex.size + ' title keys');
         return offlineDb.length;

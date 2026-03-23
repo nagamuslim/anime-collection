@@ -129,7 +129,7 @@
         bookmark.js MUST be synchronous (no defer) so BookmarkManager
         exists before the inline script's first synchronous execution.
     -->
-    <script src="bookmark.js" onerror="void 0"></script>
+    <script src="bookmark.js" spa="1" onerror="void 0"></script>
     <script>
         'use strict';
 
@@ -230,6 +230,7 @@
         function stopTimeObserver() {
             if (_timeObserver) { clearInterval(_timeObserver); _timeObserver = null; }
         }
+        window.__spaStopTimeObserver = stopTimeObserver;
 
         // ── Unified Time-Range Observer ───────────────────────────────────────
         //

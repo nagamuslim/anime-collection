@@ -254,7 +254,7 @@
     <script src="fuse.js" onerror="this.onerror=null; this.src='https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js';"></script>
     <script src="metadata.js"    onerror="void 0"></script>
     <script src="update_data.js" onerror="void 0"></script>
-    <script src="bookmark.js" defer onerror="void 0"></script>
+    <script src="bookmark.js" spa="1" defer onerror="void 0"></script>
     <script>
         'use strict';
         let animeData         = [];
@@ -654,7 +654,6 @@
                     }
                     if (contents.length === 0) { status.textContent = '\u274c Tidak ada file .txt di dalam ZIP.'; return; }
                     status.textContent = 'Memproses ' + contents.length + ' file...';
-                    await new Promise(r => setTimeout(r, 0));      
                     // 1. Before parsing: set the resolver
                     if (typeof AnimeMetadata !== 'undefined' && typeof AnimeUpdater !== 'undefined') {
                         AnimeUpdater.setMalResolver(name => AnimeMetadata.findRecord(name));
