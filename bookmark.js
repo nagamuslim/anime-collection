@@ -431,8 +431,14 @@ var ContinueWatching = (function () {
             .then(function (html) {
                 var doc = new DOMParser().parseFromString(html, 'text/html');
 
-                // 2. Swap page content
+                // 2. Swap page content + HEAD styles
+                // Each page has its own <style> block in <head>. Without this,
+                // navigating index→player keeps index's CSS and player layout breaks.
                 document.title = doc.title;
+                [].forEach.call(document.head.querySelectorAll('style'), function (s) { s.remove(); });
+                [].forEach.call(doc.head.querySelectorAll('style'), function (s) {
+                    document.head.appendChild(s.cloneNode(true));
+                });
                 document.body.innerHTML = doc.body.innerHTML;
 
                 // 3. Re-execute scripts
