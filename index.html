@@ -199,6 +199,27 @@
             #updateRow { position: static; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: flex-end; margin-bottom: 12px; }
             .update-status { flex-basis: 100%; text-align: right; }
         }
+
+        /* ── DB progress toast ───────────────────────────────────────── */
+        #db-toast{position:fixed;right:24px;bottom:24px;z-index:9997;
+            background:rgba(15,12,41,0.96);
+            border:1px solid rgba(255,255,255,0.13);border-radius:16px;
+            padding:14px 16px 12px;width:280px;
+            box-shadow:0 12px 40px rgba(0,0,0,0.6);
+            backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+            font-family:'Segoe UI',Tahoma,sans-serif;color:#e0e0e0;
+            animation:dbt-in .38s cubic-bezier(.22,.68,0,1.2) both;
+            transition:bottom .25s ease}
+        #db-toast.dbt-hiding{opacity:0;transform:translateY(16px);pointer-events:none;
+            transition:opacity .3s,transform .3s,bottom .25s ease}
+        @keyframes dbt-in{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+        #db-toast .dbt-label{font-size:.68em;color:#667eea;font-weight:700;
+            text-transform:uppercase;letter-spacing:1.2px;margin-bottom:5px}
+        #db-toast .dbt-msg{font-size:.83em;line-height:1.4;margin-bottom:8px;min-height:1.2em}
+        #db-toast .dbt-bar-wrap{background:rgba(255,255,255,.1);border-radius:4px;height:4px;overflow:hidden}
+        #db-toast .dbt-bar{background:linear-gradient(90deg,#667eea,#764ba2);
+            height:100%;width:0%;transition:width .4s ease;border-radius:4px}
+        @media(max-width:480px){#db-toast{left:12px;right:12px;width:auto}}
     </style>
 </head>
 <body>
@@ -257,6 +278,35 @@
     <script src="bookmark.js" defer onerror="void 0"></script>
     <script>
         'use strict';
+
+        // ── Popup stack: stacks bottom-right toasts so they never overlap ────
+        // push(el) → returns a remove() fn.
+        // Both ContinueWatching popup (bookmark.js) and DB toast register here.
+        // When any popup is removed, the ones below it slide down smoothly.
+        window.__toastStack = (function () {
+            const GAP = 10, BASE = 24;
+            let items = [];
+            function reposition() {
+                let bottom = BASE;
+                for (let i = 0; i < items.length; i++) {
+                    items[i].style.bottom = bottom + 'px';
+                    bottom += items[i].offsetHeight + GAP;
+                }
+            }
+            return {
+                push(el) {
+                    items.push(el);
+                    requestAnimationFrame(reposition);
+                    return () => this.remove(el);
+                },
+                remove(el) {
+                    const i = items.indexOf(el);
+                    if (i !== -1) items.splice(i, 1);
+                    requestAnimationFrame(reposition);
+                }
+            };
+        }());
+
         let animeData         = [];
         let fuseIndex         = null;
         let activeGenres      = new Set();
@@ -556,7 +606,65 @@
         // Keep a raw (unenriched) copy so we can re-enrich after DB upload
         let currentAnimeRaw = {};
 
-        // ── Data loading ──────────────────────────────────────────────────────
+        // ── DB progress toast ─────────────────────────────────────────────────────
+        let _dbToastEl = null, _dbToastRemove = null, _dbAutoDismiss = null;
+
+        function _showDbToast() {
+            if (_dbToastEl) return;
+            _dbToastEl = document.createElement('div');
+            _dbToastEl.id = 'db-toast';
+            _dbToastEl.innerHTML =
+                '<div class="dbt-label">&#9881;&#65039; Database Genre</div>' +
+                '<div class="dbt-msg">Mempersiapkan...</div>' +
+                '<div class="dbt-bar-wrap"><div class="dbt-bar"></div></div>';
+            document.body.appendChild(_dbToastEl);
+            requestAnimationFrame(() => { _dbToastRemove = window.__toastStack.push(_dbToastEl); });
+        }
+
+        function _dismissDbToast(delay) {
+            if (!_dbToastEl) return;
+            if (_dbAutoDismiss) { clearTimeout(_dbAutoDismiss); _dbAutoDismiss = null; }
+            const el = _dbToastEl, rm = _dbToastRemove;
+            _dbToastEl = _dbToastRemove = null;
+            const doRemove = () => {
+                if (rm) rm();
+                el.classList.add('dbt-hiding');
+                setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 350);
+            };
+            if (delay > 0) _dbAutoDismiss = setTimeout(doRemove, delay); else doRemove();
+        }
+
+        function _handleDbProgress(evt) {
+            // 'skip': P1+P2 covers >=50% -- silent, no toast, P3 not loaded
+            if (evt.phase === 'skip') return;
+            // 'p3_needed': below 50% -- show toast
+            if (evt.phase === 'p3_needed') { _showDbToast(); return; }
+            if (!_dbToastEl) return;
+            const msgEl = _dbToastEl.querySelector('.dbt-msg');
+            const barEl = _dbToastEl.querySelector('.dbt-bar');
+            if (evt.phase === 'p3_progress') {
+                const mb  = (evt.loaded / 1048576).toFixed(1);
+                const tot = evt.total > 0 ? (evt.total / 1048576).toFixed(0) + ' MB' : '?';
+                msgEl.textContent = '⬇ Mengunduh... ' + mb + ' MB / ' + tot;
+                if (evt.total > 0) barEl.style.width = Math.min(90, evt.loaded / evt.total * 100) + '%';
+            } else if (evt.phase === 'extracting') {
+                msgEl.textContent = '📦 Mengekstrak ZIP...';
+                barEl.style.width = '70%';
+            } else if (evt.phase === 'indexing') {
+                msgEl.textContent = '⚙ Membangun indeks...';
+                barEl.style.width = '92%';
+            } else if (evt.phase === 'p3_done') {
+                msgEl.textContent = '✅ Database siap — filter genre aktif';
+                barEl.style.width = '100%';
+                _dismissDbToast(3000);
+            } else if (evt.phase === 'p3_fail') {
+                msgEl.textContent = '⚠ DB tidak tersedia — gunakan tombol Upload';
+                barEl.style.width = '0%';
+                // Stay visible so user sees it and can upload manually
+            }
+        }
+
+        // ── Data loading ────────────────────────────────────────────────────────────────────────────
         async function loadAnimeData() {
             let data = null;
 
@@ -588,24 +696,33 @@
             currentAnimeRaw = {};
             data.anime_list.forEach(a => { currentAnimeRaw[a.name] = a; });
 
-            if (typeof AnimeMetadata !== 'undefined') {
-                await AnimeMetadata.setupMetadata(data.anime_list);
-                animeData = AnimeMetadata.enrichAnimeList(data.anime_list);
-                metadataAvailable = (AnimeMetadata.enrichAnimeList.lastCount || 0) > 0;
-            } else {
-                animeData = data.anime_list.map(a => ({ ...a, allTitles: [], tags: [] }));
-                metadataAvailable = false;
-            }
-
+            // Phase A: render cards immediately with raw data (no metadata)
+            // Cards appear right away. Fuse searches by name only.
+            // Genre panel shows 'no DB' state until Phase B completes.
+            animeData = data.anime_list.map(a => ({ ...a, allTitles: [], tags: [] }));
+            metadataAvailable = false;
             buildFuseIndex();
-            buildGenrePills();
             showStats(data);
             applyFilterAndSort();
+            buildGenrePills();
 
-            const c = AnimeMetadata?.enrichAnimeList?.lastCount || 0;
-            console.log(c > 0
-                ? `[Metadata] ${c}/${animeData.length} anime enriched`
-                : '[Metadata] No metadata — run: node metadata.js --phase1  or upload anime-offline-database-minified.json');
+            if (typeof AnimeMetadata === 'undefined') return;
+
+            // Phase B: enrich in background (non-blocking)
+            // setupMetadata loads P2 (fast, silent) then optionally P3
+            // (slow, shows progress toast via _handleDbProgress).
+            // After both complete, re-enrich animeData + rebuild Fuse + pills.
+            AnimeMetadata.setupMetadata(data.anime_list, _handleDbProgress)
+                .then(() => {
+                    animeData = AnimeMetadata.enrichAnimeList(data.anime_list);
+                    metadataAvailable = (AnimeMetadata.enrichAnimeList.lastCount || 0) > 0;
+                    buildFuseIndex();   // rebuild with allTitles for JP/romaji search
+                    buildGenrePills();  // shows genre pills if P2 or P3 succeeded
+                    const ct = AnimeMetadata.enrichAnimeList.lastCount || 0;
+                    console.log(ct > 0
+                        ? '[Metadata] ' + ct + '/' + animeData.length + ' anime enriched'
+                        : '[Metadata] No metadata — upload anime-offline-database-minified.json');
+                });
         }
 
         // ── Zip extractor ─────────────────────────────────────────────────────

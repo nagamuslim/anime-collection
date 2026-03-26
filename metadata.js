@@ -188,7 +188,7 @@
     };
 
     // ── loadOfflineDb ─────────────────────────────────────────────────
-    const loadOfflineDb = (logCallback, onProgress = null) => {
+    const loadOfflineDb = (logCallback, onProgress = null, onStatus = null) => {
         return new Promise((resolve, reject) => {
             if (offlineDb) return resolve(offlineDb);
             logCallback('[INFO] Memuat anime-offline-database-minified.json...');
@@ -292,9 +292,11 @@
                     }
                     if (isZip) {
                         // ZIP path: decompress then parse JSON inside
+                        if (onStatus) onStatus('extracting');
                         extractZipDb(xhr.response)
                             .then(arr => {
                                 if (!Array.isArray(arr)) throw new Error('Format tidak valid');
+                                if (onStatus) onStatus('indexing');
                                 _setDb(arr);
                                 buildIndex(offlineDb);
                                 logCallback('[SUCCESS] Dimuat dari ' + url + ': ' + offlineDb.length + ' entri, ' + titleIndex.size + ' judul.');
@@ -311,6 +313,7 @@
                             logCallback('[WARN] Format tidak valid di ' + url + ' — mencoba lokasi berikutnya...');
                             return tryNext(paths, idx + 1);
                         }
+                        if (onStatus) onStatus('indexing');
                         _setDb(parsed);
                         buildIndex(offlineDb);
                         logCallback('[SUCCESS] Dimuat dari ' + url + ': ' + offlineDb.length + ' entri, ' + titleIndex.size + ' judul.');
@@ -789,8 +792,19 @@
     //   setupMetadata loads priority 2 + 3 into RAM.
     //   enrichAnimeList picks LS > _inMemoryMeta > titleIndex per-entry.
     //   Jikan on-demand (fetchJikanForAnime) writes to LS for that one anime.
-    const setupMetadata = async animeList => {
+    // ── setupMetadata ─────────────────────────────────────────────────────
+    // onProgress(evt) is an optional callback for index.html's DB toast.
+    // evt = { phase, ... }  phases:
+    //   'skip'         — P1+P2 covers ≥50%, P3 not loaded   { covered, total }
+    //   'p3_needed'    — below 50%, P3 will load             { covered, total }
+    //   'p3_progress'  — download progress                   { loaded, total }
+    //   'extracting'   — ZIP extraction in progress
+    //   'indexing'     — building title index
+    //   'p3_done'      — success                             { keys }
+    //   'p3_fail'      — load failed                         { msg }
+    const setupMetadata = async (animeList, onProgress) => {
         if (isNode) return;
+        const report = typeof onProgress === 'function' ? onProgress : () => {};
 
         // Priority 2: always load metadata.json → _inMemoryMeta
         const loaded = await loadMetadataJson();
@@ -798,19 +812,55 @@
             ? '[Metadata] metadata.json → RAM (P2 active, ' + Object.keys(_inMemoryMeta).length + ' entries)'
             : '[Metadata] metadata.json not available');
 
-        // Priority 3: always load offline DB → titleIndex
-        // Used by enrichAnimeList P3 AND by setMalResolver in update_data.js.
-        // If offline DB unavailable, gracefully skip — site still works via P1+P2.
-        if (!offlineDb) {
-            try {
-                await loadOfflineDb(() => {});
-                console.log('[Metadata] Offline DB → RAM (P3 active, ' + titleIndex.size + ' title keys)');
-            } catch(e) {
-                console.warn('[Metadata] Offline DB unavailable (place anime-offline-database-minified.json alongside):', e.message);
+        // ── P1+P2 coverage check: skip P3 if ≥50% of anime already covered ──
+        // P1 = localStorage (Jikan), P2 = metadata.json in RAM.
+        // If they together cover at least half the list, the offline DB adds
+        // diminishing returns and we avoid fetching/parsing 60MB on page load.
+        // P3 still kicks in for a fresh install (0% coverage) or when many
+        // anime are new and not yet in metadata.json.
+        if (animeList.length > 0) {
+            let covered = 0;
+            for (const a of animeList) {
+                const key = LS_PREFIX + a.name;
+                let lsOk = false;
+                if (storage) {
+                    try {
+                        const raw = storage.getItem(key);
+                        if (raw) lsOk = !JSON.parse(raw).not_found;
+                    } catch(e) {}
+                }
+                const memOk = !!(_inMemoryMeta?.[key] && !_inMemoryMeta[key].not_found);
+                if (lsOk || memOk) covered++;
             }
+            const pct = covered / animeList.length;
+            if (pct >= 0.50) {
+                console.log('[Metadata] P1+P2 covers ' + Math.round(pct * 100) + '% (' + covered + '/' + animeList.length + ') — P3 skipped');
+                report({ phase: 'skip', covered, total: animeList.length });
+                return;
+            }
+            console.log('[Metadata] P1+P2 covers ' + Math.round(pct * 100) + '% (' + covered + '/' + animeList.length + ') — loading P3');
+            report({ phase: 'p3_needed', covered, total: animeList.length });
+        }
+
+        // Priority 3: load offline DB → titleIndex (browser only)
+        if (offlineDb) {
+            // Already in RAM (e.g. SPA re-navigation or injectOfflineDb was called)
+            console.log('[Metadata] Offline DB already in RAM (' + titleIndex.size + ' keys) — skip fetch');
+            return;
+        }
+        try {
+            await loadOfflineDb(
+                () => {},  // logCallback (silent — toast handles the UX)
+                (loaded, total) => report({ phase: 'p3_progress', loaded, total }),
+                status => report({ phase: status })  // 'extracting' | 'indexing'
+            );
+            console.log('[Metadata] Offline DB → RAM (P3 active, ' + titleIndex.size + ' title keys)');
+            report({ phase: 'p3_done', keys: titleIndex.size });
+        } catch(e) {
+            console.warn('[Metadata] Offline DB unavailable:', e.message);
+            report({ phase: 'p3_fail', msg: e.message });
         }
         // P1 (localStorage) is read per-entry in enrichAnimeList — no batch needed here.
-        // New anime not in metadata.json get P3 coverage from titleIndex.
     };
 
     // ── fetchJikanForAnime ────────────────────────────────────────────────

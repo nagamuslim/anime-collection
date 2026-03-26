@@ -155,7 +155,7 @@ var ContinueWatching = (function () {
         _stylesInjected = true;
         var s = document.createElement('style');
         s.textContent = [
-            '#cw-popup{position:fixed;bottom:24px;right:24px;z-index:9998;',
+            '#cw-popup{position:fixed;bottom:24px;right:24px;z-index:9998;transition:bottom .25s ease;',
                 'background:rgba(15,12,41,0.96);',
                 'border:1px solid rgba(255,255,255,0.13);border-radius:16px;',
                 'padding:16px 18px 14px;width:300px;',
@@ -258,7 +258,15 @@ var ContinueWatching = (function () {
 
         document.body.appendChild(popup);
 
+        // Register with the popup stack (defined in index.html's inline script).
+        // Deferred so the element is laid out and its height is measurable.
+        var _cwStackRemove = null;
+        requestAnimationFrame(function () {
+            if (window.__toastStack) _cwStackRemove = window.__toastStack.push(popup);
+        });
+
         function dismiss() {
+            if (_cwStackRemove) { _cwStackRemove(); _cwStackRemove = null; }
             popup.classList.add('cw-hiding');
             setTimeout(function () {
                 if (popup.parentNode) popup.parentNode.removeChild(popup);
