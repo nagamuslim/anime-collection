@@ -369,59 +369,45 @@ var ContinueWatching = (function () {
 //    Legacy mode (no change needed):
 //      <script src="bookmark.js" onerror="void 0"></script>
 //
-//    SPA mode (one attribute added):
+//    SPA mode:
 //      <script src="bookmark.js" spa="1" onerror="void 0"></script>
 //
-//    Works on ALL three pages (index, player, bookmark) because this
-//    file is already the only script loaded on every page.
-//
-//    Optional one-liner in player.html (add AFTER stopTimeObserver def):
+//    Optional one-liner in player.html after stopTimeObserver definition:
 //      window.__spaStopTimeObserver = stopTimeObserver;
-//    That prevents the 3-second time-observer interval from leaking
-//    when the user navigates away mid-episode.
 // ══════════════════════════════════════════════════════════════════════
 (function () {
     'use strict';
 
-    // ── Guard: only initialise the router once per real page load ──────────
-    // bookmark.js is re-executed by the router on every SPA navigation,
-    // so without this guard the listeners would stack up.
     if (window.__spaInitialized) return;
-
-    // ── Check for opt-in attribute ─────────────────────────────────────────
-    // document.currentScript points to THIS <script> element while executing.
-    var me = document.currentScript ||
-             (document.querySelector('script[src*="bookmark.js"]'));
+    var me = document.currentScript || (document.querySelector('script[src*="bookmark.js"]'));
     if (!me || !me.hasAttribute('spa')) return;
-
-    // ── Initialise ─────────────────────────────────────────────────────────
     window.__spaInitialized = true;
 
-    // Seed with CDN scripts already present on the initial page load.
-    // These are skipped on every subsequent navigation (their globals persist).
     window.__spaLoadedCdn = new Set(
         [].slice.call(document.querySelectorAll('script[src]'))
             .map(function (s) { return new URL(s.getAttribute('src'), location.href).href; })
             .filter(function (u) { return /(?:cdnjs\.cloudflare\.com|cdn\.jsdelivr\.net|youtube\.com)/.test(u); })
     );
 
-    // ── Click interceptor ──────────────────────────────────────────────────
+    // ── Click interceptor ──────────────────────────────────────────────────────────────────
     document.addEventListener('click', function (e) {
         var a = e.target.closest('a');
-        if (!a) return;
-        if (a.host !== location.host) return;
-        if (a.hasAttribute('download') || a.target === '_blank') return;
+        if (!a || a.host !== location.host || a.hasAttribute('download') || a.target === '_blank') return;
         e.preventDefault();
         var url = a.href;
+
+        // Normalize /index.html → directory root so the URL bar shows / not /index.html
+        if (url.endsWith('/index.html')) url = url.slice(0, -10);
+
         if (url === location.href) return;
         history.pushState({}, '', url);
         _spaNavigate(url);
     });
 
-    // ── Back / Forward buttons ─────────────────────────────────────────────
+    // ── Back / Forward buttons ─────────────────────────────────────────────────────────────────
     window.addEventListener('popstate', function () { _spaNavigate(location.href); });
 
-    // ── Core navigation ────────────────────────────────────────────────────
+    // ── Core navigation ──────────────────────────────────────────────────────────────────────
     function _spaNavigate(url) {
 
         // 1. Cleanup intervals before leaving current page
@@ -431,6 +417,11 @@ var ContinueWatching = (function () {
             window.__spaStopTimeObserver = null;
         }
 
+        // 2. Instant visual feedback — fade so navigation feels snappy, not frozen
+        document.body.style.transition  = 'opacity 0.15s ease-out';
+        document.body.style.opacity     = '0.4';
+        document.body.style.pointerEvents = 'none';
+
         fetch(url)
             .then(function (res) {
                 if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -439,52 +430,59 @@ var ContinueWatching = (function () {
             .then(function (html) {
                 var doc = new DOMParser().parseFromString(html, 'text/html');
 
-                // 2. Swap page content + HEAD styles
-                // Each page has its own <style> block in <head>. Without this,
-                // navigating index→player keeps index's CSS and player layout breaks.
+                // 3. Swap title + page-level styles
+                // :not([data-dynamic]) protects runtime-injected CSS (CW popup,
+                // DB toast) from being wiped. Those styles have data-dynamic="true".
                 document.title = doc.title;
-                [].forEach.call(document.head.querySelectorAll('style'), function (s) { s.remove(); });
+                [].forEach.call(document.head.querySelectorAll('style:not([data-dynamic])'), function (s) { s.remove(); });
                 [].forEach.call(doc.head.querySelectorAll('style'), function (s) {
                     document.head.appendChild(s.cloneNode(true));
                 });
+
+                // 4. Swap body
                 document.body.innerHTML = doc.body.innerHTML;
 
-                // 3. Re-execute scripts
+                // 5. Re-execute scripts
+                // bookmark.js is intentionally skipped — its globals (BookmarkManager,
+                // ContinueWatching, __spaInitialized, __toastStack) already live on
+                // window and must NOT be reset by re-execution.
                 var scripts = document.body.querySelectorAll('script');
                 [].forEach.call(scripts, function (old) {
                     var rawSrc = old.getAttribute('src');
                     var absSrc = rawSrc ? new URL(rawSrc, location.href).href : null;
-                    var isCdn  = absSrc && /(?:cdnjs\.cloudflare\.com|cdn\.jsdelivr\.net|youtube\.com)/.test(absSrc);
 
-                    // Skip already-loaded CDN libraries (Fuse, JSZip, YT API…)
-                    if (isCdn && window.__spaLoadedCdn.has(absSrc)) {
-                        old.remove();
-                        return;
-                    }
+                    // Skip bookmark.js — already live, globals must persist
+                    if (absSrc && /bookmark\.js/.test(absSrc)) { old.remove(); return; }
+
+                    // Skip already-loaded CDN libs (Fuse, JSZip, YT API)
+                    var isCdn = absSrc && /(?:cdnjs\.cloudflare\.com|cdn\.jsdelivr\.net|youtube\.com)/.test(absSrc);
+                    if (isCdn && window.__spaLoadedCdn.has(absSrc)) { old.remove(); return; }
 
                     var fresh = document.createElement('script');
-                    [].forEach.call(old.attributes, function (attr) {
-                        fresh.setAttribute(attr.name, attr.value);
-                    });
-                    if (!absSrc) fresh.textContent = old.textContent; // inline script
+                    [].forEach.call(old.attributes, function (attr) { fresh.setAttribute(attr.name, attr.value); });
+                    if (!absSrc) fresh.textContent = old.textContent;
                     if (isCdn) window.__spaLoadedCdn.add(absSrc);
                     old.replaceWith(fresh);
                 });
 
-                // 4. Re-trigger YT API if already loaded (critical for player.html)
+                // 6. Re-trigger YT API if already loaded (critical for player.html)
                 // The YT script fires onYouTubeIframeAPIReady only ONCE per real
-                // page load. On SPA revisits to player.html the inline script resets
-                // ytApiReady=false but YT never fires the callback again.
-                // We call it ourselves when YT is already ready.
+                // page load. On SPA re-visits to player.html we call it ourselves.
                 if (typeof window.onYouTubeIframeAPIReady === 'function' &&
                     typeof YT !== 'undefined' && typeof YT.Player === 'function') {
                     setTimeout(window.onYouTubeIframeAPIReady, 0);
                 }
 
                 window.scrollTo(0, 0);
+
+                // 7. Fade back in
+                document.body.style.opacity      = '1';
+                document.body.style.pointerEvents = 'auto';
             })
             .catch(function (err) {
                 console.error('[bookmark.js/spa] Navigation failed, hard reload:', err);
+                // Restore opacity before hard reload so there's no stuck-faded flash
+                document.body.style.opacity = '1';
                 location.assign(url);
             });
     }

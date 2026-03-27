@@ -870,17 +870,59 @@
         const stats = { added: 0, updated: 0, removed: 0 };
         const newList = [];
 
+        // 1. Process every anime that came from the parsed text files
         combinedGroups.forEach((videoMap, animeName) => {
-            const videos = Array.from(videoMap.values());
-            if (videos.length === 0) return;
-            newList.push(buildEntry(animeName, videos));
-            if (!existingMap.has(animeName)) stats.added++;
-            else stats.updated++;
+            const newVideos = Array.from(videoMap.values());
+            if (newVideos.length === 0) return;
+
+            if (existingMap.has(animeName)) {
+                // EXISTING ANIME: merge saved episodes + incoming episodes.
+                // Incoming episodes overwrite the same episode slot (same key)
+                // so re-uploads always pick up corrected video_ids.
+                // Old episodes NOT present in the new file are kept (additive).
+                stats.updated++;
+                const oldAnime = existingMap.get(animeName);
+                const videoDedup = new Map();
+
+                // Add saved episodes first (lower priority)
+                oldAnime.videos.forEach(v => {
+                    const k = v.start_seconds !== undefined
+                        ? v.episode + '_' + v.start_seconds
+                        : String(v.episode);
+                    videoDedup.set(k, v);
+                });
+
+                // Add incoming episodes (higher priority — overwrites same slot)
+                newVideos.forEach(v => {
+                    const k = v.start_seconds !== undefined
+                        ? v.episode + '_' + v.start_seconds
+                        : String(v.episode);
+                    videoDedup.set(k, v);
+                });
+
+                newList.push(buildEntry(animeName, Array.from(videoDedup.values())));
+                existingMap.delete(animeName); // mark as handled
+            } else {
+                // BRAND NEW ANIME
+                stats.added++;
+                newList.push(buildEntry(animeName, newVideos));
+            }
         });
 
-        existingMap.forEach((_, name) => {
-            if (!combinedGroups.has(name)) stats.removed++;
+        // 2. Keep all old anime that were NOT in the uploaded file (non-destructive append)
+        //    These show up as neither added nor updated — they just carry over.
+        //    The SYNC confirm in index.html handles the case where the caller
+        //    wants to remove them; it adds them back into combinedGroups before
+        //    calling mergeData so they pass through branch 1 above unchanged.
+        existingMap.forEach((oldAnime) => {
+            newList.push(oldAnime);
         });
+
+        // Count removals: entries still in existingMap were not touched at all.
+        // In practice this is always 0 here because index.html's SYNC dialog
+        // either adds them back to combinedGroups (append) or doesn't (sync).
+        // We still expose stats.removed for Node CLI reporting.
+        stats.removed = 0; // handled by caller's SYNC logic, not here
 
         newList.sort((a, b) => a.name.localeCompare(b.name));
         const now = (typeof Date !== 'undefined') ? new Date().toISOString().slice(0, 10) : 'unknown';
