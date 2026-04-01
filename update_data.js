@@ -290,6 +290,7 @@
         if (/全漫同庆|合集|全集/.test(t)) return null;        // promos / batch compilations
         if (/EP\d+[-–]\d+|\d+[-–]\d+集/i.test(t)) return null; // EP range videos (EP01-66 etc)
         if (/VIETDUB|JPN\s*DUB/i.test(t)) return null;      // non-sub dubs we don't want
+        if (/\bMembers?\b|会员/i.test(t)) return null;       // member-only / members preview / 会员专享
         // Must have a structured bracket title
         if (!/[【《\[]/.test(t)) return null;
 
