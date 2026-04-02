@@ -119,6 +119,7 @@
 
     const parseAniOne = (t, url, block) => {
         if (/^FULL EPISODE/i.test(t)) return null;
+        if (/Science Class/i.test(t)) return null;
         let isSpecial = /^SPECIAL EPISODE/i.test(t);
         let isEncore = /\(ENCORE\)/i.test(t);
 
@@ -143,6 +144,7 @@
     const parseAniOneAsia = (t, url, block) => {
         if (/^FULL EPISODE/i.test(t)) return null;
         if (/Highlight/i.test(t)) return null;
+        if (/Science Class/i.test(t)) return null;
 
         let animeName, episode;
 
@@ -196,6 +198,7 @@
             if (/Semua Episode/i.test(t)) return null;
             if (/\(Live-Action\)/i.test(t)) return null;
             if (/PUI PUI MOLCAR/i.test(t)) return null;
+            if (/Cuplikan/i.test(t)) return null;
     
             const m = t.match(/^(.+?)\s+-\s+Episode\s*(\d+(?:\s*[-–]\s*\d+)?)\s*\[Takarir Indonesia\]/i);        if (!m) return null;
 
