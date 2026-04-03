@@ -975,21 +975,6 @@
             } catch(e) {}
         }
 
-        // 2. Try combined.txt from GitHub
-        if (typeof fetch !== 'undefined') {
-            try {
-                const githubUrl = 'https://raw.githubusercontent.com/nagamuslim/anime-collection/refs/heads/main/combined.txt';
-                const r3 = await fetch(githubUrl, { cache: 'no-cache' });
-                if (r3.ok) {
-                    const txt = await r3.text();
-                    const groups = parseContent(txt);
-                    const merged = mergeData(null, groups);
-                    console.log('AnimeUpdater: Loaded from GitHub combined.txt');
-                    saveLocal(merged.data);
-                    return merged.data;
-                }
-            } catch(e) {}
-        }
 
         return null;
     };
