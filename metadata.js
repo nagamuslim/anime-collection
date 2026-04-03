@@ -51,6 +51,239 @@
     const _setDb = arr => { offlineDb = arr; _winMeta.db = arr; };
     let storage    = null;
 
+    // ── SharedWorker — embedded offline DB loader ─────────────────────
+    // The worker's only job: fetch → (extract if zip) → strip to minimal
+    // fields → broadcast to all connected pages.
+    // Lives here as a Blob so no extra file is needed.
+    // Shared across index/player/bookmark in MPA mode — DB parsed once.
+    // If SharedWorker isn't supported (file://, old browser) the normal
+    // XHR path below acts as seamless fallback.
+
+    const _WORKER_SRC = /* ── worker source (IIFE) ── */ `
+'use strict';
+var ports  = [];
+var cached = null;   /* stripped array once loaded */
+var loading = false;
+var failed  = false;
+var GITHUB_JSON = 'https://github.com/manami-project/anime-offline-database/releases/latest/download/anime-offline-database-minified.json';
+var LOCAL_PATHS = [
+    './anime-offline-database-minified.json',
+    './anime-offline-database-minified.zip',
+    './db/anime-offline-database-minified.json',
+    './db/anime-offline-database-minified.zip',
+];
+
+/* Strip each DB entry to only what buildIndex needs — reduces transfer size */
+function strip(data) {
+    var out = [];
+    for (var i = 0; i < data.length; i++) {
+        var a = data[i];
+        var src = null;
+        var srcs = a.sources || [];
+        for (var j = 0; j < srcs.length; j++) {
+            if (srcs[j].indexOf('myanimelist.net/anime/') !== -1) { src = srcs[j]; break; }
+        }
+        if (!src) continue;
+        var m = src.match(/anime\\/(\\d+)/);
+        if (!m) continue;
+        out.push({
+            malId:    m[1],
+            title:    a.title,
+            synonyms: a.synonyms || [],
+            tags:     a.tags     || [],
+            score:    (a.score && a.score.arithmeticMean) ? a.score.arithmeticMean : null
+        });
+    }
+    return out;
+}
+
+function broadcast(msg) {
+    for (var i = 0; i < ports.length; i++) {
+        try { ports[i].postMessage(msg); } catch(e) {}
+    }
+}
+
+function tryExtractZip(blob) {
+    return new Promise(function(resolve, reject) {
+        try {
+            importScripts('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+        } catch(e) { return reject(new Error('JSZip load failed: ' + e.message)); }
+        JSZip.loadAsync(blob).then(function(zip) {
+            var files = Object.keys(zip.files);
+            for (var i = 0; i < files.length; i++) {
+                var entry = zip.files[files[i]];
+                if (!entry.dir && /anime.*\\.json\$/i.test(files[i])) {
+                    return entry.async('text').then(function(text) {
+                        var parsed = JSON.parse(text);
+                        resolve(parsed.data || parsed);
+                    });
+                }
+            }
+            reject(new Error('No JSON found in ZIP'));
+        }).catch(reject);
+    });
+}
+
+function tryFetch(url, asBlob) {
+    return fetch(url, { cache: 'no-store' }).then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return asBlob ? r.blob() : r.json();
+    });
+}
+
+function loadDb() {
+    var chain = Promise.reject(new Error('start'));
+
+    /* local paths first */
+    LOCAL_PATHS.forEach(function(path) {
+        var isZip = /\\.zip\$/i.test(path);
+        chain = chain.catch(function() {
+            return tryFetch(path, isZip).then(function(result) {
+                if (isZip) return tryExtractZip(result);
+                var arr = result && result.data ? result.data : result;
+                if (!Array.isArray(arr)) throw new Error('bad format');
+                return arr;
+            });
+        });
+    });
+
+    /* GitHub JSON fallback */
+    chain = chain.catch(function() {
+        broadcast({ type: 'log', msg: '[Worker] Mengunduh DB dari GitHub...' });
+        return tryFetch(GITHUB_JSON, false).then(function(result) {
+            var arr = result && result.data ? result.data : result;
+            if (!Array.isArray(arr)) throw new Error('bad format');
+            return arr;
+        });
+    });
+
+    chain.then(function(arr) {
+        cached = strip(arr);
+        loading = false;
+        broadcast({ type: 'ready', db: cached });
+    }).catch(function(e) {
+        failed  = true;
+        loading = false;
+        broadcast({ type: 'failed', msg: e.message });
+    });
+}
+
+onconnect = function(e) {
+    var port = e.ports[0];
+    ports.push(port);
+    port.start();
+
+    port.addEventListener('message', function(ev) {
+        var msg = ev.data || {};
+
+        /* user uploaded a DB — update cache and notify everyone */
+        if (msg.type === 'inject') {
+            try {
+                var arr = msg.data;
+                if (!Array.isArray(arr)) throw new Error('not array');
+                cached = strip(arr);
+                failed = false;
+                broadcast({ type: 'ready', db: cached });
+            } catch(err) {
+                port.postMessage({ type: 'failed', msg: err.message });
+            }
+            return;
+        }
+
+        /* ping: new page asking for current status */
+        if (msg.type === 'ping') {
+            if (cached)  { port.postMessage({ type: 'ready',   db: cached });    return; }
+            if (failed)  { port.postMessage({ type: 'failed',  msg: 'all 404' }); return; }
+            if (loading) { port.postMessage({ type: 'loading' });                  return; }
+            /* not started yet — start now */
+            loading = true;
+            loadDb();
+            port.postMessage({ type: 'loading' });
+            return;
+        }
+    });
+
+    /* immediately reply if already done */
+    if (cached)  { port.postMessage({ type: 'ready',  db: cached    }); return; }
+    if (failed)  { port.postMessage({ type: 'failed', msg: 'all 404' }); return; }
+
+    /* kick off loading on first connection */
+    if (!loading) { loading = true; loadDb(); }
+};
+`;
+
+    // ── Worker connector (browser only, skipped in Node) ─────────────
+    const _WIN_WORKER_KEY  = '__animeDbWorkerUrl';
+    const _WIN_WORKER_OBJ  = '__animeDbWorker';
+
+    // Returns a Promise<strippedArray> via the SharedWorker.
+    // Rejects if SharedWorker unsupported, unavailable, or all sources 404.
+    const _workerLoadDb = () => new Promise((resolve, reject) => {
+        if (isNode || typeof SharedWorker === 'undefined')
+            return reject(new Error('SharedWorker not available'));
+
+        try {
+            // Reuse the same Blob URL so re-execution (MPA navigation) connects
+            // to the existing SharedWorker rather than spinning up a new one.
+            if (!window[_WIN_WORKER_KEY]) {
+                const blob = new Blob([_WORKER_SRC], { type: 'application/javascript' });
+                window[_WIN_WORKER_KEY] = URL.createObjectURL(blob);
+            }
+            if (!window[_WIN_WORKER_OBJ]) {
+                window[_WIN_WORKER_OBJ] = new SharedWorker(window[_WIN_WORKER_KEY]);
+                window[_WIN_WORKER_OBJ].onerror = () => {
+                    window[_WIN_WORKER_OBJ] = null; // allow retry next time
+                };
+            }
+            const worker = window[_WIN_WORKER_OBJ];
+            const port   = worker.port;
+            port.start();
+
+            const _timeout = setTimeout(() => {
+                port.removeEventListener('message', _handler);
+                reject(new Error('Worker timeout'));
+            }, 60000);
+
+            const _handler = (e) => {
+                const msg = e.data || {};
+                if (msg.type === 'log') {
+                    console.log(msg.msg);
+                } else if (msg.type === 'ready') {
+                    clearTimeout(_timeout);
+                    port.removeEventListener('message', _handler);
+                    resolve(msg.db);
+                } else if (msg.type === 'failed') {
+                    clearTimeout(_timeout);
+                    port.removeEventListener('message', _handler);
+                    reject(new Error('Worker: ' + (msg.msg || 'load failed')));
+                }
+            };
+
+            port.addEventListener('message', _handler);
+            port.postMessage({ type: 'ping' }); // ask worker for status / kick load
+        } catch(err) {
+            reject(err);
+        }
+    });
+
+    // Build titleIndex from stripped worker records (no sources[] array).
+    // Worker pre-extracts malId, so buildIndex handles both formats.
+    const buildIndexFromStripped = arr => {
+        titleIndex.clear();
+        for (const item of arr) {
+            const { malId, title, synonyms, tags, score } = item;
+            const roundScore = score ? Math.round(score * 100) / 100 : null;
+            const allTitles  = [title, ...(synonyms || [])];
+            const rec        = { malId, tags: tags || [], matchedTitle: title, allTitles, score: roundScore };
+            titleIndex.set(cleanForIndex(title), rec);
+            for (const syn of (synonyms || [])) {
+                const k = cleanForIndex(syn);
+                if (k && !titleIndex.has(k)) titleIndex.set(k, rec);
+            }
+        }
+        _winMeta.index = titleIndex; // persist for SPA re-execution
+    };
+
     // ── Storage ───────────────────────────────────────────────────────
     if (isNode) {
         const fs = require('fs'), path = require('path');
@@ -326,7 +559,23 @@
                 };
                 xhr.send();
             };
-            tryNext(BROWSER_PATHS, 0);
+
+            // ── Browser: try SharedWorker first, fall back to XHR ────────
+            _workerLoadDb()
+                .then(stripped => {
+                    // Worker succeeded — build index from stripped records
+                    if (onStatus) onStatus('indexing');
+                    buildIndexFromStripped(stripped);
+                    // offlineDb stays null (worker stripped big fields we don't need)
+                    // titleIndex is now populated — findRecord works normally
+                    logCallback('[SUCCESS] Worker: ' + titleIndex.size + ' judul diindeks.');
+                    resolve(null); // null signals "index ready but no raw DB"
+                })
+                .catch(() => {
+                    // Worker unavailable or all sources 404 → XHR fallback on main thread
+                    logCallback('[INFO] Worker tidak tersedia — memuat langsung...');
+                    tryNext(BROWSER_PATHS, 0);
+                });
         });
     };
 
@@ -920,11 +1169,20 @@
     // directly — the data is pre-parsed by the caller and injected here.
     // Sets offlineDb + rebuilds titleIndex, so subsequent batchProcess calls
     // skip the HTTP fetch and use the injected data instead.
+    // Also notifies the SharedWorker so other open pages receive it too.
     const injectOfflineDb = (arr) => {
         if (!Array.isArray(arr)) throw new Error('injectOfflineDb: expected an array');
         _setDb(arr);
         buildIndex(offlineDb);
         console.log('[AnimeMetadata] injectOfflineDb: ' + offlineDb.length + ' entries, ' + titleIndex.size + ' title keys');
+
+        // Tell the SharedWorker so it caches for player.html / bookmark.html
+        if (!isNode && window[_WIN_WORKER_OBJ]) {
+            try {
+                window[_WIN_WORKER_OBJ].port.postMessage({ type: 'inject', data: arr });
+            } catch(e) {}
+        }
+
         return offlineDb.length;
     };
 
