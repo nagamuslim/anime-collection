@@ -665,21 +665,58 @@ onconnect = function(e) {
 
     const findMalId = animeName => { const r = findRecord(animeName); return r ? r.malId : null; };
 
-    // ── Jikan — overwrites tags, adds synopsis + demographics ─────────
-    const fetchJikan = async malId => {
-        const res = await fetch(`https://api.jikan.moe/v4/anime/${malId}`);
-        if (res.status === 429) { await sleep(2000); return fetchJikan(malId); }
-        const data = await res.json();
-        if (data?.data) {
-            const d = data.data;
-            return {
-                tags:         [...(d.genres?.map(g => g.name) || []), ...(d.themes?.map(t => t.name) || [])],
-                synopsis:     d.synopsis || null,
-                demographics: d.demographics?.map(x => x.name) || []
-            };
+    // ── getMalId — titleIndex first, then LS, then _inMemoryMeta ─────
+    const getMalId = animeName => {
+        const rec = findRecord(animeName);
+        if (rec) return rec.malId;
+        if (storage) {
+            const raw = storage.getItem(LS_PREFIX + animeName);
+            if (raw) return JSON.parse(raw).malId;
+        }
+        if (_inMemoryMeta?.[LS_PREFIX + animeName]) return _inMemoryMeta[LS_PREFIX + animeName].malId;
+        return null;
+    };
+
+    // ── Jikan API — Robust Fetcher ─────────────────────────────────────
+    // Retries up to maxRetries times with exponential backoff on 429.
+    // Returns data.data on success, null on 404 / exhausted retries.
+    const fetchWithRetry = async (url, maxRetries = 3) => {
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                const res = await fetch(url);
+                if (res.status === 429) {
+                    await sleep(1500 * (i + 1)); // exponential backoff for rate limits
+                    continue;
+                }
+                if (res.status === 404) return null; // genuinely not found, do not retry
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                return data?.data || null;
+            } catch (e) {
+                if (i === maxRetries - 1) return null;
+                await sleep(1000);
+            }
         }
         return null;
     };
+
+    // ── Jikan — overwrites tags, adds synopsis + demographics ─────────
+    // Uses /full endpoint so we get fullData for the player overview tab.
+    const fetchJikan = async malId => {
+        const d = await fetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/full`);
+        if (!d) return null;
+        return {
+            tags:         [...(d.genres?.map(g => g.name) || []), ...(d.themes?.map(t => t.name) || [])],
+            synopsis:     d.synopsis || null,
+            demographics: d.demographics?.map(x => x.name) || [],
+            fullData:     d
+        };
+    };
+
+    // ── Single On-Demand Fetch Helpers ────────────────────────────────
+    const fetchReviews        = async malId => malId ? (await fetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/reviews?preliminary=true`) || []) : [];
+    const fetchForum          = async malId => malId ? (await fetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/forum`)                      || []) : [];
+    const fetchRecommendations = async malId => malId ? (await fetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/recommendations`)            || []) : [];
 
     // ── getMetadata ───────────────────────────────────────────────────
     const getMetadata = animeName => {
@@ -1123,13 +1160,11 @@ onconnect = function(e) {
         if (isNode) return null;
         const key = LS_PREFIX + animeName;
 
-        // Already have full Jikan data?
+        // Read any cached data — used as fallback if Jikan call fails
+        let existingLsData = null;
         if (storage) {
             const raw = storage.getItem(key);
-            if (raw) {
-                const d = JSON.parse(raw);
-                if (d.synopsis !== undefined) return d;  // already fetched
-            }
+            if (raw) existingLsData = JSON.parse(raw);
         }
 
         // Find MAL ID — titleIndex first (loaded by setupMetadata), LS fallback
@@ -1145,7 +1180,7 @@ onconnect = function(e) {
 
         try {
             const jikan = await fetchJikan(malId);
-            if (!jikan) return null;
+            if (!jikan) return existingLsData || { malId };
             // Merge with any existing P2/P3 data for allTitles/score
             const base = rec || (_inMemoryMeta?.[key]) || {};
             const toStore = {
@@ -1157,10 +1192,11 @@ onconnect = function(e) {
                 demographics: jikan.demographics  ?? [],
             };
             if (storage) storage.setItem(key, JSON.stringify(toStore));
-            return toStore;
+            // Return full API payload so player.html overview tab can render poster/score/etc.
+            return { ...toStore, fullData: jikan.fullData };
         } catch(e) {
             console.warn('[Metadata] Jikan failed for', animeName, ':', e.message);
-            return null;
+            return existingLsData || { malId };
         }
     };
 
@@ -1186,7 +1222,7 @@ onconnect = function(e) {
         return offlineDb.length;
     };
 
-    return { loadOfflineDb, getMetadata, batchProcess, findMalId, findRecord, clearAll,
+    return { loadOfflineDb, getMetadata, batchProcess, findMalId, getMalId, findRecord, clearAll,
              normalizeTag, normalizeTags, enrichAnimeList, loadMetadataJson, setupMetadata,
-             fetchJikanForAnime, injectOfflineDb };
+             fetchJikanForAnime, fetchReviews, fetchForum, fetchRecommendations, injectOfflineDb };
 }));
