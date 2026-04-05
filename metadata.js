@@ -702,11 +702,17 @@ onconnect = function(e) {
 
     // ── Jikan — overwrites tags, adds synopsis + demographics ─────────
     // Uses /full endpoint so we get fullData for the player overview tab.
+    // Tags mirror the Manami Project's flattening: genres + explicit_genres + themes
+    // all collapsed into one flat array (same shape as offline DB tags[]).
     const fetchJikan = async malId => {
         const d = await fetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/full`);
         if (!d) return null;
         return {
-            tags:         [...(d.genres?.map(g => g.name) || []), ...(d.themes?.map(t => t.name) || [])],
+            tags: [
+                ...(d.genres          || []),
+                ...(d.explicit_genres || []),   // hentai/erotica genre lives here on MAL
+                ...(d.themes          || []),
+            ].map(x => x.name),
             synopsis:     d.synopsis || null,
             demographics: d.demographics?.map(x => x.name) || [],
             fullData:     d

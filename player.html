@@ -739,7 +739,7 @@
             container.innerHTML = html;
         }
 
-        function renderRecs(recs, malIdToName) {
+        function renderRecs(recs, malIdToNames) {
             const container = document.getElementById('tab-recs');
             const tabBtn = document.querySelector('[data-tab="recs"]');
 
@@ -748,15 +748,20 @@
                 return;
             }
 
-            // Cross-check recommendations against in-RAM MAL IDs
+            // Cross-check recommendations against in-RAM MAL IDs.
+            // malIdToNames maps one MAL ID → array of local names, so if both
+            // "Jujutsu Kaisen" and "Jujutsu Kaisen (Dub Indo)" exist in the
+            // collection they both get their own rec card instead of one being lost.
             const availableRecs = [];
             recs.forEach(r => {
                 const targetId = String(r.entry.mal_id);
-                if (malIdToName.has(targetId)) {
-                    availableRecs.push({
-                        title:    r.entry.title,
-                        img:      r.entry.images.jpg.image_url,
-                        siteName: malIdToName.get(targetId)
+                if (malIdToNames.has(targetId)) {
+                    malIdToNames.get(targetId).forEach(localName => {
+                        availableRecs.push({
+                            title:    localName,                       // show local name (Sub/Dub label preserved)
+                            img:      r.entry.images.jpg.image_url,
+                            siteName: localName
+                        });
                     });
                 }
             });
@@ -791,11 +796,18 @@
             // 1. Pass data.anime_list to trigger the ≥50% coverage check (skips 60MB DB)
             await AnimeMetadata.setupMetadata(data.anime_list);
 
-            // 2. Build a highly accurate RAM map: malId → local anime name
-            const malIdToName = new Map();
+            // 2. Build RAM map: malId → Array of local names
+            //    One MAL ID can map to multiple local entries (e.g. Sub + Dub Indo).
+            //    Using a plain set(id, name) would silently overwrite the first one,
+            //    so both Sub and Dub would never appear as recommendations together.
+            const malIdToNames = new Map();
             data.anime_list.forEach(a => {
                 const id = AnimeMetadata.getMalId(a.name);
-                if (id) malIdToName.set(String(id), a.name);
+                if (id) {
+                    const strId = String(id);
+                    if (!malIdToNames.has(strId)) malIdToNames.set(strId, []);
+                    malIdToNames.get(strId).push(a.name);
+                }
             });
 
             const meta = await AnimeMetadata.fetchJikanForAnime(currentAnime.name);
@@ -810,7 +822,7 @@
 
                 renderReviews(reviews);
                 renderForums(forums);
-                renderRecs(recs, malIdToName);
+                renderRecs(recs, malIdToNames);
             } else {
                 document.getElementById('tab-overview').innerHTML = "<p style='color:#888;'>Data Jikan API tidak tersedia untuk anime ini.</p>";
                 document.getElementById('tab-reviews').innerHTML  = "<p style='color:#888;'>-</p>";
