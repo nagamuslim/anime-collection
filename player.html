@@ -174,6 +174,32 @@
             .overview-layout { flex-direction: column; }
             .overview-poster { width: 160px; margin: 0 auto; }
         }
+
+        /* ── Synopsis Translation ─────────────────────────────── */
+        .synopsis-wrap { position: relative; margin-top: 20px; }
+        .synopsis-text { text-align: justify; color: #ddd; line-height: 1.7; }
+        .translate-row {
+            display: flex; align-items: center; gap: 10px;
+            margin-top: 10px; flex-wrap: wrap;
+        }
+        .translate-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(102,126,234,0.15); border: 1px solid rgba(102,126,234,0.4);
+            color: #c3cfff; padding: 6px 14px; border-radius: 20px;
+            font-size: 0.82em; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; font-family: inherit; white-space: nowrap;
+        }
+        .translate-btn:hover:not(:disabled) {
+            background: rgba(102,126,234,0.3); color: #fff;
+            border-color: rgba(102,126,234,0.7);
+        }
+        .translate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .translate-btn.translating { animation: tl-pulse 1s ease-in-out infinite; }
+        @keyframes tl-pulse { 0%,100%{opacity:.5} 50%{opacity:1} }
+        .translate-badge {
+            font-size: 0.75em; color: #888; font-style: italic;
+        }
+        .translate-err { font-size: 0.78em; color: #f87171; }
     </style>
 </head>
 <body>
@@ -669,6 +695,82 @@
 
         // ── Jikan Renderers ───────────────────────────────────────────────────
 
+        // ── Method B: Unofficial Google Translate endpoint ────────────────
+        // Returns translated string or throws on failure.
+        // Docs: undocumented gtx endpoint; free, no key, CORS-open.
+        // Response shape: [ [ ["translated","original",...], ... ], ... ]
+        // We join all chunk[0] values to reconstruct the full translated text.
+        async function _gtxTranslate(text, targetLang = 'id') {
+            const url = 'https://translate.googleapis.com/translate_a/single'
+                      + '?client=gtx&sl=en&tl=' + targetLang
+                      + '&dt=t&q=' + encodeURIComponent(text);
+            const res = await fetch(url);
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            // data[0] = array of sentence chunks; each chunk[0] = translated piece
+            if (!Array.isArray(data) || !Array.isArray(data[0]))
+                throw new Error('Unexpected response shape');
+            return data[0].map(chunk => chunk[0] || '').join('');
+        }
+
+        // ── translateSynopsis ─────────────────────────────────────────────
+        // Called by the Terjemahkan button in renderOverview.
+        // 1. Translates text via Method B (gtx endpoint).
+        // 2. Persists the result as synopsis_id inside the existing meta_ key
+        //    in localStorage — same object, zero extra quota cost.
+        // 3. Updates the DOM in-place (no full re-render).
+        async function translateSynopsis(originalText, animeName, btnEl, textEl, badgeEl) {
+            btnEl.disabled = true;
+            btnEl.classList.add('translating');
+            btnEl.textContent = '⏳ Menerjemahkan...';
+
+            try {
+                const translated = await _gtxTranslate(originalText);
+
+                // ── Persist into existing meta_ key (same object as synopsis) ──
+                // Storage is meta_<animeName> in localStorage.
+                // We ADD synopsis_id to whatever is already there.
+                // This means on next page open we skip the API call entirely.
+                const lsKey = 'meta_' + animeName;
+                try {
+                    const raw = localStorage.getItem(lsKey);
+                    const obj = raw ? JSON.parse(raw) : {};
+                    obj.synopsis_id = translated;
+                    localStorage.setItem(lsKey, JSON.stringify(obj));
+                } catch(e) { /* localStorage full or blocked — still show in DOM */ }
+
+                // Update DOM
+                textEl.textContent = translated;
+                btnEl.textContent = '🔄 Tampilkan Asli';
+                btnEl.disabled = false;
+                btnEl.classList.remove('translating');
+                badgeEl.textContent = 'Diterjemahkan via Google Translate';
+
+                // Toggle back to original on second click
+                let showingTranslation = true;
+                btnEl.onclick = () => {
+                    if (showingTranslation) {
+                        textEl.textContent = originalText;
+                        btnEl.textContent = '🇮🇩 Terjemahkan';
+                        badgeEl.textContent = '';
+                        showingTranslation = false;
+                    } else {
+                        textEl.textContent = translated;
+                        btnEl.textContent = '🔄 Tampilkan Asli';
+                        badgeEl.textContent = 'Diterjemahkan via Google Translate';
+                        showingTranslation = true;
+                    }
+                };
+            } catch(e) {
+                btnEl.classList.remove('translating');
+                btnEl.disabled = false;
+                btnEl.textContent = '🇮🇩 Terjemahkan';
+                // Show error inline
+                const errEl = btnEl.parentElement.querySelector('.translate-err');
+                if (errEl) errEl.textContent = '⚠ Gagal: ' + e.message + ' (coba lagi)';
+            }
+        }
+
         function renderOverview(meta) {
             const container = document.getElementById('tab-overview');
             if (!meta || !meta.fullData) {
@@ -676,8 +778,22 @@
                 return;
             }
             const d = meta.fullData;
+            const synopsis = d.synopsis || 'Sinopsis tidak tersedia.';
+
+            // Check if we already have a cached Indonesian translation
+            let cachedTranslation = null;
+            try {
+                const lsKey = 'meta_' + currentAnime.name;
+                const raw = localStorage.getItem(lsKey);
+                if (raw) {
+                    const obj = JSON.parse(raw);
+                    cachedTranslation = obj.synopsis_id || null;
+                }
+            } catch(e) {}
+
             let tagHtml = '';
             meta.tags.forEach(t => tagHtml += `<span>${t}</span>`);
+
             container.innerHTML = `
                 <div class="overview-layout">
                     <img src="${d.images?.jpg?.large_image_url || d.images?.jpg?.image_url}" alt="Poster" class="overview-poster" />
@@ -691,10 +807,45 @@
                             <div class="overview-stat"><span>Status</span><strong>${d.status}</strong></div>
                             <div class="overview-stat"><span>Aired</span><strong>${d.season ? d.season.charAt(0).toUpperCase()+d.season.slice(1) : ''} ${d.year || ''}</strong></div>
                         </div>
-                        <p style="margin-top:20px; text-align:justify; color:#ddd;">${d.synopsis || 'Sinopsis tidak tersedia.'}</p>
+                        <div class="synopsis-wrap">
+                            <p class="synopsis-text" id="synopsisText">${cachedTranslation || synopsis}</p>
+                            <div class="translate-row">
+                                <button class="translate-btn" id="translateBtn">
+                                    ${cachedTranslation ? '🔄 Tampilkan Asli' : '🇮🇩 Terjemahkan'}
+                                </button>
+                                <span class="translate-badge" id="translateBadge">${cachedTranslation ? 'Diterjemahkan via Google Translate' : ''}</span>
+                                <span class="translate-err" id="translateErr"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
+
+            // Wire up the translate button
+            const btn    = document.getElementById('translateBtn');
+            const textEl = document.getElementById('synopsisText');
+            const badge  = document.getElementById('translateBadge');
+
+            if (cachedTranslation) {
+                // Already translated — wire up toggle to go back to original
+                let showingTranslation = true;
+                btn.onclick = () => {
+                    if (showingTranslation) {
+                        textEl.textContent = synopsis;
+                        btn.textContent = '🇮🇩 Terjemahkan';
+                        badge.textContent = '';
+                        showingTranslation = false;
+                    } else {
+                        textEl.textContent = cachedTranslation;
+                        btn.textContent = '🔄 Tampilkan Asli';
+                        badge.textContent = 'Diterjemahkan via Google Translate';
+                        showingTranslation = true;
+                    }
+                };
+            } else {
+                // First time — fire translation on click
+                btn.onclick = () => translateSynopsis(synopsis, currentAnime.name, btn, textEl, badge);
+            }
         }
 
         function renderReviews(reviews) {
