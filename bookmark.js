@@ -75,6 +75,13 @@ var BookmarkManager = (function () {
          * re-entering the same one on page reload).
          */
         trackProgress: function (animeName, videoId, epNumber, epTitle, timeSeconds) {
+            // Guard: episode 1 bare-open writes (timeSeconds === undefined, no arg passed)
+            // are rejected. The popup would say "Episode 1" before anything was actually
+            // watched. Near-end nulls (explicit null) still pass through — they carry
+            // meaning (clear lastWatchedTime), and ep 1 genuinely near-ending is real.
+            // Polling saves (number > 5) also pass through normally.
+            if (epNumber === 1 && timeSeconds === undefined) return;
+
             var data = getData();
             if (!data[animeName]) data[animeName] = { visitCount: 0 };
 

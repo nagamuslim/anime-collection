@@ -848,10 +848,10 @@
             }
         }
 
-        function renderReviews(reviews) {
+        function renderReviews(reviews, append = false) {
             const container = document.getElementById('tab-reviews');
             if (!reviews || reviews.length === 0) {
-                container.innerHTML = "<p style='color:#888; text-align:center;'>Belum ada ulasan untuk anime ini.</p>";
+                if (!append) container.innerHTML = "<p style='color:#888; text-align:center;'>Belum ada ulasan untuk anime ini.</p>";
                 return;
             }
             let html = '';
@@ -868,7 +868,8 @@
                     <div class="review-body">${r.review}</div>
                 </div>`;
             });
-            container.innerHTML = html;
+            if (append) container.insertAdjacentHTML('beforeend', html);
+            else container.innerHTML = html;
         }
 
         function renderForums(forums) {
@@ -941,6 +942,43 @@
         // setupMetadata so it can decide whether to skip the 60 MB offline DB.
         // Then builds a RAM map (malId → local name) for recs cross-checking.
         //
+        // ── Background Review Worker ──────────────────────────────────────────
+        // Fetches pages 2+ of Jikan reviews in a detached Worker so the main
+        // thread never blocks. Each batch is appended to the reviews tab as it
+        // arrives. Uses a Blob URL so no extra file is needed.
+        function _spawnReviewWorker(malId, startPage) {
+            const src = `
+                self.onmessage = async function(e) {
+                    const { malId, startPage } = e.data;
+                    let page = startPage;
+                    while (true) {
+                        try {
+                            const res = await fetch(
+                                'https://api.jikan.moe/v4/anime/' + malId +
+                                '/reviews?preliminary=true&page=' + page
+                            );
+                            if (!res.ok) break;
+                            const json = await res.json();
+                            const data = json.data || [];
+                            const hasNext = json.pagination?.has_next_page ?? false;
+                            if (data.length > 0) self.postMessage({ data, done: !hasNext });
+                            if (!hasNext) break;
+                            page++;
+                            await new Promise(r => setTimeout(r, 1500));
+                        } catch(e) { break; }
+                    }
+                };
+            `;
+            const blobUrl = URL.createObjectURL(new Blob([src], { type: 'application/javascript' }));
+            const worker  = new Worker(blobUrl);
+            worker.postMessage({ malId, startPage });
+            worker.onmessage = e => {
+                renderReviews(e.data.data, true); // append each batch
+                if (e.data.done) { worker.terminate(); URL.revokeObjectURL(blobUrl); }
+            };
+            worker.onerror = () => { worker.terminate(); URL.revokeObjectURL(blobUrl); };
+        }
+
         async function fetchJikanTabs(data) {
             if (typeof AnimeMetadata === 'undefined') return;
 
@@ -965,13 +1003,14 @@
             if (meta && meta.malId) {
                 renderOverview(meta);
 
-                const [reviews, forums, recs] = await Promise.all([
-                    AnimeMetadata.fetchReviews(meta.malId),
+                const [reviewsP1, forums, recs] = await Promise.all([
+                    AnimeMetadata.fetchReviews(meta.malId, 1),
                     AnimeMetadata.fetchForum(meta.malId),
                     AnimeMetadata.fetchRecommendations(meta.malId)
                 ]);
 
-                renderReviews(reviews);
+                renderReviews(reviewsP1.data);
+                if (reviewsP1.hasNext) _spawnReviewWorker(meta.malId, 2);
                 renderForums(forums);
                 renderRecs(recs, malIdToNames);
             } else {

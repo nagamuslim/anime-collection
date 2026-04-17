@@ -680,7 +680,7 @@ onconnect = function(e) {
     // ── Jikan API — Robust Fetcher ─────────────────────────────────────
     // Retries up to maxRetries times with exponential backoff on 429.
     // Returns data.data on success, null on 404 / exhausted retries.
-    const fetchWithRetry = async (url, maxRetries = 3) => {
+    const fetchWithRetry = async (url, maxRetries = 3, returnFull = false) => {
         for (let i = 0; i < maxRetries; i++) {
             try {
                 const res = await fetch(url);
@@ -691,7 +691,7 @@ onconnect = function(e) {
                 if (res.status === 404) return null; // genuinely not found, do not retry
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
-                return data?.data || null;
+                return returnFull ? data : (data?.data || null);
             } catch (e) {
                 if (i === maxRetries - 1) return null;
                 await sleep(1000);
@@ -720,7 +720,16 @@ onconnect = function(e) {
     };
 
     // ── Single On-Demand Fetch Helpers ────────────────────────────────
-    const fetchReviews        = async malId => malId ? (await fetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/reviews?preliminary=true`) || []) : [];
+    // fetchReviews returns { data: [], hasNext: bool } for page N.
+    // Callers render page 1 immediately; if hasNext, a Worker fetches the rest.
+    const fetchReviews = async (malId, page = 1) => {
+        if (!malId) return { data: [], hasNext: false };
+        const res = await fetchWithRetry(
+            `https://api.jikan.moe/v4/anime/${malId}/reviews?preliminary=true&page=${page}`,
+            3, true
+        );
+        return { data: res?.data || [], hasNext: res?.pagination?.has_next_page ?? false };
+    };
     const fetchForum          = async malId => malId ? (await fetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/forum`)                      || []) : [];
     const fetchRecommendations = async malId => malId ? (await fetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/recommendations`)            || []) : [];
 
