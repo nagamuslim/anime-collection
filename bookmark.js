@@ -75,12 +75,13 @@ var BookmarkManager = (function () {
          * re-entering the same one on page reload).
          */
         trackProgress: function (animeName, videoId, epNumber, epTitle, timeSeconds) {
-            // Guard: episode 1 bare-open writes (timeSeconds === undefined, no arg passed)
-            // are rejected. The popup would say "Episode 1" before anything was actually
-            // watched. Near-end nulls (explicit null) still pass through — they carry
-            // meaning (clear lastWatchedTime), and ep 1 genuinely near-ending is real.
-            // Polling saves (number > 5) also pass through normally.
-            if (epNumber === 1 && timeSeconds === undefined) return;
+            // Guard: bare-open calls (timeSeconds === undefined, no arg passed) are
+            // rejected when NO history exists yet for this anime. This prevents
+            // "Continue Watching: Episode 14" appearing before anything was actually
+            // watched — regardless of which episode number is the starting point
+            // (ep 1 for normal series, ep 14 for continuations, ep 7 in Terbaru mode).
+            // Near-end nulls (explicit null) and polling saves (number) pass through.
+            if (timeSeconds === undefined && !getData()[animeName]) return;
 
             var data = getData();
             if (!data[animeName]) data[animeName] = { visitCount: 0 };
@@ -224,6 +225,31 @@ var ContinueWatching = (function () {
         var savedTime = (item.lastWatchedTime && item.lastWatchedTime > 5)
                         ? item.lastWatchedTime : null;
 
+        // For marathon series the player saves absolute video position as lastWatchedTime
+        // (e.g. ep 49 starting at second 43,384 → saved as ~43,510).
+        // Look up the episode's start_seconds from anime_data so we can display
+        // episode-relative time in the label without touching how anything is saved or seeked.
+        var _displayTime = savedTime;
+        if (savedTime && epNum) {
+            try {
+                var _raw = localStorage.getItem('anime_data');
+                if (_raw) {
+                    var _parsed = JSON.parse(_raw);
+                    var _animeEntry = (_parsed.anime_list || []).find(function(a) {
+                        return a.name === item.name;
+                    });
+                    if (_animeEntry) {
+                        var _vid = (_animeEntry.videos || []).find(function(v) {
+                            return v.episode === epNum;
+                        });
+                        if (_vid && _vid.start_seconds > 0) {
+                            _displayTime = savedTime - _vid.start_seconds;
+                        }
+                    }
+                }
+            } catch(e) { /* silent — fall back to raw savedTime */ }
+        }
+
         // epLabel() in player.html builds titles like "Episode 12" or "Episode 3-4"
         // when there's no real chapter name. Detect that default pattern so we
         // don't append "Episode 12 · Episode 12" (the bug in the screenshot).
@@ -235,7 +261,8 @@ var ContinueWatching = (function () {
             epText = 'Episode ' + epNum;
             if (savedTime) {
                 // User stopped mid-episode — show where they left off
-                epText += ' \u00b7 ' + fmtTime(savedTime);
+                // _displayTime is episode-relative (start_seconds subtracted for marathon)
+                epText += ' \u00b7 ' + fmtTime(_displayTime > 0 ? _displayTime : savedTime);
             } else if (!isDefaultLabel) {
                 // Real chapter title from the source (ItsAnime, etc.)
                 epText += ' \u00b7 ' + rawTitle;
