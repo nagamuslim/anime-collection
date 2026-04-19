@@ -55,6 +55,46 @@
             .grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
             .header-content { flex-wrap: wrap; }
         }
+
+        /* ── MAL Sync Bar ──────────────────────────────────────────── */
+        .mal-bar{max-width:1400px;margin:0 auto 20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:12px;padding:12px 18px;}
+        .mal-status-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+        .mal-avatar{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,.2);flex-shrink:0;display:none;}
+        .mal-dot{width:8px;height:8px;border-radius:50%;background:#666;flex-shrink:0;transition:background .3s;}
+        .mal-dot.ok{background:#6bcf7f;box-shadow:0 0 6px rgba(107,207,127,.6);}
+        #mal-status-text{font-size:0.86em;color:#b0b0b0;font-weight:600;}
+        #mal-last-sync{font-size:0.78em;color:#777;}
+        .mal-hdr-btns{margin-left:auto;display:flex;gap:8px;flex-shrink:0;}
+        .mal-btn-sm{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#ccc;padding:5px 12px;border-radius:7px;font-size:0.78em;font-family:inherit;cursor:pointer;transition:background .2s;white-space:nowrap;}
+        .mal-btn-sm:hover{background:rgba(255,255,255,0.14);}
+        .mal-btn-sync{color:#a8e6cf;border-color:rgba(168,230,175,.3);}
+        .mal-btn-sync:hover{background:rgba(168,230,175,.1);}
+        .mal-btn-disc{color:#ff8a80;border-color:rgba(220,50,50,.25);}
+        .mal-btn-disc:hover{background:rgba(220,50,50,.12);}
+        #mal-panel{margin-top:14px;border-top:1px solid rgba(255,255,255,0.07);padding-top:14px;}
+        .mal-fields{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+        .mal-field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:170px;}
+        .mal-field label{font-size:0.76em;color:#888;}
+        .mal-field input{background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.12);color:#e0e0e0;border-radius:8px;padding:8px 11px;font-size:0.86em;font-family:inherit;width:100%;}
+        .mal-field input:focus{outline:none;border-color:rgba(102,126,234,.5);}
+        .mal-options-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:8px;}
+        .mal-check-label{display:flex;align-items:center;gap:7px;font-size:0.84em;color:#ccc;cursor:pointer;}
+        .mal-check-label input[type=checkbox]{accent-color:#667eea;width:14px;height:14px;cursor:pointer;}
+        .mal-check-hint{color:#777;font-size:0.82em;}
+        .mal-adv-btn{background:none;border:none;color:#667eea;font-size:0.78em;cursor:pointer;padding:0;font-family:inherit;}
+        .mal-adv-btn:hover{color:#a8e6cf;}
+        #mal-adv-section{margin-top:8px;}
+        #mal-paste-row{display:flex;gap:8px;align-items:flex-end;margin-top:10px;}
+        #mal-paste-row .mal-field{flex:1;}
+        .mal-action-row{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap;}
+        .mal-btn-primary{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border:none;color:#fff;padding:9px 20px;border-radius:8px;font-size:0.86em;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity .2s;}
+        .mal-btn-primary:hover{opacity:.85;}
+        #mal-code-box{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;background:rgba(102,126,234,.08);border:1px solid rgba(102,126,234,.25);border-radius:8px;padding:9px 13px;}
+        #mal-code-val{color:#a8e6cf;font-family:monospace;font-size:0.82em;flex:1;word-break:break-all;line-height:1.5;}
+        #mal-copy-btn,#mal-paste-btn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#ccc;padding:5px 10px;border-radius:6px;font-size:0.78em;font-family:inherit;cursor:pointer;white-space:nowrap;}
+        #mal-copy-btn:hover,#mal-paste-btn:hover{background:rgba(255,255,255,.15);}
+        #mal-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(10px);background:rgba(30,20,60,0.95);border:1px solid rgba(255,255,255,0.15);color:#e0e0e0;padding:8px 18px;border-radius:20px;font-size:0.84em;opacity:0;pointer-events:none;transition:all .25s;z-index:9999;white-space:nowrap;}
+        #mal-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
     </style>
 </head>
 <body>
@@ -66,12 +106,74 @@
         </div>
     </div>
 
+
+    <!-- MAL Sync Bar -->
+    <div class="container" style="padding-bottom:0;padding-top:20px">
+      <div class="mal-bar" id="mal-bar">
+        <div class="mal-status-row">
+          <img class="mal-avatar" id="mal-avatar" src="" alt="avatar"/>
+          <span class="mal-dot" id="mal-dot"></span>
+          <span id="mal-status-text">MAL: Belum terhubung</span>
+          <span id="mal-last-sync"></span>
+          <div class="mal-hdr-btns">
+            <button class="mal-btn-sm mal-btn-sync" id="mal-sync-btn" style="display:none">Sinkron Sekarang ↺</button>
+            <button class="mal-btn-sm" id="mal-toggle-btn">Hubungkan ▾</button>
+            <button class="mal-btn-sm mal-btn-disc" id="mal-disconnect-btn" style="display:none">Putuskan</button>
+          </div>
+        </div>
+
+        <div id="mal-panel" style="display:none">
+          <div class="mal-fields">
+            <div class="mal-field">
+              <label>Client ID</label>
+              <input type="text" id="mal-cid" placeholder="MAL Client ID" autocomplete="off"/>
+            </div>
+            <div class="mal-field">
+              <label>Client Secret</label>
+              <input type="password" id="mal-csec" placeholder="MAL Client Secret" autocomplete="off"/>
+            </div>
+          </div>
+          <div class="mal-options-row">
+            <label class="mal-check-label">
+              <input type="checkbox" id="mal-auto-cb"/>
+              <span>Auto mode <span class="mal-check-hint">(tanpa tempel kode manual)</span></span>
+            </label>
+            <button class="mal-adv-btn" id="mal-adv-btn">⚙ Advanced</button>
+          </div>
+          <div id="mal-adv-section" style="display:none">
+            <div class="mal-fields">
+              <div class="mal-field" style="min-width:100%">
+                <label>GAS Web App URL (opsional — sudah ada default)</label>
+                <input type="url" id="mal-gas-url" placeholder="https://script.google.com/macros/s/.../exec"/>
+              </div>
+            </div>
+          </div>
+          <div id="mal-paste-row" style="display:none">
+            <div class="mal-field">
+              <label>Kode Otorisasi (dari halaman GAS)</label>
+              <input type="text" id="mal-auth-code" placeholder="Tempel kode di sini..."/>
+            </div>
+            <button class="mal-btn-primary" id="mal-exchange-btn">Tukar →</button>
+          </div>
+          <div id="mal-code-box" style="display:none">
+            <div id="mal-code-val"></div>
+            <button id="mal-copy-btn">Salin</button>
+            <button id="mal-paste-btn">Tempel ke field →</button>
+          </div>
+          <div class="mal-action-row">
+            <button class="mal-btn-primary" id="mal-connect-btn">Hubungkan MAL ↗</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="mal-toast"></div>
     <div class="container">
         <div class="grid" id="historyGrid">
             <div class="loading">&#9203; Memuat riwayat...</div>
         </div>
     </div>
 
+    <script src="metadata.js" onerror="void 0"></script>
     <script src="bookmark.js" onerror="void 0"></script>
     <script>
         'use strict';
@@ -226,6 +328,85 @@
         });
 
         loadMasterData();
+    </script>
+
+    <script>
+    (function malBarInit(){
+        if(typeof MALSync==='undefined') return;
+
+        // ── Pre-fill saved values ─────────────────────────────────────
+        function ck(n){var m=document.cookie.match('(?:^|; )'+n+'=([^;]*)');return m?decodeURIComponent(m[1]):'';}
+        var cid=ck('mal_cid')||localStorage.getItem('cid')||'';
+        var gasUrl=ck('mal_gas')||localStorage.getItem('gas_url')||'';
+        var elCid=document.getElementById('mal-cid'),elGas=document.getElementById('mal-gas-url');
+        if(elCid&&cid) elCid.value=cid;
+        if(elGas&&gasUrl) elGas.value=gasUrl;
+        // Show Advanced only if GAS URL not set (first-time setup)
+        if(!gasUrl){var adv=document.getElementById('mal-adv-section');if(adv)adv.style.display='';}
+
+        // ── Toggle panel ──────────────────────────────────────────────
+        document.getElementById('mal-toggle-btn').addEventListener('click',function(){
+            var panel=document.getElementById('mal-panel');
+            var syncBtn=document.getElementById('mal-sync-btn');
+            var open=panel.style.display!=='none';
+            panel.style.display=open?'none':'';
+            if(!open&&syncBtn) syncBtn.style.display='none'; // hide sync btn while panel open
+        });
+
+        // ── Disconnect ────────────────────────────────────────────────
+        document.getElementById('mal-disconnect-btn').addEventListener('click',function(){
+            if(confirm('Putuskan koneksi MAL?')) MALSync.disconnect();
+        });
+
+        // ── Sync now button ───────────────────────────────────────────
+        var syncBtn=document.getElementById('mal-sync-btn');
+        if(syncBtn) syncBtn.addEventListener('click',function(){ MALSync.importFromMAL(); });
+
+        // ── Advanced toggle ───────────────────────────────────────────
+        document.getElementById('mal-adv-btn').addEventListener('click',function(){
+            var sec=document.getElementById('mal-adv-section');
+            sec.style.display=sec.style.display==='none'?'':'none';
+        });
+
+        // ── Auto mode: show/hide paste row ────────────────────────────
+        document.getElementById('mal-auto-cb').addEventListener('change',function(){
+            var pr=document.getElementById('mal-paste-row');
+            if(pr) pr.style.display='none';
+        });
+
+        // ── Connect button ────────────────────────────────────────────
+        document.getElementById('mal-connect-btn').addEventListener('click',function(){
+            MALSync.startAuth();
+        });
+
+        // ── Exchange button (display mode) ────────────────────────────
+        document.getElementById('mal-exchange-btn').addEventListener('click',function(){
+            var code=(document.getElementById('mal-auth-code')?.value||'').trim();
+            if(!code){MALSync.showToast('Tempel kode terlebih dahulu');return;}
+            MALSync.exchangeCode(code);
+        });
+
+        // ── Code copy / paste ─────────────────────────────────────────
+        document.getElementById('mal-copy-btn').addEventListener('click',function(){
+            var v=document.getElementById('mal-code-val').textContent;
+            navigator.clipboard.writeText(v).then(function(){MALSync.showToast('Disalin');});
+        });
+        document.getElementById('mal-paste-btn').addEventListener('click',function(){
+            var v=document.getElementById('mal-code-val').textContent;
+            var f=document.getElementById('mal-auth-code');
+            if(f){f.value=v;var pr=document.getElementById('mal-paste-row');if(pr)pr.style.display='flex';}
+        });
+
+        // ── Render status + show sync button when connected ───────────
+        MALSync.updateSyncStatus();
+        var connected=MALSync.isConnected();
+        if(connected){
+            var sb=document.getElementById('mal-sync-btn');
+            if(sb) sb.style.display='';
+            // Auto-import in background (silent)
+            MALSync.importFromMAL();
+        }
+    })();
     </script>
 </body>
 </html>
