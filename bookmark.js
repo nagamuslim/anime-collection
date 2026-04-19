@@ -435,12 +435,22 @@ var MALSync = (function(){
         try{
             var res=await resolveMALEpisode(animeName,localEp);
             if(!res) return;
+            var tk=getTK();
+            if(tk[animeName]) {
+                tk[animeName].malStatus = 'completed';
+                setTK(tk);
+            }
             var upd={num_watched_episodes:res.malEp, status:'completed'};
             var resp=await gasPost({action:'UPDATE', animeId:parseInt(res.malId), updateData:upd});
             if(resp&&resp.success){
-                var tk=getTK(); if(tk[animeName]){ tk[animeName].malStatus='completed'; setTK(tk); }
                 updateSyncStatus();
                 console.log('[MALSync] ✓ Marked COMPLETED:',animeName);
+            } else {
+                // Revert if GAS fails, so it tries again later
+                if(tk[animeName]) {
+                    tk[animeName].malStatus = 'watching';
+                    setTK(tk);
+                }
             }
         }catch(e){console.warn('[MALSync] Completion error:',e.message);}
     }
