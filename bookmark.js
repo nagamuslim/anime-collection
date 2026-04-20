@@ -357,10 +357,15 @@ var MALSync = (function(){
     // For SEQUELS (by malId only), falls back to jikanByMalId().
     //
     async function resolveMALEpisode(animeName, localEp){
-        // 1. Check cached segment chain
+        // 1. Check cached segment chain — only return if it covers the requested episode
         var tk=getTK();
-        if(tk[animeName]&&tk[animeName].malSegments&&tk[animeName].malSegments.length)
-            return walk(tk[animeName].malSegments, localEp);
+        var cached = tk[animeName] && tk[animeName].malSegments;
+        if(cached && cached.length){
+            var last = cached[cached.length - 1];
+            if (localEp <= last.offset + last.epCount) {
+                return walk(cached, localEp);
+            }
+        }
 
         // 2. Get startMalId — prefer AnimeMetadata (more reliable resolution)
         var startId=null;
