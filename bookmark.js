@@ -423,40 +423,69 @@ var MALSync = (function(){
         return {malId:last.malId, malEp:localEp-last.offset};
     }
 
-    // ── Sync episode ──────────────────────────────────────────────────
-    var _compTimer=null;
-    async function scheduleCompletion(animeName, localEp){
+    // ── Completion ────────────────────────────────────────────────────
+    // Dedup map: prevents the same (animeName:ep) from triggering completion
+    // more than once. Key cleared when the user switches to a different episode.
+    // Without this, every 5-second poll in state===0 re-fires the timer.
+    var _completionSent = {};
+    var _compTimer = null;
+
+    function scheduleCompletion(animeName, localEp){
         clearTimeout(_compTimer);
-        _compTimer=setTimeout(function(){_doCompletion(animeName,localEp);}, 2000);
+        _compTimer = setTimeout(function(){ _doCompletion(animeName, localEp); }, 2000);
     }
 
     async function _doCompletion(animeName, localEp){
-        if(!isConnected()||!getGasUrl()) return;
+        // Dedup: only fire once per (anime:ep) pair
+        var dedupKey = animeName + ':' + localEp;
+        if (_completionSent[dedupKey]) return;
+
+        if (!isConnected() || !getGasUrl()) return;
         try{
-            var res=await resolveMALEpisode(animeName,localEp);
-            if(!res) return;
-            var tk=getTK();
-            if(tk[animeName]) {
-                tk[animeName].malStatus = 'completed';
-                setTK(tk);
+            var res = await resolveMALEpisode(animeName, localEp);
+            if (!res) return;
+
+            // ── CRITICAL CHECK: only mark completed when malEp === totalEps ──
+            // The segment cache was built by resolveMALEpisode and contains
+            // the total episode count (epCount) from Jikan for this MAL ID.
+            // epCount = 9999 means still airing / unknown → never mark completed.
+            // If malEp < epCount, the user is mid-series → skip completion.
+            var tk = getTK();
+            var segs = (tk[animeName] && tk[animeName].malSegments) || [];
+            var seg = null;
+            for (var i = 0; i < segs.length; i++) {
+                if (segs[i].malId === res.malId) { seg = segs[i]; break; }
             }
-            var upd={num_watched_episodes:res.malEp, status:'completed'};
-            var resp=await gasPost({action:'UPDATE', animeId:parseInt(res.malId), updateData:upd});
-            if(resp&&resp.success){
-                updateSyncStatus();
-                console.log('[MALSync] ✓ Marked COMPLETED:',animeName);
-            } else {
-                // Revert if GAS fails, so it tries again later
-                if(tk[animeName]) {
-                    tk[animeName].malStatus = 'watching';
-                    setTK(tk);
+            var totalEps = seg ? seg.epCount : null;
+
+            if (!totalEps || totalEps >= 9999 || res.malEp < totalEps) {
+                // Not last episode, or airing/unknown count — skip
+                console.log('[MALSync] Near-end ep '+res.malEp+'/'+totalEps+' — not completing '+animeName);
+                return;
+            }
+
+            // Mark as sent so repeated polls don't re-fire
+            _completionSent[dedupKey] = true;
+
+            var upd = { num_watched_episodes: res.malEp, status: 'completed' };
+            var resp = await gasPost({ action: 'UPDATE', animeId: parseInt(res.malId), updateData: upd });
+            if (resp && resp.success){
+                var tk2 = getTK();
+                if (tk2[animeName]){
+                    tk2[animeName].malStatus    = 'completed';
+                    tk2[animeName].malLastSync  = Date.now();
+                    setTK(tk2);
                 }
+                updateSyncStatus();
+                console.log('[MALSync] ✓ COMPLETED:', animeName, 'MAL:'+res.malId, 'ep'+res.malEp+'/'+totalEps);
             }
-        }catch(e){console.warn('[MALSync] Completion error:',e.message);}
+        }catch(e){ console.warn('[MALSync] Completion error:', e.message); }
     }
 
     var _syncTimer=null;
     function scheduleSyncEpisode(animeName, localEp){
+        // Switching episode → previous completion dedup keys are irrelevant now
+        _completionSent = {};
         clearTimeout(_syncTimer);
         _syncTimer=setTimeout(function(){_doSync(animeName,localEp);},5000);
     }
@@ -471,11 +500,22 @@ var MALSync = (function(){
             if(!existing||existing==='plan_to_watch'||existing==='dropped') upd.status='watching';
             else if(existing==='completed'){ upd.status='watching'; upd.is_rewatching=true; }
 
+            // ── Piggyback watchtime in MAL comments for cross-device sync ──
+            // Zero extra quota — this field is written in the same PUT call.
+            // Format: {"ep":<localEp>,"t":<seconds>}  (compact, fits any comment length limit)
+            // On importFromMAL, we read it back and restore lastWatchedTime on other devices.
+            /* Disabled sending time as comment due to MAL API strictness
+            var lastTime = tk[animeName] && tk[animeName].lastWatchedTime;
+            if (typeof lastTime === 'number' && lastTime > 5) {
+                upd.comments = JSON.stringify({ ep: localEp, t: lastTime });
+            }
+            */
+
             var resp=await gasPost({action:'UPDATE', animeId:parseInt(res.malId), updateData:upd});
             if(resp&&resp.success){
                 tk=getTK(); if(tk[animeName]){ tk[animeName].malStatus=upd.status||existing||'watching'; tk[animeName].malLastSync=Date.now(); setTK(tk); }
                 updateSyncStatus();
-                console.log('[MALSync] ✓',animeName,'ep',res.malEp,'→ MAL',res.malId);
+                console.log('[MALSync] ✓',animeName,'ep',res.malEp,'→ MAL',res.malId, lastTime?'(+watchtime)':'');
             }else console.warn('[MALSync] Update failed:',resp);
         }catch(e){console.warn('[MALSync] _doSync error:',e.message);}
     }
@@ -524,6 +564,7 @@ var MALSync = (function(){
                         score:        mls.score||0,
                         numWatched:   mls.num_episodes_watched||0,
                         isRewatching: mls.is_rewatching||false,
+                        comments:     mls.comments||'',   // watchtime JSON piggyback
                         updatedAt:    mls.updated_at
                                         ? new Date(mls.updated_at).getTime()
                                         : Date.now()
@@ -669,6 +710,23 @@ var MALSync = (function(){
                 // visitCount — episodes watched is a meaningful proxy
                 if(!tk[name].visitCount && entry.numWatched > 0)
                     tk[name].visitCount = entry.numWatched;
+
+                // ── Restore cross-device watchtime from MAL comment ──────
+                // _doSync writes {"ep":<localEp>,"t":<seconds>} to the MAL
+                // comment field when syncing an episode switch. On a second
+                // device this arrives here and restores the playback position.
+                if (entry.comments && !tk[name].lastWatchedTime) {
+                    try {
+                        var _cwt = JSON.parse(entry.comments);
+                        if (typeof _cwt.ep === 'number' && typeof _cwt.t === 'number' && _cwt.t > 5) {
+                            tk[name].lastWatchedTime          = _cwt.t;
+                            // ep in comment is local episode number (before offset)
+                            if (!tk[name].lastWatchedEpisodeNumber)
+                                tk[name].lastWatchedEpisodeNumber = _cwt.ep;
+                            console.log('[MALSync] Restored watchtime for '+name+': ep'+_cwt.ep+' t='+_cwt.t+'s');
+                        }
+                    } catch(e) {}
+                }
 
                 changed=true;
             });
