@@ -501,11 +501,8 @@ var MALSync = (function(){
             else if(existing==='completed'){ upd.status='watching'; upd.is_rewatching=true; }
 
             // ── Piggyback watchtime in MAL comments for cross-device sync ──
-            // Zero extra quota — this field is written in the same PUT call.
-            // Format: {"ep":<localEp>,"t":<seconds>}  (compact, fits any comment length limit)
-            // On importFromMAL, we read it back and restore lastWatchedTime on other devices.
-            /* Disabled sending time as comment due to MAL API strictness
             var lastTime = tk[animeName] && tk[animeName].lastWatchedTime;
+            /* Disabled sending time as comment due to MAL API strictness
             if (typeof lastTime === 'number' && lastTime > 5) {
                 upd.comments = JSON.stringify({ ep: localEp, t: lastTime });
             }
