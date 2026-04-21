@@ -101,15 +101,17 @@
         .mal-btn-guide:hover{background:rgba(195,177,225,.12);}
 
         /* ── Guide Modal ────────────────────────────────────────────── */
-        #guide-overlay{display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px;}
+        #guide-overlay{display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:12px;}
         #guide-overlay.open{display:flex;}
-        #guide-modal{background:linear-gradient(160deg,#18153a 0%,#1e1a42 100%);border:1px solid rgba(255,255,255,0.12);border-radius:16px;width:100%;max-width:780px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.7);}
-        #guide-modal-header{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0;}
+        /* height:92vh gives iframe a concrete dimension to flex into — without it flex:1 collapses to 0 on mobile */
+        #guide-modal{background:linear-gradient(160deg,#18153a 0%,#1e1a42 100%);border:1px solid rgba(255,255,255,0.12);border-radius:16px;width:100%;max-width:780px;height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.7);}
+        #guide-modal-header{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0;}
         #guide-modal-header span{color:#fff;font-weight:700;font-size:0.97em;flex:1;}
         .guide-modal-close{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:#bbb;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:1em;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0;}
         .guide-modal-close:hover{background:rgba(220,50,50,.25);color:#fff;border-color:rgba(220,50,50,.3);}
-        #guide-iframe{border:none;flex:1;min-height:0;width:100%;display:block;}
-        #guide-modal-footer{padding:10px 18px;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:flex-end;flex-shrink:0;}
+        /* flex:1 now has a concrete parent height to expand into */
+        #guide-iframe{border:none;flex:1;width:100%;display:block;min-height:0;}
+        #guide-modal-footer{padding:8px 16px;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:flex-end;flex-shrink:0;}
         .guide-newtab-btn{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:#ccc;padding:7px 16px;border-radius:8px;font-size:0.81em;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .2s;}
         .guide-newtab-btn:hover{background:rgba(255,255,255,0.14);color:#fff;}
     </style>
@@ -365,8 +367,24 @@
     <script>
     // ── Embedded MAL Guide ────────────────────────────────────────────
     // Stored inline so no extra file is needed in the repo.
-    // image/api.jpg path is relative to bookmark.html's directory.
+
+    // GAS_CODE is defined here (outside getGuideHtml) so it can be:
+    //  1. Downloaded via downloadGas()
+    //  2. Copied to clipboard via copyGasCode()
+    //  3. Displayed in the audit code block inside the guide
+    //  4. Injected into the standalone new-tab version via JSON.stringify
+    var GAS_CODE = '/** MAL GAS Proxy\n * Deploy as Web App → Execute as: Me, Who has access: Anyone\n * App Redirect URL di MAL = URL /exec dari deployment ini\n */\n\nfunction doGet(e) {\n  var params   = e.parameter || {};\n  var code     = params.code;\n  var error    = params.error;\n  var rawState = params.state || \'\';\n\n  if (!code && !error) {\n    return HtmlService.createHtmlOutput(\'<p style="font-family:monospace;padding:20px">MAL GAS Proxy running.</p>\');\n  }\n  if (error) {\n    return HtmlService.createHtmlOutput(\'<p style="font-family:monospace;padding:20px;color:red">OAuth error: \' + error + \'</p>\');\n  }\n\n  var parts      = rawState.split(\':\');\n  var isPollMode = parts.length >= 3 && parts[parts.length - 1] === \'poll\';\n  var sessionId  = isPollMode ? parts[parts.length - 2] : null;\n\n  if (isPollMode && sessionId) {\n    CacheService.getScriptCache().put(\'mal_code_\' + sessionId, code, 120);\n    return HtmlService.createHtmlOutput(\'<p style="font-family:monospace;padding:20px">\\u2713 Authorized! Tab ini bisa ditutup.</p>\');\n  }\n  return HtmlService.createHtmlOutput(\'<p style="font-family:monospace;padding:20px">\\u2713 Authorized!<br>Kode: \' + code + \'</p>\');\n}\n\nfunction doPost(e) {\n  try {\n    var req = JSON.parse(e.postData.contents);\n    var result;\n\n    if (req.action === \'CHECK_CODE\') {\n      var cache = CacheService.getScriptCache();\n      var key   = \'mal_code_\' + req.sessionId;\n      var c     = cache.get(key);\n      if (c) { cache.remove(key); result = { code: c, found: true }; }\n      else   { result = { found: false }; }\n    }\n    else if (req.action === \'GET_TOKEN\') {\n      result = exchangeToken_({\n        client_id:     req.clientId,\n        client_secret: req.clientSecret,\n        code:          req.code,\n        code_verifier: req.codeVerifier,\n        grant_type:    \'authorization_code\',\n        redirect_uri:  req.redirectUri\n      });\n    }\n    else if (req.action === \'REFRESH_TOKEN\') {\n      result = exchangeToken_({\n        client_id:     req.clientId,\n        client_secret: req.clientSecret,\n        refresh_token: req.refreshToken,\n        grant_type:    \'refresh_token\'\n      });\n    }\n    else if (req.action === \'GET_ME\')  result = new MalApi(req.token).getProfile();\n    else if (req.action === \'GET\')     result = new MalApi(req.token).getList(req.userName, req.offset, req.limit);\n    else if (req.action === \'UPDATE\')  result = new MalApi(req.token).updateList(req.animeId, req.updateData);\n    else if (req.action === \'DELETE\')  result = new MalApi(req.token).deleteList(req.animeId);\n    else throw new Error(\'Unknown action: \' + req.action);\n\n    return ContentService\n      .createTextOutput(JSON.stringify({ success: true, data: result }))\n      .setMimeType(ContentService.MimeType.JSON);\n  } catch (err) {\n    return ContentService\n      .createTextOutput(JSON.stringify({ success: false, error: err.toString() }))\n      .setMimeType(ContentService.MimeType.JSON);\n  }\n}\n\nfunction exchangeToken_(params) {\n  var qs = Object.keys(params)\n    .map(function(k) { return encodeURIComponent(k) + \'=\' + encodeURIComponent(params[k]); })\n    .join(\'&\');\n  var res = UrlFetchApp.fetch(\'https://myanimelist.net/v1/oauth2/token\', {\n    method: \'post\',\n    headers: { \'Content-Type\': \'application/x-www-form-urlencoded\' },\n    payload: qs,\n    muteHttpExceptions: true\n  });\n  try { return JSON.parse(res.getContentText()); }\n  catch (e) { return { error: \'parse_failed\', raw: res.getContentText() }; }\n}\n\nclass MalApi {\n  constructor(token) {\n    if (!token) throw new Error(\'Token required\');\n    this.base = \'https://api.myanimelist.net/v2\';\n    this.tok  = token;\n  }\n  _qs(p) {\n    return Object.keys(p)\n      .filter(k => p[k] !== undefined && p[k] !== null && p[k] !== \'\')\n      .map(k => encodeURIComponent(k) + \'=\' + encodeURIComponent(p[k]))\n      .join(\'&\');\n  }\n  _ok(r) { try { return JSON.parse(r.getContentText()); } catch(e) { return { message: \'ok\' }; } }\n  auth()  { return { Authorization: \'Bearer \' + this.tok }; }\n  getProfile() {\n    return this._ok(UrlFetchApp.fetch(this.base + \'/users/@me\',\n      { method: \'get\', headers: this.auth(), muteHttpExceptions: true }));\n  }\n  getList(user, offset, limit) {\n    user = user || \'@me\'; offset = Number(offset) || 0; limit = Number(limit) || 100;\n    var fields = \'id,title,main_picture,my_list_status,num_episodes\';\n    return this._ok(UrlFetchApp.fetch(\n      this.base + \'/users/\' + user + \'/animelist?fields=\' + fields + \'&offset=\' + offset + \'&limit=\' + limit,\n      { method: \'get\', headers: this.auth(), muteHttpExceptions: true }));\n  }\n  updateList(id, data) {\n    return this._ok(UrlFetchApp.fetch(this.base + \'/anime/\' + id + \'/my_list_status\', {\n      method: \'put\',\n      headers: Object.assign(this.auth(), { \'Content-Type\': \'application/x-www-form-urlencoded\' }),\n      payload: this._qs(data),\n      muteHttpExceptions: true\n    }));\n  }\n  deleteList(id) {\n    return this._ok(UrlFetchApp.fetch(this.base + \'/anime/\' + id + \'/my_list_status\',\n      { method: \'delete\', headers: this.auth(), muteHttpExceptions: true }));\n  }\n}';
+
     function getGuideHtml() {
+        // Inject GAS_CODE and base image URL into the guide document at render time.
+        // JSON.stringify safely escapes the code string for embedding as a JS literal.
+        var injectedGasCode  = JSON.stringify(GAS_CODE);
+        // Build absolute URL for image/api.jpg so it works in both srcdoc iframe
+        // AND blob URL tab (blob URLs have no base URL for relative paths).
+        var imgBase = window.location.href.replace(/\/[^\/]*(\?.*)?$/, '/');
+        var apiImgUrl = imgBase + 'image/api.jpg';
+        var apiImgFallback = imgBase + 'api.jpg';
+
         return `<!DOCTYPE html>
 <html lang="id">
 <head>
@@ -405,8 +423,10 @@
         .copy-btn { background: rgba(102,126,234,0.2); border: none; border-left: 1px solid rgba(255,255,255,0.1); color: #c3cfff; padding: 0 14px; cursor: pointer; font-size: 0.8em; font-weight: 600; font-family: inherit; white-space: nowrap; transition: background 0.2s; flex-shrink: 0; }
         .copy-btn:hover { background: rgba(102,126,234,0.38); }
         .copy-btn.copied { background: rgba(107,207,127,0.25); color: #a8e6cf; }
-        .dl-btn { display: inline-flex; align-items: center; gap: 7px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18); color: #d0d0e0; padding: 8px 16px; border-radius: 8px; font-size: 0.83em; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.2s; margin: 8px 0; text-decoration: none; }
+        .dl-btn { display: inline-flex; align-items: center; gap: 7px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18); color: #d0d0e0; padding: 8px 16px; border-radius: 8px; font-size: 0.83em; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.2s; margin: 0; text-decoration: none; }
         .dl-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
+        .dl-btn.copy-gas { background: rgba(102,126,234,0.15); border-color: rgba(102,126,234,0.4); color: #c3cfff; }
+        .dl-btn.copy-gas:hover { background: rgba(102,126,234,0.28); color: #fff; }
         .callout { border-radius: 8px; padding: 10px 14px; margin: 10px 0; font-size: 0.87em; display: flex; gap: 9px; align-items: flex-start; }
         .callout.warn { background: rgba(255,140,0,0.1); border: 1px solid rgba(255,140,0,0.3); color: #ffd090; }
         .callout.info { background: rgba(102,126,234,0.1); border: 1px solid rgba(102,126,234,0.3); color: #c3cfff; }
@@ -422,6 +442,11 @@
         .adv-toggle:hover { background: rgba(255,255,255,0.07); color: #ccc; }
         .adv-content { margin-top: 14px; display: none; }
         .adv-content.open { display: block; }
+        .gas-code-block { display: none; margin-top: 10px; }
+        .gas-code-block.open { display: block; }
+        .gas-code-pre { background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 14px; font-family: 'Consolas','Courier New',monospace; font-size: 0.72em; color: #a8e6cf; overflow-x: auto; overflow-y: auto; max-height: 300px; line-height: 1.55; white-space: pre; margin: 0; }
+        .gas-code-pre::-webkit-scrollbar { width: 5px; height: 5px; }
+        .gas-code-pre::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
         a { color: #93c5fd; text-decoration: none; }
         a:hover { color: #bfdbfe; text-decoration: underline; }
         @media (max-width: 520px) {
@@ -478,9 +503,9 @@
                     <div class="callout warn"><span class="ci">⚠️</span><div>URL di atas harus ditempel <strong>persis sama</strong> ke App Redirect URL — tanpa spasi, tanpa tambahan apapun. Satu karakter berbeda = error <code>invalid_redirect_uri</code>.</div></div>
                     <p style="margin-top:14px;margin-bottom:6px;font-size:0.85em;color:#888;">Contoh formulir yang sudah diisi dengan benar (panah menunjukkan field penting):</p>
                     <div class="screenshot">
-                        <img
-                            src="image/api.jpg"
-                            onerror="this.onerror=null;this.src='api.jpg';this.onerror=function(){this.closest('.screenshot').innerHTML='<div class=\\'screenshot-missing\\'>📸 Gambar tidak ditemukan — pastikan file <code>api.jpg</code> ada di folder <code>image/</code> atau di direktori yang sama dengan panduan ini.</div>'}"
+                        <img id="api-img"
+                            src="${apiImgUrl}"
+                            onerror="this.onerror=null;this.src='${apiImgFallback}';this.onerror=function(){this.closest('.screenshot').innerHTML='<div class=\\'screenshot-missing\\'>📸 Gambar tidak ditemukan — pastikan file <code>api.jpg</code> ada di folder <code>image/</code>.</div>'}"
                             alt="Formulir MAL API Config: App Type = web ditunjuk panah merah, Client ID dan Client Secret ditunjuk panah merah besar, App Redirect URL sudah terisi URL GAS"
                         />
                     </div>
@@ -545,7 +570,20 @@
         <button class="adv-toggle" id="adv-btn" onclick="var c=document.getElementById('adv-content');var open=c.classList.toggle('open');this.textContent=open?'▲ Sembunyikan':'▼ Tampilkan langkah-langkah';">▼ Tampilkan langkah-langkah</button>
         <div class="adv-content" id="adv-content">
             <div class="steps" style="margin-top:16px;">
-                <div class="step"><span class="step-letter">A</span><div class="step-body"><p>Unduh file kode GAS berikut:</p><button class="dl-btn" onclick="downloadGas()">⬇ Unduh gas-proxy.gs</button><p style="font-size:0.83em;color:#777;margin-top:4px;">Atau salin manual dari file <code>gas-proxy.gs</code> yang disertakan bersama situs ini.</p></div></div>
+                <div class="step"><span class="step-letter">A</span>
+                    <div class="step-body">
+                        <p>Unduh atau salin kode GAS berikut:</p>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 6px;">
+                            <button class="dl-btn" onclick="downloadGas()">⬇ Unduh gas-proxy.gs</button>
+                            <button class="dl-btn copy-gas" id="gas-copy-btn" onclick="copyGasCode(this)">📋 Salin ke Clipboard</button>
+                        </div>
+                        <button class="adv-toggle" style="font-size:0.78em;padding:5px 12px;margin-top:2px;" onclick="var c=document.getElementById('gas-code-block');var open=c.classList.toggle('open');this.textContent=open?'▲ Sembunyikan kode':'👁 Lihat isi kode (audit keamanan)';">👁 Lihat isi kode (audit keamanan)</button>
+                        <div class="gas-code-block" id="gas-code-block">
+                            <div class="callout info" style="margin:8px 0 6px;font-size:0.82em;"><span class="ci">🔍</span><span>Ini <strong>seluruh</strong> kode yang berjalan di GAS-mu. Kamu bisa verifikasi sendiri: tidak ada panggilan ke server selain <code>myanimelist.net</code>, tidak ada penyimpanan data, tidak ada backdoor.</span></div>
+                            <pre class="gas-code-pre" id="gas-code-pre"></pre>
+                        </div>
+                    </div>
+                </div>
                 <div class="step"><span class="step-letter">B</span><div class="step-body"><p>Buka <a href="https://script.google.com" target="_blank" rel="noopener noreferrer">script.google.com</a> → klik <strong>"New Project"</strong> → hapus semua kode yang ada → tempelkan seluruh isi file yang diunduh.</p></div></div>
                 <div class="step"><span class="step-letter">C</span><div class="step-body"><p>Klik <strong>Deploy → New Deployment</strong>, atur seperti ini:</p><div class="field-box"><span class="fl">Type</span><span class="fv good">Web app</span><span class="fl">Execute as</span><span class="fv good">Me</span><span class="fl">Who has access ⚠️</span><span class="fv good">✔ <strong>Anyone</strong></span><span class="fl" style="color:#ff8a80;font-size:0.83em;">Jangan pilih:</span><span class="fv bad">Anyone with Google account</span></div><div class="callout warn"><span class="ci">⚠️</span><span>Harus <strong>"Anyone"</strong> (anonim) — bukan "Anyone with Google account".</span></div></div></div>
                 <div class="step"><span class="step-letter">D</span><div class="step-body"><p>Klik <strong>Deploy</strong> → ikuti proses otorisasi Google → salin <strong>Web app URL</strong> yang dihasilkan.</p></div></div>
@@ -555,6 +593,15 @@
     </div>
 </div>
 <script>
+// GAS_CODE is injected from the parent page's JS variable via JSON.stringify
+var GAS_CODE = ${injectedGasCode};
+
+// Populate code block when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    var pre = document.getElementById('gas-code-pre');
+    if (pre) pre.textContent = GAS_CODE;
+});
+
 function copyText(elId, btn) {
     var text = document.getElementById(elId).textContent.trim();
     var orig = btn.textContent;
@@ -562,9 +609,26 @@ function copyText(elId, btn) {
     if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(onSuccess).catch(fallback); } else { fallback(); }
     function fallback() { try { var ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); onSuccess(); } catch(e) { btn.textContent = '⚠ Salin manual'; setTimeout(function(){ btn.textContent = orig; }, 2500); } }
 }
+
+function copyGasCode(btn) {
+    var orig = btn.textContent;
+    function onSuccess() { btn.textContent = '✅ Disalin!'; setTimeout(function(){ btn.textContent = orig; }, 2200); }
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(GAS_CODE).then(onSuccess).catch(fallback); } else { fallback(); }
+    function fallback() { try { var ta = document.createElement('textarea'); ta.value = GAS_CODE; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); onSuccess(); } catch(e) { btn.textContent = '⚠ Salin manual'; setTimeout(function(){ btn.textContent = orig; }, 2500); } }
+}
+
 function downloadGas() {
-    var code = '/** MAL GAS Proxy — Deploy as Web App: Execute as Me, Who has access = Anyone */\n\nfunction doGet(e) {\n  var params = e.parameter || {};\n  var code = params.code, error = params.error, rawState = params.state || \'\';\n  if (!code && !error) return HtmlService.createHtmlOutput(\'<p>MAL GAS Proxy running.</p>\');\n  if (error) return HtmlService.createHtmlOutput(\'<p style="color:red">OAuth error: \' + error + \'</p>\');\n  var parts = rawState.split(\':\'), isPollMode = parts.length >= 3 && parts[parts.length-1] === \'poll\', sessionId = isPollMode ? parts[parts.length-2] : null;\n  if (isPollMode && sessionId) { CacheService.getScriptCache().put(\'mal_code_\' + sessionId, code, 120); return HtmlService.createHtmlOutput(\'<p>Authorized! Tab ini bisa ditutup.</p>\'); }\n  return HtmlService.createHtmlOutput(\'<p>Authorized! Kode: \' + code + \'</p>\');\n}\n\nfunction doPost(e) {\n  try {\n    var req = JSON.parse(e.postData.contents), result;\n    if (req.action === \'CHECK_CODE\') { var cache = CacheService.getScriptCache(), key = \'mal_code_\' + req.sessionId, c = cache.get(key); if (c) { cache.remove(key); result = {code:c,found:true}; } else { result = {found:false}; } }\n    else if (req.action === \'GET_ME\')     result = new MalApi(req.token).getProfile();\n    else if (req.action === \'GET\')        result = new MalApi(req.token).getList(req.userName, req.offset, req.limit);\n    else if (req.action === \'UPDATE\')     result = new MalApi(req.token).updateList(req.animeId, req.updateData);\n    else if (req.action === \'DELETE\')     result = new MalApi(req.token).deleteList(req.animeId);\n    else if (req.action === \'GET_TOKEN\') result = exchangeToken_({client_id:req.clientId,client_secret:req.clientSecret,code:req.code,code_verifier:req.codeVerifier,grant_type:\'authorization_code\',redirect_uri:req.redirectUri});\n    else if (req.action === \'REFRESH_TOKEN\') result = exchangeToken_({client_id:req.clientId,client_secret:req.clientSecret,refresh_token:req.refreshToken,grant_type:\'refresh_token\'});\n    else throw new Error(\'Unknown action: \' + req.action);\n    return ContentService.createTextOutput(JSON.stringify({success:true,data:result})).setMimeType(ContentService.MimeType.JSON);\n  } catch(err) { return ContentService.createTextOutput(JSON.stringify({success:false,error:err.toString()})).setMimeType(ContentService.MimeType.JSON); }\n}\n\nfunction exchangeToken_(params) {\n  var qs = Object.keys(params).map(function(k){ return encodeURIComponent(k)+\'=\'+encodeURIComponent(params[k]); }).join(\'&\');\n  var res = UrlFetchApp.fetch(\'https://myanimelist.net/v1/oauth2/token\', {method:\'post\',headers:{\'Content-Type\':\'application/x-www-form-urlencoded\'},payload:qs,muteHttpExceptions:true});\n  try { return JSON.parse(res.getContentText()); } catch(e) { return {error:\'parse_failed\',raw:res.getContentText()}; }\n}\n\nclass MalApi {\n  constructor(token) { if(!token) throw new Error(\'Token required\'); this.base=\'https://api.myanimelist.net/v2\'; this.tok=token; }\n  _qs(p){return Object.keys(p).filter(k=>p[k]!==undefined&&p[k]!==null&&p[k]!==\'\').map(k=>encodeURIComponent(k)+\'=\'+encodeURIComponent(p[k])).join(\'&\');}\n  _ok(r){try{return JSON.parse(r.getContentText());}catch(e){return{message:\'ok\'};} }\n  auth(){return{Authorization:\'Bearer \'+this.tok};}\n  getProfile(){return this._ok(UrlFetchApp.fetch(this.base+\'/users/@me\',{method:\'get\',headers:this.auth(),muteHttpExceptions:true}));}\n  getList(user,offset,limit){user=user||\'@me\';offset=Number(offset)||0;limit=Number(limit)||100;return this._ok(UrlFetchApp.fetch(this.base+\'/users/\'+user+\'/animelist?fields=id,title,my_list_status,num_episodes&offset=\'+offset+\'&limit=\'+limit,{method:\'get\',headers:this.auth(),muteHttpExceptions:true}));}\n  updateList(id,data){return this._ok(UrlFetchApp.fetch(this.base+\'/anime/\'+id+\'/my_list_status\',{method:\'put\',headers:Object.assign(this.auth(),{\'Content-Type\':\'application/x-www-form-urlencoded\'}),payload:this._qs(data),muteHttpExceptions:true}));}\n  deleteList(id){return this._ok(UrlFetchApp.fetch(this.base+\'/anime/\'+id+\'/my_list_status\',{method:\'delete\',headers:this.auth(),muteHttpExceptions:true}));}\n}';
-    try { var blob = new Blob([code], {type:'text/plain'}); var url = URL.createObjectURL(blob); var a = document.createElement('a'); a.href=url; a.download='gas-proxy.gs'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(function(){ URL.revokeObjectURL(url); }, 1000); } catch(e) { alert('Download gagal — salin kode secara manual dari file gas-proxy.gs.'); }
+    try {
+        var blob = new Blob([GAS_CODE], { type: 'text/plain' });
+        var url  = URL.createObjectURL(blob);
+        var a    = document.createElement('a');
+        a.href = url; a.download = 'gas-proxy.gs';
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a);
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    } catch(e) {
+        alert('Download gagal — gunakan tombol Salin ke Clipboard lalu tempel ke editor teks.');
+    }
 }
 <\/script>
 </body>
@@ -578,7 +642,6 @@ function downloadGas() {
         var overlay = document.getElementById('guide-overlay');
         var iframe  = document.getElementById('guide-iframe');
         if (!overlay || !iframe) return;
-        // Inject guide HTML via srcdoc (works in sandboxed iframe, no extra file)
         iframe.srcdoc = getGuideHtml();
         overlay.classList.add('open');
         document.body.style.overflow = 'hidden';
@@ -592,7 +655,8 @@ function downloadGas() {
     }
 
     function openGuideNewTab() {
-        // Create a Blob URL from the guide HTML and open it — no server file needed
+        // getGuideHtml() already injects absolute image URLs (resolved at call time
+        // from window.location), so the blob URL page loads images correctly.
         var html = getGuideHtml();
         try {
             var blob = new Blob([html], { type: 'text/html' });
@@ -600,7 +664,6 @@ function downloadGas() {
             _guideBlobUrl = URL.createObjectURL(blob);
             window.open(_guideBlobUrl, '_blank');
         } catch(e) {
-            // Fallback: data URI (limited browser support for large HTML)
             window.open('data:text/html;charset=utf-8,' + encodeURIComponent(html), '_blank');
         }
     }
@@ -609,11 +672,9 @@ function downloadGas() {
     document.getElementById('guide-close-btn').addEventListener('click', closeGuide);
     document.getElementById('guide-newtab-btn').addEventListener('click', openGuideNewTab);
 
-    // Close on overlay backdrop click
     document.getElementById('guide-overlay').addEventListener('click', function(e) {
         if (e.target === this) closeGuide();
     });
-    // Close on Escape key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeGuide();
     });
