@@ -95,6 +95,23 @@
         #mal-copy-btn:hover,#mal-paste-btn:hover{background:rgba(255,255,255,.15);}
         #mal-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(10px);background:rgba(30,20,60,0.95);border:1px solid rgba(255,255,255,0.15);color:#e0e0e0;padding:8px 18px;border-radius:20px;font-size:0.84em;opacity:0;pointer-events:none;transition:all .25s;z-index:9999;white-space:nowrap;}
         #mal-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+        /* ── Guide Button ───────────────────────────────────────────── */
+        .mal-btn-guide{color:#c3b1e1;border-color:rgba(195,177,225,.25);}
+        .mal-btn-guide:hover{background:rgba(195,177,225,.12);}
+
+        /* ── Guide Modal ────────────────────────────────────────────── */
+        #guide-overlay{display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px;}
+        #guide-overlay.open{display:flex;}
+        #guide-modal{background:linear-gradient(160deg,#18153a 0%,#1e1a42 100%);border:1px solid rgba(255,255,255,0.12);border-radius:16px;width:100%;max-width:780px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.7);}
+        #guide-modal-header{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0;}
+        #guide-modal-header span{color:#fff;font-weight:700;font-size:0.97em;flex:1;}
+        .guide-modal-close{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:#bbb;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:1em;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0;}
+        .guide-modal-close:hover{background:rgba(220,50,50,.25);color:#fff;border-color:rgba(220,50,50,.3);}
+        #guide-iframe{border:none;flex:1;min-height:0;width:100%;display:block;}
+        #guide-modal-footer{padding:10px 18px;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:flex-end;flex-shrink:0;}
+        .guide-newtab-btn{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:#ccc;padding:7px 16px;border-radius:8px;font-size:0.81em;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .2s;}
+        .guide-newtab-btn:hover{background:rgba(255,255,255,0.14);color:#fff;}
     </style>
 </head>
 <body>
@@ -117,6 +134,7 @@
           <span id="mal-last-sync"></span>
           <div class="mal-hdr-btns">
             <button class="mal-btn-sm mal-btn-sync" id="mal-sync-btn" style="display:none">Sinkron Sekarang ↺</button>
+            <button class="mal-btn-sm mal-btn-guide" id="mal-guide-btn">📖 Panduan</button>
             <button class="mal-btn-sm" id="mal-toggle-btn">Hubungkan ▾</button>
             <button class="mal-btn-sm mal-btn-disc" id="mal-disconnect-btn" style="display:none">Putuskan</button>
           </div>
@@ -171,6 +189,20 @@
         <div class="grid" id="historyGrid">
             <div class="loading">&#9203; Memuat riwayat...</div>
         </div>
+    </div>
+
+    <!-- Guide Modal -->
+    <div id="guide-overlay" role="dialog" aria-modal="true" aria-label="Panduan MAL">
+      <div id="guide-modal">
+        <div id="guide-modal-header">
+          <span>📖 Panduan Sinkronisasi MyAnimeList</span>
+          <button class="guide-modal-close" id="guide-close-btn" title="Tutup">✕</button>
+        </div>
+        <iframe id="guide-iframe" title="Panduan MAL" sandbox="allow-scripts allow-same-origin"></iframe>
+        <div id="guide-modal-footer">
+          <button class="guide-newtab-btn" id="guide-newtab-btn">↗ Buka di tab baru</button>
+        </div>
+      </div>
     </div>
 
     <script src="metadata.js" onerror="void 0"></script>
@@ -328,6 +360,263 @@
         });
 
         loadMasterData();
+    </script>
+
+    <script>
+    // ── Embedded MAL Guide ────────────────────────────────────────────
+    // Stored inline so no extra file is needed in the repo.
+    // image/api.jpg path is relative to bookmark.html's directory.
+    function getGuideHtml() {
+        return `<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Sinkronisasi MAL</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 24px 16px 40px;
+        }
+        .guide { max-width: 740px; margin: 0 auto; font-size: 0.92em; line-height: 1.7; }
+        .guide-header { background: rgba(102,126,234,0.12); border: 1px solid rgba(102,126,234,0.3); border-radius: 14px; padding: 18px 22px; margin-bottom: 20px; }
+        .guide-header h2 { font-size: 1.3em; color: #fff; font-weight: 700; margin-bottom: 5px; display: flex; align-items: center; gap: 9px; }
+        .guide-header p { color: #b0b0c0; font-size: 0.91em; }
+        .tldr { background: rgba(107,207,127,0.08); border: 1px solid rgba(107,207,127,0.25); border-radius: 10px; padding: 13px 17px; margin-bottom: 20px; font-size: 0.88em; color: #c8f0d0; }
+        .tldr strong { color: #a8e6cf; }
+        .section { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-radius: 12px; padding: 18px 20px; margin-bottom: 18px; }
+        .section-title { font-size: 1.03em; font-weight: 700; color: #fff; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+        .step-num { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; border-radius: 50%; width: 27px; height: 27px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8em; font-weight: 800; flex-shrink: 0; }
+        .steps { display: flex; flex-direction: column; gap: 14px; }
+        .step { display: flex; gap: 12px; align-items: flex-start; }
+        .step-letter { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #c3cfff; border-radius: 6px; min-width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.74em; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+        .step-body { flex: 1; }
+        .step-body p { color: #d0d0e0; margin-bottom: 5px; }
+        .screenshot { margin: 10px 0 2px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); line-height: 0; }
+        .screenshot img { width: 100%; height: auto; display: block; border-radius: 9px; }
+        .screenshot-missing { padding: 14px 16px; display: flex; align-items: center; gap: 10px; color: #667eea; font-size: 0.82em; line-height: 1.4; border: 2px dashed rgba(102,126,234,0.3); border-radius: 9px; }
+        code { background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.12); color: #a8e6cf; padding: 2px 7px; border-radius: 5px; font-family: 'Consolas','Courier New',monospace; font-size: 0.87em; }
+        .copy-row { display: flex; align-items: stretch; gap: 0; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; overflow: hidden; margin: 8px 0; }
+        .copy-val { flex: 1; padding: 9px 12px; color: #a8e6cf; font-family: 'Consolas','Courier New',monospace; font-size: 0.82em; word-break: break-all; line-height: 1.5; user-select: all; }
+        .copy-btn { background: rgba(102,126,234,0.2); border: none; border-left: 1px solid rgba(255,255,255,0.1); color: #c3cfff; padding: 0 14px; cursor: pointer; font-size: 0.8em; font-weight: 600; font-family: inherit; white-space: nowrap; transition: background 0.2s; flex-shrink: 0; }
+        .copy-btn:hover { background: rgba(102,126,234,0.38); }
+        .copy-btn.copied { background: rgba(107,207,127,0.25); color: #a8e6cf; }
+        .dl-btn { display: inline-flex; align-items: center; gap: 7px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18); color: #d0d0e0; padding: 8px 16px; border-radius: 8px; font-size: 0.83em; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.2s; margin: 8px 0; text-decoration: none; }
+        .dl-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
+        .callout { border-radius: 8px; padding: 10px 14px; margin: 10px 0; font-size: 0.87em; display: flex; gap: 9px; align-items: flex-start; }
+        .callout.warn { background: rgba(255,140,0,0.1); border: 1px solid rgba(255,140,0,0.3); color: #ffd090; }
+        .callout.info { background: rgba(102,126,234,0.1); border: 1px solid rgba(102,126,234,0.3); color: #c3cfff; }
+        .callout.ok   { background: rgba(107,207,127,0.08); border: 1px solid rgba(107,207,127,0.25); color: #c0f0cc; }
+        .callout .ci  { font-size: 1.15em; flex-shrink: 0; margin-top: 1px; }
+        .field-box { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 14px; margin: 8px 0; display: grid; grid-template-columns: 160px 1fr; gap: 7px 14px; font-size: 0.86em; }
+        .fl { color: #888; display: flex; align-items: center; }
+        .fv { color: #fff; font-weight: 600; }
+        .fv.good { color: #a8e6cf; }
+        .fv.bad  { color: #ff8a80; text-decoration: line-through; opacity: 0.7; }
+        hr { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 16px 0; }
+        .adv-toggle { background: none; border: 1px solid rgba(255,255,255,0.12); color: #888; padding: 6px 14px; border-radius: 8px; font-size: 0.81em; cursor: pointer; font-family: inherit; margin-top: 6px; transition: all 0.2s; }
+        .adv-toggle:hover { background: rgba(255,255,255,0.07); color: #ccc; }
+        .adv-content { margin-top: 14px; display: none; }
+        .adv-content.open { display: block; }
+        a { color: #93c5fd; text-decoration: none; }
+        a:hover { color: #bfdbfe; text-decoration: underline; }
+        @media (max-width: 520px) {
+            body { padding: 14px 11px 30px; }
+            .field-box { grid-template-columns: 1fr; gap: 3px 0; }
+            .fl { font-size: 0.79em; color: #666; }
+            .copy-val { font-size: 0.75em; }
+        }
+    </style>
+</head>
+<body>
+<div class="guide">
+    <div class="guide-header">
+        <h2>🔗 Panduan Sinkronisasi MyAnimeList</h2>
+        <p>Hubungkan akunmu ke MAL agar progres nonton otomatis tersimpan — tanpa perlu mengetik username atau password di sini.</p>
+    </div>
+    <div class="tldr">
+        <strong>Singkatnya:</strong> Buat "Aplikasi API" gratis di MAL sekali saja → salin 2 kode darinya → tempel di sini → selesai.
+        Datamu <strong>tidak pernah tersimpan di server manapun</strong> — semua ada di browser kamu sendiri.
+    </div>
+    <div class="section">
+        <div class="section-title"><span class="step-num">1</span> Buat Aplikasi API di MyAnimeList (gratis, sekali saja)</div>
+        <div class="steps">
+            <div class="step">
+                <span class="step-letter">A</span>
+                <div class="step-body">
+                    <p>Buka halaman ini di <strong>tab baru</strong> (kamu harus sudah login MAL):</p>
+                    <p style="margin-top:5px;"><a href="https://myanimelist.net/apiconfig" target="_blank" rel="noopener noreferrer">↗ myanimelist.net/apiconfig</a></p>
+                </div>
+            </div>
+            <div class="step">
+                <span class="step-letter">B</span>
+                <div class="step-body"><p>Klik tombol <strong>"Create ID"</strong> di pojok kanan atas halaman tersebut.</p></div>
+            </div>
+            <div class="step">
+                <span class="step-letter">C</span>
+                <div class="step-body">
+                    <p>Isi formulir. <strong>Tiga kolom bertanda ⚠️ paling penting</strong> — salah mengisi di sini adalah penyebab error paling umum:</p>
+                    <div class="field-box">
+                        <span class="fl">App Name</span><span class="fv" style="color:#ddd;font-weight:400;">Bebas, misal: <em>Anime Tracker</em></span>
+                        <span class="fl">App Type ⚠️</span><span class="fv good">✔ Pilih <strong>web</strong></span>
+                        <span class="fl" style="color:#ff8a80;font-size:0.83em;">Jangan pilih:</span><span class="fv bad">other</span>
+                        <span class="fl">App Description</span><span class="fv" style="color:#aaa;font-weight:400;font-size:0.9em;font-style:italic;">A simple local web application to update my anime list status using the official API</span>
+                        <span class="fl">App Redirect URL ⚠️</span><span class="fv" style="color:#ddd;font-weight:400;">Salin persis dari kotak di bawah ini ↓</span>
+                        <span class="fl">Homepage URL</span><span class="fv" style="color:#ddd;font-weight:400;">Boleh isi <code>http://localhost:8000/</code></span>
+                        <span class="fl">Commercial ⚠️</span><span class="fv good">✔ Pilih <strong>non-commercial</strong></span>
+                        <span class="fl">Purpose of Use</span><span class="fv good">✔ Pilih <strong>hobbyist</strong></span>
+                    </div>
+                    <p style="margin-top:12px;margin-bottom:4px;font-size:0.9em;color:#ccc;">Salin URL ini → tempel ke kolom <strong>App Redirect URL</strong> di MAL:</p>
+                    <div class="copy-row">
+                        <span class="copy-val" id="gas-url-val">https://script.google.com/macros/s/AKfycbyFxnexHxeO9l34KeFJG8LvasAZk0x-RHFSox-hYliU3EGFKF6KBEZW_2GOIwrBGI0s/exec</span>
+                        <button class="copy-btn" onclick="copyText('gas-url-val',this)">📋 Salin</button>
+                    </div>
+                    <div class="callout warn"><span class="ci">⚠️</span><div>URL di atas harus ditempel <strong>persis sama</strong> ke App Redirect URL — tanpa spasi, tanpa tambahan apapun. Satu karakter berbeda = error <code>invalid_redirect_uri</code>.</div></div>
+                    <p style="margin-top:14px;margin-bottom:6px;font-size:0.85em;color:#888;">Contoh formulir yang sudah diisi dengan benar (panah menunjukkan field penting):</p>
+                    <div class="screenshot">
+                        <img
+                            src="image/api.jpg"
+                            onerror="this.onerror=null;this.src='api.jpg';this.onerror=function(){this.closest('.screenshot').innerHTML='<div class=\\'screenshot-missing\\'>📸 Gambar tidak ditemukan — pastikan file <code>api.jpg</code> ada di folder <code>image/</code> atau di direktori yang sama dengan panduan ini.</div>'}"
+                            alt="Formulir MAL API Config: App Type = web ditunjuk panah merah, Client ID dan Client Secret ditunjuk panah merah besar, App Redirect URL sudah terisi URL GAS"
+                        />
+                    </div>
+                    <p style="font-size:0.78em;color:#666;margin-top:5px;padding-left:2px;">↑ Panah kanan = App Type harus <strong>web</strong>. Panah kiri = letak Client ID &amp; Client Secret yang akan kamu salin setelah submit.</p>
+                </div>
+            </div>
+            <div class="step">
+                <span class="step-letter">D</span>
+                <div class="step-body">
+                    <p>Klik <strong>"Submit"</strong>. Halaman berikutnya menampilkan <strong>Client ID</strong> dan <strong>Client Secret</strong> milikmu.</p>
+                    <div class="callout warn"><span class="ci">⚠️</span><span><strong>Jangan tutup halaman itu dulu!</strong> Salin kedua kode tersebut sekarang — terutama Client Secret, karena hanya muncul sekali saat pertama kali dibuat.</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="section-title"><span class="step-num">2</span> Masukkan Kode ke Formulir Sinkronisasi</div>
+        <div class="steps">
+            <div class="step">
+                <span class="step-letter">A</span>
+                <div class="step-body">
+                    <p>Tutup panduan ini, lalu isi kolom <code>Client ID</code> dan <code>Client Secret</code> dengan kode yang baru kamu salin dari MAL.</p>
+                    <div class="callout info"><span class="ci">ℹ️</span><span>Client ID dan Secret adalah <strong>identitas aplikasimu ke MAL</strong> — bukan username atau password akunmu. Keduanya tersimpan hanya di browser-mu.</span></div>
+                </div>
+            </div>
+            <div class="step">
+                <span class="step-letter">B</span>
+                <div class="step-body">
+                    <p>Centang <strong>"Auto mode"</strong> agar setelah klik <em>Allow</em> di MAL, situs ini otomatis mendeteksinya tanpa perlu copy-paste kode tambahan.</p>
+                    <div class="callout ok"><span class="ci">✅</span><span><strong>Tidak centang Auto mode:</strong> halaman GAS akan menampilkan kode yang perlu disalin manual ke kolom yang muncul. Sama aman, hanya lebih manual.</span></div>
+                </div>
+            </div>
+            <div class="step">
+                <span class="step-letter">C</span>
+                <div class="step-body"><p>Klik <strong>"Hubungkan MAL ↗"</strong>. Tab baru terbuka ke halaman MAL → klik <strong>"Allow"</strong>.</p></div>
+            </div>
+            <div class="step">
+                <span class="step-letter">D</span>
+                <div class="step-body"><p>Selesai! Kembali ke situs ini. Kalau berhasil, nama akunmu muncul dan titik <span style="color:#6bcf7f;font-weight:bold;">●</span> menyala hijau. Data dari daftar MAL-mu akan otomatis dimuat.</p></div>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="section-title"><span class="step-num">?</span> Pertanyaan Umum</div>
+        <div style="display:flex;flex-direction:column;gap:13px;">
+            <div><p style="color:#fff;font-weight:600;margin-bottom:3px;">🔒 Apakah data MAL-ku aman?</p><p style="color:#b0b0c0;font-size:0.89em;">Ya. Client ID, Secret, dan token MAL-mu tersimpan <strong>hanya di browser-mu</strong> (cookies dan localStorage). Relay (GAS) bersifat stateless — ia hanya meneruskan permintaan ke MAL lalu melupakannya.</p></div>
+            <hr>
+            <div><p style="color:#fff;font-weight:600;margin-bottom:3px;">🤔 Apa itu GAS / Google Apps Script?</p><p style="color:#b0b0c0;font-size:0.89em;">MAL memblokir permintaan langsung dari browser (CORS). GAS berfungsi sebagai "kurir" — browser-mu menitipkan permintaan ke GAS, GAS meneruskannya ke MAL, lalu mengirim jawaban kembali. GAS tidak menyimpan apapun.</p></div>
+            <hr>
+            <div><p style="color:#fff;font-weight:600;margin-bottom:3px;">❓ Kenapa tidak pakai username dan password?</p><p style="color:#b0b0c0;font-size:0.89em;">MAL menggunakan OAuth 2.0 — standar keamanan yang sama dipakai Google dan GitHub. Password-mu tidak pernah meninggalkan server MAL.</p></div>
+            <hr>
+            <div><p style="color:#fff;font-weight:600;margin-bottom:3px;">🔴 Error: <code>invalid_redirect_uri</code></p><p style="color:#b0b0c0;font-size:0.89em;">Redirect URL di pengaturan aplikasi MAL-mu tidak cocok. Buka <a href="https://myanimelist.net/apiconfig" target="_blank" rel="noopener noreferrer">myanimelist.net/apiconfig</a> → klik Edit → periksa App Redirect URL sudah persis sama dengan URL di Langkah 1C.</p></div>
+            <hr>
+            <div><p style="color:#fff;font-weight:600;margin-bottom:3px;">🔴 Error: <code>invalid_client</code></p><p style="color:#b0b0c0;font-size:0.89em;">Client ID atau Secret yang dimasukkan salah. Salin ulang dari halaman apiconfig MAL — perhatikan tidak ada spasi tersembunyi.</p></div>
+            <hr>
+            <div><p style="color:#fff;font-weight:600;margin-bottom:3px;">⏱ Auto mode tidak terdeteksi</p><p style="color:#b0b0c0;font-size:0.89em;">Auto mode menunggu hingga 2 menit. Jika belum berhasil, nonaktifkan centang Auto mode lalu ulangi — halaman GAS akan menampilkan kode yang perlu disalin manual.</p></div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="section-title"><span class="step-num">⚙</span> Pengguna Mahir: Deploy GAS Sendiri</div>
+        <p style="color:#777;font-size:0.87em;margin-bottom:8px;">Tidak diperlukan untuk pengguna biasa — GAS bawaan sudah cukup.</p>
+        <button class="adv-toggle" id="adv-btn" onclick="var c=document.getElementById('adv-content');var open=c.classList.toggle('open');this.textContent=open?'▲ Sembunyikan':'▼ Tampilkan langkah-langkah';">▼ Tampilkan langkah-langkah</button>
+        <div class="adv-content" id="adv-content">
+            <div class="steps" style="margin-top:16px;">
+                <div class="step"><span class="step-letter">A</span><div class="step-body"><p>Unduh file kode GAS berikut:</p><button class="dl-btn" onclick="downloadGas()">⬇ Unduh gas-proxy.gs</button><p style="font-size:0.83em;color:#777;margin-top:4px;">Atau salin manual dari file <code>gas-proxy.gs</code> yang disertakan bersama situs ini.</p></div></div>
+                <div class="step"><span class="step-letter">B</span><div class="step-body"><p>Buka <a href="https://script.google.com" target="_blank" rel="noopener noreferrer">script.google.com</a> → klik <strong>"New Project"</strong> → hapus semua kode yang ada → tempelkan seluruh isi file yang diunduh.</p></div></div>
+                <div class="step"><span class="step-letter">C</span><div class="step-body"><p>Klik <strong>Deploy → New Deployment</strong>, atur seperti ini:</p><div class="field-box"><span class="fl">Type</span><span class="fv good">Web app</span><span class="fl">Execute as</span><span class="fv good">Me</span><span class="fl">Who has access ⚠️</span><span class="fv good">✔ <strong>Anyone</strong></span><span class="fl" style="color:#ff8a80;font-size:0.83em;">Jangan pilih:</span><span class="fv bad">Anyone with Google account</span></div><div class="callout warn"><span class="ci">⚠️</span><span>Harus <strong>"Anyone"</strong> (anonim) — bukan "Anyone with Google account".</span></div></div></div>
+                <div class="step"><span class="step-letter">D</span><div class="step-body"><p>Klik <strong>Deploy</strong> → ikuti proses otorisasi Google → salin <strong>Web app URL</strong> yang dihasilkan.</p></div></div>
+                <div class="step"><span class="step-letter">E</span><div class="step-body"><p>URL ini digunakan di <strong>dua tempat</strong>:</p><div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;"><div class="callout info" style="margin:0;"><span class="ci">①</span><span>Di pengaturan MAL (Langkah 1C) — sebagai <strong>App Redirect URL</strong>.</span></div><div class="callout info" style="margin:0;"><span class="ci">②</span><span>Di formulir sinkronisasi — klik <strong>⚙ Advanced</strong> lalu tempelkan ke kolom <code>GAS Web App URL</code>.</span></div></div></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function copyText(elId, btn) {
+    var text = document.getElementById(elId).textContent.trim();
+    var orig = btn.textContent;
+    function onSuccess() { btn.textContent = '✅ Disalin!'; btn.classList.add('copied'); setTimeout(function(){ btn.textContent = orig; btn.classList.remove('copied'); }, 2200); }
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(onSuccess).catch(fallback); } else { fallback(); }
+    function fallback() { try { var ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); onSuccess(); } catch(e) { btn.textContent = '⚠ Salin manual'; setTimeout(function(){ btn.textContent = orig; }, 2500); } }
+}
+function downloadGas() {
+    var code = '/** MAL GAS Proxy — Deploy as Web App: Execute as Me, Who has access = Anyone */\n\nfunction doGet(e) {\n  var params = e.parameter || {};\n  var code = params.code, error = params.error, rawState = params.state || \'\';\n  if (!code && !error) return HtmlService.createHtmlOutput(\'<p>MAL GAS Proxy running.</p>\');\n  if (error) return HtmlService.createHtmlOutput(\'<p style="color:red">OAuth error: \' + error + \'</p>\');\n  var parts = rawState.split(\':\'), isPollMode = parts.length >= 3 && parts[parts.length-1] === \'poll\', sessionId = isPollMode ? parts[parts.length-2] : null;\n  if (isPollMode && sessionId) { CacheService.getScriptCache().put(\'mal_code_\' + sessionId, code, 120); return HtmlService.createHtmlOutput(\'<p>Authorized! Tab ini bisa ditutup.</p>\'); }\n  return HtmlService.createHtmlOutput(\'<p>Authorized! Kode: \' + code + \'</p>\');\n}\n\nfunction doPost(e) {\n  try {\n    var req = JSON.parse(e.postData.contents), result;\n    if (req.action === \'CHECK_CODE\') { var cache = CacheService.getScriptCache(), key = \'mal_code_\' + req.sessionId, c = cache.get(key); if (c) { cache.remove(key); result = {code:c,found:true}; } else { result = {found:false}; } }\n    else if (req.action === \'GET_ME\')     result = new MalApi(req.token).getProfile();\n    else if (req.action === \'GET\')        result = new MalApi(req.token).getList(req.userName, req.offset, req.limit);\n    else if (req.action === \'UPDATE\')     result = new MalApi(req.token).updateList(req.animeId, req.updateData);\n    else if (req.action === \'DELETE\')     result = new MalApi(req.token).deleteList(req.animeId);\n    else if (req.action === \'GET_TOKEN\') result = exchangeToken_({client_id:req.clientId,client_secret:req.clientSecret,code:req.code,code_verifier:req.codeVerifier,grant_type:\'authorization_code\',redirect_uri:req.redirectUri});\n    else if (req.action === \'REFRESH_TOKEN\') result = exchangeToken_({client_id:req.clientId,client_secret:req.clientSecret,refresh_token:req.refreshToken,grant_type:\'refresh_token\'});\n    else throw new Error(\'Unknown action: \' + req.action);\n    return ContentService.createTextOutput(JSON.stringify({success:true,data:result})).setMimeType(ContentService.MimeType.JSON);\n  } catch(err) { return ContentService.createTextOutput(JSON.stringify({success:false,error:err.toString()})).setMimeType(ContentService.MimeType.JSON); }\n}\n\nfunction exchangeToken_(params) {\n  var qs = Object.keys(params).map(function(k){ return encodeURIComponent(k)+\'=\'+encodeURIComponent(params[k]); }).join(\'&\');\n  var res = UrlFetchApp.fetch(\'https://myanimelist.net/v1/oauth2/token\', {method:\'post\',headers:{\'Content-Type\':\'application/x-www-form-urlencoded\'},payload:qs,muteHttpExceptions:true});\n  try { return JSON.parse(res.getContentText()); } catch(e) { return {error:\'parse_failed\',raw:res.getContentText()}; }\n}\n\nclass MalApi {\n  constructor(token) { if(!token) throw new Error(\'Token required\'); this.base=\'https://api.myanimelist.net/v2\'; this.tok=token; }\n  _qs(p){return Object.keys(p).filter(k=>p[k]!==undefined&&p[k]!==null&&p[k]!==\'\').map(k=>encodeURIComponent(k)+\'=\'+encodeURIComponent(p[k])).join(\'&\');}\n  _ok(r){try{return JSON.parse(r.getContentText());}catch(e){return{message:\'ok\'};} }\n  auth(){return{Authorization:\'Bearer \'+this.tok};}\n  getProfile(){return this._ok(UrlFetchApp.fetch(this.base+\'/users/@me\',{method:\'get\',headers:this.auth(),muteHttpExceptions:true}));}\n  getList(user,offset,limit){user=user||\'@me\';offset=Number(offset)||0;limit=Number(limit)||100;return this._ok(UrlFetchApp.fetch(this.base+\'/users/\'+user+\'/animelist?fields=id,title,my_list_status,num_episodes&offset=\'+offset+\'&limit=\'+limit,{method:\'get\',headers:this.auth(),muteHttpExceptions:true}));}\n  updateList(id,data){return this._ok(UrlFetchApp.fetch(this.base+\'/anime/\'+id+\'/my_list_status\',{method:\'put\',headers:Object.assign(this.auth(),{\'Content-Type\':\'application/x-www-form-urlencoded\'}),payload:this._qs(data),muteHttpExceptions:true}));}\n  deleteList(id){return this._ok(UrlFetchApp.fetch(this.base+\'/anime/\'+id+\'/my_list_status\',{method:\'delete\',headers:this.auth(),muteHttpExceptions:true}));}\n}';
+    try { var blob = new Blob([code], {type:'text/plain'}); var url = URL.createObjectURL(blob); var a = document.createElement('a'); a.href=url; a.download='gas-proxy.gs'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(function(){ URL.revokeObjectURL(url); }, 1000); } catch(e) { alert('Download gagal — salin kode secara manual dari file gas-proxy.gs.'); }
+}
+<\/script>
+</body>
+</html>`;
+    }
+
+    // ── Guide Modal Logic ─────────────────────────────────────────────
+    var _guideBlobUrl = null;
+
+    function openGuide() {
+        var overlay = document.getElementById('guide-overlay');
+        var iframe  = document.getElementById('guide-iframe');
+        if (!overlay || !iframe) return;
+        // Inject guide HTML via srcdoc (works in sandboxed iframe, no extra file)
+        iframe.srcdoc = getGuideHtml();
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeGuide() {
+        var overlay = document.getElementById('guide-overlay');
+        if (!overlay) return;
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    function openGuideNewTab() {
+        // Create a Blob URL from the guide HTML and open it — no server file needed
+        var html = getGuideHtml();
+        try {
+            var blob = new Blob([html], { type: 'text/html' });
+            if (_guideBlobUrl) URL.revokeObjectURL(_guideBlobUrl);
+            _guideBlobUrl = URL.createObjectURL(blob);
+            window.open(_guideBlobUrl, '_blank');
+        } catch(e) {
+            // Fallback: data URI (limited browser support for large HTML)
+            window.open('data:text/html;charset=utf-8,' + encodeURIComponent(html), '_blank');
+        }
+    }
+
+    document.getElementById('mal-guide-btn').addEventListener('click', openGuide);
+    document.getElementById('guide-close-btn').addEventListener('click', closeGuide);
+    document.getElementById('guide-newtab-btn').addEventListener('click', openGuideNewTab);
+
+    // Close on overlay backdrop click
+    document.getElementById('guide-overlay').addEventListener('click', function(e) {
+        if (e.target === this) closeGuide();
+    });
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeGuide();
+    });
     </script>
 
     <script>
