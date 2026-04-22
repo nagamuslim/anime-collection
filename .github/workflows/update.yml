@@ -1,0 +1,215 @@
+name: Auto-Scrape via Tor and Push
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: '0 0 * * *'
+jobs:
+  scrape-and-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Main Repo
+        uses: actions/checkout@v4
+
+      - name: Prepare Tor Dockerfile
+        run: |
+          cat <<'EOF' > Dockerfile
+          FROM python:slim-trixie
+          RUN apt-get update && apt-get install -y tor curl netcat-openbsd unzip && apt-get clean
+          # requests[socks] pulls in PySocks — lets requests honour ALL_PROXY=socks5h://
+          RUN pip install --no-cache-dir yt-dlp scrapetube requests[socks]
+          # yt-dlp routes through Tor via config (ALL_PROXY doesn't apply to yt-dlp)
+          RUN mkdir -p /etc && echo "--proxy socks5://localhost:9050" > /etc/yt-dlp.conf
+          RUN echo 'ExitNodes {id}\nStrictNodes 1\nSocksPort 0.0.0.0:9050' >> /etc/tor/torrc
+          RUN echo '#!/bin/bash\ntor --RunAsDaemon 1\nwhile ! nc -z localhost 9050; do sleep 1; done\nsleep 5\nexec "$@"' > /entrypoint.sh && chmod +x /entrypoint.sh
+          WORKDIR /workspace
+          ENTRYPOINT ["/entrypoint.sh"]
+          EOF
+
+      - name: Prepare Python Scraper Script
+        run: |
+          cat <<'PYEOF' > scrape_uu_v3.py
+          import scrapetube
+          import sys
+          import os
+          import re
+          import threading
+          from datetime import datetime
+          from concurrent.futures import ThreadPoolExecutor, as_completed
+
+          MAX_WORKERS = 4
+
+          # update_data.js line 1037: .filter(f => /^filtered.*\.txt$/i.test(f))
+          # Both filenames MUST start with "filtered" or update_data.js silently ignores them
+          OUT_ANIONE = "filtered_channel_anioneid.txt"
+          OUT_OTHERS = "filtered_combined_all.txt"
+
+          lock_anione = threading.Lock()
+          lock_others = threading.Lock()
+
+          ANI_ONE_MARKERS = [
+              "AniOneID",
+              "UCUn0hEbVJc273anl_0ozDMQ",
+              "UUUn0hEbVJc273anl_0ozDMQ"
+          ]
+
+          def is_anione(target):
+              return any(m in target for m in ANI_ONE_MARKERS)
+
+          def scrape_target(target):
+              target = target.strip()
+              if not target:
+                  return
+
+              is_playlist = False
+              params      = {}
+              target_clean = target.split("/")[-1].replace("@", "")
+
+              if "list=" in target:
+                  match = re.search(r'list=([a-zA-Z0-9_-]+)', target)
+                  playlist_id  = match.group(1) if match else target
+                  print(f"\nScraping Playlist URL: {playlist_id}")
+                  is_playlist  = True
+                  target_clean = playlist_id
+              elif target.startswith("PL") or target.startswith("UU"):
+                  playlist_id  = target
+                  print(f"\nScraping Playlist ID: {playlist_id}")
+                  is_playlist  = True
+              elif "youtube.com/" in target or "youtu.be/" in target:
+                  params = {"channel_url": target}
+                  print(f"\nScraping Channel URL: {target}")
+              elif target.startswith("@"):
+                  params = {"channel_url": f"https://www.youtube.com/{target}"}
+                  print(f"\nScraping Channel Handle: {target}")
+              else:
+                  params = {"channel_id": target}
+                  print(f"\nScraping Channel ID: {target}")
+
+              try:
+                  if is_playlist:
+                      videos = scrapetube.get_playlist(playlist_id)
+                  else:
+                      videos = scrapetube.get_channel(**params, content_type="videos")
+
+                  lines = []
+                  count = 0
+                  for video in videos:
+                      try:
+                          title = ""
+                          if 'title' in video:
+                              if 'runs' in video['title']:
+                                  title = video['title']['runs'][0]['text']
+                              elif 'simpleText' in video['title']:
+                                  title = video['title']['simpleText']
+                          video_id = video.get('videoId')
+                          if not video_id or not title:
+                              continue
+                          url = f"https://www.youtube.com/watch?v={video_id}"
+                          lines.append(f"{title}\n{url}\n\n")
+                          count += 1
+                          if count % 50 == 0:
+                              print(f"  [{target_clean}] Fetched {count} videos...")
+                      except Exception:
+                          continue
+
+                  if count == 0:
+                      print(f"No videos found for {target}.")
+                      return
+
+                  block = "".join(lines)
+                  if is_anione(target):
+                      with lock_anione:
+                          with open(OUT_ANIONE, "a", encoding="utf-8") as f:
+                              f.write(block)
+                      print(f"  [{target_clean}] {count} videos → {OUT_ANIONE}")
+                  else:
+                      with lock_others:
+                          with open(OUT_OTHERS, "a", encoding="utf-8") as f:
+                              f.write(block)
+                      print(f"  [{target_clean}] {count} videos → {OUT_OTHERS}")
+
+              except Exception as e:
+                  print(f"Error scraping {target}: {str(e)}")
+
+          if __name__ == "__main__":
+              default_targets = [
+                  "UCUn0hEbVJc273anl_0ozDMQ",  # AniOneID
+                  "UCC-g5hWSvCbdB8HQQIA0_pg",  # TropicsAnimeAsia
+                  "UCqyqBNOAlZgJ3dQoDSCbCjQ",  # AnimiforAsia
+                  "UCxxnxya_32jcKj4yN1_kD7A",  # MuseIndonesia
+                  "UCcYw1UUwxjIMYfvmdQrcyUA",  # youkuanimation
+                  "UCrcQMdsFqYpZOHDbm-fnNlw",  # YuewenAnimationIndonesia
+                  "UCqX5I4e5iTpAt3tMYZJzZTQ",  # popsanimeindonesia
+                  "UC0wNSTMWIL3qaorLx0jie6A"   # AniOneAsia
+              ]
+
+              targets = []
+              raw_args = sys.argv[1:] if len(sys.argv) > 1 else default_targets
+
+              for item in raw_args:
+                  if os.path.isfile(item):
+                      with open(item, 'r') as f:
+                          targets.extend(f.read().splitlines())
+                  else:
+                      targets.append(item)
+
+              targets = [t for t in targets if t.strip()]
+
+              # Clear both output files before run so reruns don't stack
+              open(OUT_ANIONE, "w").close()
+              open(OUT_OTHERS, "w").close()
+
+              print(f"Starting scrape for {len(targets)} targets with {MAX_WORKERS} workers...")
+              print(f"Proxy: {os.environ.get('ALL_PROXY', 'NOT SET — traffic will NOT go through Tor!')}")
+
+              with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+                  futures = [executor.submit(scrape_target, t) for t in targets]
+                  for future in as_completed(futures):
+                      future.result()
+
+              print(f"\nDone.")
+              print(f"  AniOne ID only : {OUT_ANIONE}  ({sum(1 for l in open(OUT_ANIONE) if l.startswith('http'))} URLs)")
+              print(f"  All others     : {OUT_OTHERS}  ({sum(1 for l in open(OUT_OTHERS) if l.startswith('http'))} URLs)")
+          PYEOF
+
+      - name: Build Scraper Image
+        run: docker build -t media-scraper .
+
+      - name: Extract Playlists using yt-dlp inside Docker
+        run: |
+          CHANNELS=(
+            "https://www.youtube.com/@MuseIndonesia/playlists"
+            "https://www.youtube.com/channel/UCUn0hEbVJc273anl_0ozDMQ/playlists"
+            "https://www.youtube.com/channel/UCC-g5hWSvCbdB8HQQIA0_pg/playlists"
+            "https://www.youtube.com/channel/UCqyqBNOAlZgJ3dQoDSCbCjQ/playlists"
+            "https://www.youtube.com/channel/UCcYw1UUwxjIMYfvmdQrcyUA/playlists"
+            "https://www.youtube.com/channel/UCrcQMdsFqYpZOHDbm-fnNlw/playlists"
+            "https://www.youtube.com/channel/UCqX5I4e5iTpAt3tMYZJzZTQ/playlists"
+            "https://www.youtube.com/channel/UC0wNSTMWIL3qaorLx0jie6A/playlists"
+          )
+          touch all_playlists.txt
+          for CHANNEL in "${CHANNELS[@]}"; do
+            echo "Grabbing playlists for $CHANNEL..."
+            docker run --rm \
+              -v ${{ github.workspace }}:/workspace \
+              media-scraper \
+              yt-dlp --flat-playlist --print "%(url)s" "$CHANNEL" >> all_playlists.txt
+          done
+
+      - name: Run scrape_uu_v3.py inside Docker (PySocks via ALL_PROXY)
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -e ALL_PROXY=socks5h://127.0.0.1:9050 \
+            -e HTTPS_PROXY=socks5h://127.0.0.1:9050 \
+            -e HTTP_PROXY=socks5h://127.0.0.1:9050 \
+            media-scraper \
+            python scrape_uu_v3.py all_playlists.txt
+
+      - name: Sanity check outputs
+        run: |
+          echo "=== filtered_channel_anioneid.txt ==="
+          wc -l filtered_channel_anioneid.txt 2>/dev/null || echo "MISSING"
+          echo "=== filtered_combined_all.txt ==="
+          wc -l filtered_combined_all.txt 2>/dev/null || echo "MISSING"
+          echo "=== Head of anioneid file ==="
+          head -6 filtered_channel_anioneid.txt 2>/dev/null || true
