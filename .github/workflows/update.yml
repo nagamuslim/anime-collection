@@ -15,9 +15,7 @@ jobs:
           cat <<'EOF' > Dockerfile
           FROM python:slim-trixie
           RUN apt-get update && apt-get install -y tor curl netcat-openbsd unzip && apt-get clean
-          # requests[socks] pulls in PySocks — lets requests honour ALL_PROXY=socks5h://
           RUN pip install --no-cache-dir yt-dlp scrapetube requests[socks]
-          # yt-dlp routes through Tor via config (ALL_PROXY doesn't apply to yt-dlp)
           RUN mkdir -p /etc && echo "--proxy socks5://localhost:9050" > /etc/yt-dlp.conf
           RUN echo 'ExitNodes {id}\nStrictNodes 1\nSocksPort 0.0.0.0:9050' >> /etc/tor/torrc
           RUN echo '#!/bin/bash\ntor --RunAsDaemon 1\nwhile ! nc -z localhost 9050; do sleep 1; done\nsleep 5\nexec "$@"' > /entrypoint.sh && chmod +x /entrypoint.sh
@@ -33,57 +31,104 @@ jobs:
           import os
           import re
           import threading
+          import logging
           from datetime import datetime
           from concurrent.futures import ThreadPoolExecutor, as_completed
 
           MAX_WORKERS = 4
 
-          # update_data.js line 1037: .filter(f => /^filtered.*\.txt$/i.test(f))
-          # Both filenames MUST start with "filtered" or update_data.js silently ignores them
+          # update_data.js line 1037: /^filtered.*.txt$/i  — prefix is mandatory
           OUT_ANIONE = "filtered_channel_anioneid.txt"
           OUT_OTHERS = "filtered_combined_all.txt"
+          LOG_FILE   = f"scrape_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
 
           lock_anione = threading.Lock()
           lock_others = threading.Lock()
 
-          ANI_ONE_MARKERS = [
-              "AniOneID",
-              "UCUn0hEbVJc273anl_0ozDMQ",
-              "UUUn0hEbVJc273anl_0ozDMQ"
+          # ── Dual logger: stdout + file simultaneously ──────────────────────
+          log = logging.getLogger("scraper")
+          log.setLevel(logging.DEBUG)
+          _fmt = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s", datefmt="%H:%M:%S")
+          _fh = logging.FileHandler(LOG_FILE, encoding="utf-8")
+          _fh.setFormatter(_fmt)
+          _sh = logging.StreamHandler(sys.stdout)
+          _sh.setFormatter(_fmt)
+          log.addHandler(_fh)
+          log.addHandler(_sh)
+
+          # ── AniOne ID detection ────────────────────────────────────────────
+          # PRIMARY:  channel tag in the playlist line (CHAN_ID|||PLAYLIST_URL)
+          # SECONDARY: video title content — catches any misrouted playlist
+          # Both must agree before we trust the routing.
+
+          ANI_ONE_CHANNEL_MARKERS = [
+              "UCUn0hEbVJc273anl_0ozDMQ",   # channel ID
+              "UUUn0hEbVJc273anl_0ozDMQ",   # uploads playlist ID
+              "AniOneID",                    # legacy label
           ]
 
-          def is_anione(target):
-              return any(m in target for m in ANI_ONE_MARKERS)
+          # Matches: 》#12 (ID sub)【Ani-One Indonesia】
+          # or any variant with "Ani-One Indonesia" anywhere in the title
+          _ANIONE_TITLE_RE = re.compile(r'Ani[-\s]?One\s+Indonesia', re.IGNORECASE)
 
-          def scrape_target(target):
-              target = target.strip()
-              if not target:
+          def is_anione_channel(tag):
+              """Check source channel tag from CHAN_ID|||URL line."""
+              if not tag:
+                  return False
+              return any(m in tag for m in ANI_ONE_CHANNEL_MARKERS)
+
+          def is_anione_title(title):
+              """Fallback: check video title for Ani-One Indonesia branding."""
+              return bool(_ANIONE_TITLE_RE.search(title))
+
+
+          def scrape_target(raw_target):
+              raw_target = raw_target.strip()
+              if not raw_target:
                   return
 
-              is_playlist = False
-              params      = {}
-              target_clean = target.split("/")[-1].replace("@", "")
+              # ── Parse channel tag ──────────────────────────────────────────
+              # YML yt-dlp step writes:  UCUn0hEbVJc273anl_0ozDMQ|||https://...
+              source_chan = None
+              target = raw_target
+              if "|||" in raw_target:
+                  source_chan, target = raw_target.split("|||", 1)
+                  target = target.strip()
+                  log.debug(f"Parsed tag: channel={source_chan}  url={target}")
+
+              # Route from channel tag (primary)
+              route_anione = is_anione_channel(source_chan)
+
+              # ── Detect target type ─────────────────────────────────────────
+              is_playlist  = False
+              params       = {}
+              playlist_id  = None
 
               if "list=" in target:
-                  match = re.search(r'list=([a-zA-Z0-9_-]+)', target)
-                  playlist_id  = match.group(1) if match else target
-                  print(f"\nScraping Playlist URL: {playlist_id}")
+                  m = re.search(r'list=([a-zA-Z0-9_-]+)', target)
+                  playlist_id  = m.group(1) if m else target
                   is_playlist  = True
-                  target_clean = playlist_id
-              elif target.startswith("PL") or target.startswith("UU"):
+                  label        = playlist_id
+                  log.info(f"[{source_chan or '?'}] Scraping playlist  → {playlist_id}")
+              elif re.match(r'^(PL|UU)[a-zA-Z0-9_-]+$', target):
                   playlist_id  = target
-                  print(f"\nScraping Playlist ID: {playlist_id}")
                   is_playlist  = True
+                  label        = playlist_id
+                  log.info(f"[{source_chan or '?'}] Scraping playlist ID → {playlist_id}")
               elif "youtube.com/" in target or "youtu.be/" in target:
                   params = {"channel_url": target}
-                  print(f"\nScraping Channel URL: {target}")
-              elif target.startswith("@"):
+                  label  = target.split("/")[-1]
+                  log.info(f"[{source_chan or '?'}] Scraping channel URL → {target}")
+              elif target.startswith(" @"):
                   params = {"channel_url": f"https://www.youtube.com/{target}"}
-                  print(f"\nScraping Channel Handle: {target}")
+                  label  = target
+                  log.info(f"[{source_chan or '?'}] Scraping handle → {target}")
               else:
                   params = {"channel_id": target}
-                  print(f"\nScraping Channel ID: {target}")
+                  label  = target
+                  log.info(f"[{source_chan or '?'}] Scraping channel ID → {target}")
 
+              # ── Scrape ─────────────────────────────────────────────────────
               try:
                   if is_playlist:
                       videos = scrapetube.get_playlist(playlist_id)
@@ -92,6 +137,8 @@ jobs:
 
                   lines = []
                   count = 0
+                  title_checks = 0   # check first 5 titles for Ani-One Indonesia branding
+
                   for video in videos:
                       try:
                           title = ""
@@ -100,46 +147,71 @@ jobs:
                                   title = video['title']['runs'][0]['text']
                               elif 'simpleText' in video['title']:
                                   title = video['title']['simpleText']
+
                           video_id = video.get('videoId')
-                          if not video_id or not title:
+
+                          if not video_id:
+                              log.debug(f"  [{label}] Skipped: missing videoId — raw={str(video)[:120]}")
                               continue
+                          if not title:
+                              log.debug(f"  [{label}] Skipped: missing title for {video_id}")
+                              continue
+
+                          # ── Title-based routing (secondary/fallback) ───────
+                          # Check first 5 videos. If channel tag said "not AniOne"
+                          # but the title screams Ani-One Indonesia, override.
+                          if title_checks < 5:
+                              if is_anione_title(title):
+                                  if not route_anione:
+                                      log.warning(
+                                          f"  [{label}] TITLE OVERRIDE: found 'Ani-One Indonesia' in title "
+                                          f"but channel tag was '{source_chan}' — rerouting to {OUT_ANIONE}"
+                                      )
+                                  route_anione = True
+                              title_checks += 1
+
                           url = f"https://www.youtube.com/watch?v={video_id}"
                           lines.append(f"{title}\n{url}\n\n")
                           count += 1
                           if count % 50 == 0:
-                              print(f"  [{target_clean}] Fetched {count} videos...")
-                      except Exception:
+                              log.info(f"  [{label}] ... {count} videos fetched so far")
+
+                      except Exception as e:
+                          log.debug(f"  [{label}] Per-video error: {e}")
                           continue
 
+                  # ── Result ─────────────────────────────────────────────────
                   if count == 0:
-                      print(f"No videos found for {target}.")
+                      log.warning(
+                          f"  [{label}] 0 videos — playlist may be private, deleted, or region-locked. "
+                          f"(source_chan={source_chan})"
+                      )
                       return
 
-                  block = "".join(lines)
-                  if is_anione(target):
-                      with lock_anione:
-                          with open(OUT_ANIONE, "a", encoding="utf-8") as f:
-                              f.write(block)
-                      print(f"  [{target_clean}] {count} videos → {OUT_ANIONE}")
-                  else:
-                      with lock_others:
-                          with open(OUT_OTHERS, "a", encoding="utf-8") as f:
-                              f.write(block)
-                      print(f"  [{target_clean}] {count} videos → {OUT_OTHERS}")
+                  out_file = OUT_ANIONE if route_anione else OUT_OTHERS
+                  lock     = lock_anione if route_anione else lock_others
+                  block    = "".join(lines)
+
+                  with lock:
+                      with open(out_file, "a", encoding="utf-8") as f:
+                          f.write(block)
+
+                  log.info(f"  [{label}] DONE: {count} videos → {out_file}  (anione={route_anione})")
 
               except Exception as e:
-                  print(f"Error scraping {target}: {str(e)}")
+                  log.error(f"  [{label}] FAILED: {e}", exc_info=True)
+
 
           if __name__ == "__main__":
               default_targets = [
-                  "UCUn0hEbVJc273anl_0ozDMQ",  # AniOneID
-                  "UCC-g5hWSvCbdB8HQQIA0_pg",  # TropicsAnimeAsia
-                  "UCqyqBNOAlZgJ3dQoDSCbCjQ",  # AnimiforAsia
-                  "UCxxnxya_32jcKj4yN1_kD7A",  # MuseIndonesia
-                  "UCcYw1UUwxjIMYfvmdQrcyUA",  # youkuanimation
-                  "UCrcQMdsFqYpZOHDbm-fnNlw",  # YuewenAnimationIndonesia
-                  "UCqX5I4e5iTpAt3tMYZJzZTQ",  # popsanimeindonesia
-                  "UC0wNSTMWIL3qaorLx0jie6A"   # AniOneAsia
+                  "UCUn0hEbVJc273anl_0ozDMQ",
+                  "UCC-g5hWSvCbdB8HQQIA0_pg",
+                  "UCqyqBNOAlZgJ3dQoDSCbCjQ",
+                  "UCxxnxya_32jcKj4yN1_kD7A",
+                  "UCcYw1UUwxjIMYfvmdQrcyUA",
+                  "UCrcQMdsFqYpZOHDbm-fnNlw",
+                  "UCqX5I4e5iTpAt3tMYZJzZTQ",
+                  "UC0wNSTMWIL3qaorLx0jie6A"
               ]
 
               targets = []
@@ -147,28 +219,36 @@ jobs:
 
               for item in raw_args:
                   if os.path.isfile(item):
-                      with open(item, 'r') as f:
-                          targets.extend(f.read().splitlines())
+                      with open(item, 'r', encoding='utf-8') as f:
+                          targets.extend(line.strip() for line in f if line.strip())
                   else:
                       targets.append(item)
 
               targets = [t for t in targets if t.strip()]
 
-              # Clear both output files before run so reruns don't stack
+              log.info(f"ALL_PROXY = {os.environ.get('ALL_PROXY', 'NOT SET — traffic bypasses Tor!')}")
+              log.info(f"Targets: {len(targets)} | Workers: {MAX_WORKERS} | Log: {LOG_FILE}")
+
+              # Clear output files
               open(OUT_ANIONE, "w").close()
               open(OUT_OTHERS, "w").close()
 
-              print(f"Starting scrape for {len(targets)} targets with {MAX_WORKERS} workers...")
-              print(f"Proxy: {os.environ.get('ALL_PROXY', 'NOT SET — traffic will NOT go through Tor!')}")
-
               with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-                  futures = [executor.submit(scrape_target, t) for t in targets]
+                  futures = {executor.submit(scrape_target, t): t for t in targets}
                   for future in as_completed(futures):
-                      future.result()
+                      try:
+                          future.result()
+                      except Exception as e:
+                          log.error(f"Unhandled thread exception: {e}", exc_info=True)
 
-              print(f"\nDone.")
-              print(f"  AniOne ID only : {OUT_ANIONE}  ({sum(1 for l in open(OUT_ANIONE) if l.startswith('http'))} URLs)")
-              print(f"  All others     : {OUT_OTHERS}  ({sum(1 for l in open(OUT_OTHERS) if l.startswith('http'))} URLs)")
+              anione_urls = sum(1 for l in open(OUT_ANIONE, encoding='utf-8') if l.startswith('http'))
+              others_urls = sum(1 for l in open(OUT_OTHERS, encoding='utf-8') if l.startswith('http'))
+
+              log.info("═" * 60)
+              log.info(f"RESULT  {OUT_ANIONE}  →  {anione_urls} URLs")
+              log.info(f"RESULT  {OUT_OTHERS}  →  {others_urls} URLs")
+              log.info(f"LOG FILE: {LOG_FILE}")
+              log.info("═" * 60)
           PYEOF
 
       - name: Build Scraper Image
@@ -176,24 +256,38 @@ jobs:
 
       - name: Extract Playlists using yt-dlp inside Docker
         run: |
+          # Format per line: CHANNEL_ID|||PLAYLIST_URL
+          # This preserves channel context through the playlist extraction step
+          # so Python can correctly route AniOne ID playlists even though the
+          # playlist URL itself has no channel info in it.
           CHANNELS=(
-            "https://www.youtube.com/@MuseIndonesia/playlists"
-            "https://www.youtube.com/channel/UCUn0hEbVJc273anl_0ozDMQ/playlists"
-            "https://www.youtube.com/channel/UCC-g5hWSvCbdB8HQQIA0_pg/playlists"
-            "https://www.youtube.com/channel/UCqyqBNOAlZgJ3dQoDSCbCjQ/playlists"
-            "https://www.youtube.com/channel/UCcYw1UUwxjIMYfvmdQrcyUA/playlists"
-            "https://www.youtube.com/channel/UCrcQMdsFqYpZOHDbm-fnNlw/playlists"
-            "https://www.youtube.com/channel/UCqX5I4e5iTpAt3tMYZJzZTQ/playlists"
-            "https://www.youtube.com/channel/UC0wNSTMWIL3qaorLx0jie6A/playlists"
+            "UCUn0hEbVJc273anl_0ozDMQ|https://www.youtube.com/channel/UCUn0hEbVJc273anl_0ozDMQ/playlists"
+            "UCC-g5hWSvCbdB8HQQIA0_pg|https://www.youtube.com/channel/UCC-g5hWSvCbdB8HQQIA0_pg/playlists"
+            "UCqyqBNOAlZgJ3dQoDSCbCjQ|https://www.youtube.com/channel/UCqyqBNOAlZgJ3dQoDSCbCjQ/playlists"
+            "UCxxnxya_32jcKj4yN1_kD7A|https://www.youtube.com/@MuseIndonesia/playlists"
+            "UCcYw1UUwxjIMYfvmdQrcyUA|https://www.youtube.com/channel/UCcYw1UUwxjIMYfvmdQrcyUA/playlists"
+            "UCrcQMdsFqYpZOHDbm-fnNlw|https://www.youtube.com/channel/UCrcQMdsFqYpZOHDbm-fnNlw/playlists"
+            "UCqX5I4e5iTpAt3tMYZJzZTQ|https://www.youtube.com/channel/UCqX5I4e5iTpAt3tMYZJzZTQ/playlists"
+            "UC0wNSTMWIL3qaorLx0jie6A|https://www.youtube.com/channel/UC0wNSTMWIL3qaorLx0jie6A/playlists"
           )
+
           touch all_playlists.txt
-          for CHANNEL in "${CHANNELS[@]}"; do
-            echo "Grabbing playlists for $CHANNEL..."
+
+          for ENTRY in "${CHANNELS[@]}"; do
+            CHAN_ID="${ENTRY%%|*}"
+            CHAN_URL="${ENTRY#*|}"
+            echo "Grabbing playlists for $CHAN_ID ($CHAN_URL)..."
             docker run --rm \
               -v ${{ github.workspace }}:/workspace \
               media-scraper \
-              yt-dlp --flat-playlist --print "%(url)s" "$CHANNEL" >> all_playlists.txt
+              yt-dlp --flat-playlist --print "%(url)s" "$CHAN_URL" \
+              | awk -v id="$CHAN_ID" 'NF{print id "|||" $0}' >> all_playlists.txt
           done
+
+          echo "=== all_playlists.txt preview (first 10 lines) ==="
+          head -10 all_playlists.txt
+          echo "=== Total playlist entries ==="
+          wc -l all_playlists.txt
 
       - name: Run scrape_uu_v3.py inside Docker (PySocks via ALL_PROXY)
         run: |
@@ -210,6 +304,10 @@ jobs:
           echo "=== filtered_channel_anioneid.txt ==="
           wc -l filtered_channel_anioneid.txt 2>/dev/null || echo "MISSING"
           echo "=== filtered_combined_all.txt ==="
-          wc -l filtered_combined_all.txt 2>/dev/null || echo "MISSING"
-          echo "=== Head of anioneid file ==="
-          head -6 filtered_channel_anioneid.txt 2>/dev/null || true
+          wc -l filtered_combined_all.txt      2>/dev/null || echo "MISSING"
+          echo ""
+          echo "=== AniOne ID sample (first 6 lines) ==="
+          head -6 filtered_channel_anioneid.txt 2>/dev/null || echo "(empty)"
+          echo ""
+          echo "=== Log file ==="
+          cat scrape_log_*.txt 2>/dev/null | grep -E "(RESULT|FAILED|OVERRIDE|0 videos)" || echo "No log found"
