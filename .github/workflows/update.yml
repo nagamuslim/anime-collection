@@ -18,7 +18,9 @@ jobs:
           RUN pip install --no-cache-dir yt-dlp scrapetube requests[socks]
           RUN mkdir -p /etc && echo "--proxy socks5://localhost:9050" > /etc/yt-dlp.conf
           RUN echo 'ExitNodes {id}\nStrictNodes 1\nSocksPort 0.0.0.0:9050' >> /etc/tor/torrc
-          RUN echo '#!/bin/bash\ntor --RunAsDaemon 1\nwhile ! nc -z localhost 9050; do sleep 1; done\nsleep 5\nexec "$@"' > /entrypoint.sh && chmod +x /entrypoint.sh
+          # FIX #1a: redirect ALL Tor output to /dev/null in the entrypoint
+          # so it never bleeds into pipes that capture stdout
+          RUN printf '#!/bin/bash\ntor --RunAsDaemon 1 >/dev/null 2>&1\nwhile ! nc -z localhost 9050; do sleep 1; done\nsleep 3\nexec "$@"\n' > /entrypoint.sh && chmod +x /entrypoint.sh
           WORKDIR /workspace
           ENTRYPOINT ["/entrypoint.sh"]
           EOF
@@ -32,12 +34,15 @@ jobs:
           import re
           import threading
           import logging
+          import time
           from datetime import datetime
           from concurrent.futures import ThreadPoolExecutor, as_completed
 
           MAX_WORKERS = 4
+          MAX_RETRIES = 3
+          RETRY_DELAY = 5  # seconds between retries on connection errors
 
-          # update_data.js line 1037: /^filtered.*.txt$/i  — prefix is mandatory
+          # update_data.js: /^filtered.*\.txt$/i — prefix mandatory
           OUT_ANIONE = "filtered_channel_anioneid.txt"
           OUT_OTHERS = "filtered_combined_all.txt"
           LOG_FILE   = f"scrape_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
@@ -45,7 +50,6 @@ jobs:
           lock_anione = threading.Lock()
           lock_others = threading.Lock()
 
-          # ── Dual logger: stdout + file simultaneously ──────────────────────
           log = logging.getLogger("scraper")
           log.setLevel(logging.DEBUG)
           _fmt = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s", datefmt="%H:%M:%S")
@@ -56,150 +60,172 @@ jobs:
           log.addHandler(_fh)
           log.addHandler(_sh)
 
-          # ── AniOne ID detection ────────────────────────────────────────────
-          # PRIMARY:  channel tag in the playlist line (CHAN_ID|||PLAYLIST_URL)
-          # SECONDARY: video title content — catches any misrouted playlist
-          # Both must agree before we trust the routing.
-
           ANI_ONE_CHANNEL_MARKERS = [
-              "UCUn0hEbVJc273anl_0ozDMQ",   # channel ID
-              "UUUn0hEbVJc273anl_0ozDMQ",   # uploads playlist ID
-              "AniOneID",                    # legacy label
+              "UCUn0hEbVJc273anl_0ozDMQ",
+              "UUUn0hEbVJc273anl_0ozDMQ",
+              "AniOneID",
           ]
-
-          # Matches: 》#12 (ID sub)【Ani-One Indonesia】
-          # or any variant with "Ani-One Indonesia" anywhere in the title
           _ANIONE_TITLE_RE = re.compile(r'Ani[-\s]?One\s+Indonesia', re.IGNORECASE)
 
+          # FIX #3: strict validation — only accept real YouTube targets
+          # Rejects anything that looks like a log line (spaces, brackets, colons)
+          _VALID_YT_RE = re.compile(
+              r'^(https?://|@|UC|UU|PL)[a-zA-Z0-9@._/\-?=&%]+$'
+          )
+
+          def is_valid_target(t):
+              if not t or len(t) < 4:
+                  return False
+              if not _VALID_YT_RE.match(t):
+                  return False
+              # Reject anything with spaces (log lines always have spaces)
+              if ' ' in t:
+                  return False
+              return True
+
           def is_anione_channel(tag):
-              """Check source channel tag from CHAN_ID|||URL line."""
               if not tag:
                   return False
               return any(m in tag for m in ANI_ONE_CHANNEL_MARKERS)
 
           def is_anione_title(title):
-              """Fallback: check video title for Ani-One Indonesia branding."""
               return bool(_ANIONE_TITLE_RE.search(title))
-
 
           def scrape_target(raw_target):
               raw_target = raw_target.strip()
               if not raw_target:
                   return
 
-              # ── Parse channel tag ──────────────────────────────────────────
-              # YML yt-dlp step writes:  UCUn0hEbVJc273anl_0ozDMQ|||https://...
               source_chan = None
               target = raw_target
               if "|||" in raw_target:
                   source_chan, target = raw_target.split("|||", 1)
                   target = target.strip()
-                  log.debug(f"Parsed tag: channel={source_chan}  url={target}")
 
-              # Route from channel tag (primary)
+              # FIX #3: validate BEFORE doing anything with the target
+              if not is_valid_target(target):
+                  log.debug(f"SKIPPED invalid target (likely Tor log line): {repr(target[:80])}")
+                  return
+
               route_anione = is_anione_channel(source_chan)
 
-              # ── Detect target type ─────────────────────────────────────────
-              is_playlist  = False
-              params       = {}
-              playlist_id  = None
+              is_playlist = False
+              params      = {}
+              playlist_id = None
 
               if "list=" in target:
                   m = re.search(r'list=([a-zA-Z0-9_-]+)', target)
                   playlist_id  = m.group(1) if m else target
                   is_playlist  = True
                   label        = playlist_id
-                  log.info(f"[{source_chan or '?'}] Scraping playlist  → {playlist_id}")
+                  log.info(f"[{source_chan or '?'}] playlist → {playlist_id}")
               elif re.match(r'^(PL|UU)[a-zA-Z0-9_-]+$', target):
                   playlist_id  = target
                   is_playlist  = True
                   label        = playlist_id
-                  log.info(f"[{source_chan or '?'}] Scraping playlist ID → {playlist_id}")
+                  log.info(f"[{source_chan or '?'}] playlist ID → {playlist_id}")
               elif "youtube.com/" in target or "youtu.be/" in target:
                   params = {"channel_url": target}
                   label  = target.split("/")[-1]
-                  log.info(f"[{source_chan or '?'}] Scraping channel URL → {target}")
-              elif target.startswith(" @"):
+                  log.info(f"[{source_chan or '?'}] channel URL → {target}")
+              elif target.startswith("@"):  # FIX #2: removed erroneous space
                   params = {"channel_url": f"https://www.youtube.com/{target}"}
                   label  = target
-                  log.info(f"[{source_chan or '?'}] Scraping handle → {target}")
+                  log.info(f"[{source_chan or '?'}] handle → {target}")
               else:
                   params = {"channel_id": target}
                   label  = target
-                  log.info(f"[{source_chan or '?'}] Scraping channel ID → {target}")
+                  log.info(f"[{source_chan or '?'}] channel ID → {target}")
 
-              # ── Scrape ─────────────────────────────────────────────────────
-              try:
-                  if is_playlist:
-                      videos = scrapetube.get_playlist(playlist_id)
-                  else:
-                      videos = scrapetube.get_channel(**params, content_type="videos")
+              # FIX #4: retry loop for Tor connection drops
+              for attempt in range(1, MAX_RETRIES + 1):
+                  try:
+                      if is_playlist:
+                          videos = scrapetube.get_playlist(playlist_id)
+                      else:
+                          videos = scrapetube.get_channel(**params, content_type="videos")
 
-                  lines = []
-                  count = 0
-                  title_checks = 0   # check first 5 titles for Ani-One Indonesia branding
+                      lines        = []
+                      count        = 0
+                      title_checks = 0
 
-                  for video in videos:
-                      try:
-                          title = ""
-                          if 'title' in video:
-                              if 'runs' in video['title']:
-                                  title = video['title']['runs'][0]['text']
-                              elif 'simpleText' in video['title']:
-                                  title = video['title']['simpleText']
+                      for video in videos:
+                          try:
+                              title = ""
+                              if 'title' in video:
+                                  if 'runs' in video['title']:
+                                      title = video['title']['runs'][0]['text']
+                                  elif 'simpleText' in video['title']:
+                                      title = video['title']['simpleText']
 
-                          video_id = video.get('videoId')
+                              video_id = video.get('videoId')
+                              if not video_id:
+                                  log.debug(f"  [{label}] skip: no videoId — {str(video)[:80]}")
+                                  continue
+                              if not title:
+                                  log.debug(f"  [{label}] skip: no title for {video_id}")
+                                  continue
 
-                          if not video_id:
-                              log.debug(f"  [{label}] Skipped: missing videoId — raw={str(video)[:120]}")
+                              # Title-based override (first 5 videos)
+                              if title_checks < 5:
+                                  if is_anione_title(title):
+                                      if not route_anione:
+                                          log.warning(
+                                              f"  [{label}] TITLE OVERRIDE: "
+                                              f"'Ani-One Indonesia' found in title, "
+                                              f"chan_tag='{source_chan}' → rerouting to {OUT_ANIONE}"
+                                          )
+                                      route_anione = True
+                                  title_checks += 1
+
+                              url = f"https://www.youtube.com/watch?v={video_id}"
+                              lines.append(f"{title}\n{url}\n\n")
+                              count += 1
+                              if count % 50 == 0:
+                                  log.info(f"  [{label}] {count} videos so far...")
+                          except Exception as e:
+                              log.debug(f"  [{label}] per-video error: {e}")
                               continue
-                          if not title:
-                              log.debug(f"  [{label}] Skipped: missing title for {video_id}")
-                              continue
 
-                          # ── Title-based routing (secondary/fallback) ───────
-                          # Check first 5 videos. If channel tag said "not AniOne"
-                          # but the title screams Ani-One Indonesia, override.
-                          if title_checks < 5:
-                              if is_anione_title(title):
-                                  if not route_anione:
-                                      log.warning(
-                                          f"  [{label}] TITLE OVERRIDE: found 'Ani-One Indonesia' in title "
-                                          f"but channel tag was '{source_chan}' — rerouting to {OUT_ANIONE}"
-                                      )
-                                  route_anione = True
-                              title_checks += 1
+                      if count == 0:
+                          log.warning(
+                              f"  [{label}] 0 videos — private/deleted/region-locked? "
+                              f"(chan={source_chan}, attempt={attempt})"
+                          )
+                          return
 
-                          url = f"https://www.youtube.com/watch?v={video_id}"
-                          lines.append(f"{title}\n{url}\n\n")
-                          count += 1
-                          if count % 50 == 0:
-                              log.info(f"  [{label}] ... {count} videos fetched so far")
+                      out_file = OUT_ANIONE if route_anione else OUT_OTHERS
+                      lock     = lock_anione if route_anione else lock_others
+                      block    = "".join(lines)
+                      with lock:
+                          with open(out_file, "a", encoding="utf-8") as f:
+                              f.write(block)
 
-                      except Exception as e:
-                          log.debug(f"  [{label}] Per-video error: {e}")
-                          continue
-
-                  # ── Result ─────────────────────────────────────────────────
-                  if count == 0:
-                      log.warning(
-                          f"  [{label}] 0 videos — playlist may be private, deleted, or region-locked. "
-                          f"(source_chan={source_chan})"
+                      log.info(
+                          f"  [{label}] DONE: {count} videos → {out_file} "
+                          f"(anione={route_anione}, attempt={attempt})"
                       )
-                      return
+                      return  # success — exit retry loop
 
-                  out_file = OUT_ANIONE if route_anione else OUT_OTHERS
-                  lock     = lock_anione if route_anione else lock_others
-                  block    = "".join(lines)
-
-                  with lock:
-                      with open(out_file, "a", encoding="utf-8") as f:
-                          f.write(block)
-
-                  log.info(f"  [{label}] DONE: {count} videos → {out_file}  (anione={route_anione})")
-
-              except Exception as e:
-                  log.error(f"  [{label}] FAILED: {e}", exc_info=True)
+                  except Exception as e:
+                      err_str = str(e)
+                      is_conn_err = any(k in err_str for k in [
+                          "RemoteDisconnected", "ConnectionError",
+                          "ConnectionAborted", "Connection aborted"
+                      ])
+                      if is_conn_err and attempt < MAX_RETRIES:
+                          log.warning(
+                              f"  [{label}] connection drop (attempt {attempt}/{MAX_RETRIES}), "
+                              f"retrying in {RETRY_DELAY}s..."
+                          )
+                          time.sleep(RETRY_DELAY)
+                          continue
+                      else:
+                          log.error(
+                              f"  [{label}] FAILED after {attempt} attempt(s): {e}",
+                              exc_info=True
+                          )
+                          return
 
 
           if __name__ == "__main__":
@@ -224,12 +250,20 @@ jobs:
                   else:
                       targets.append(item)
 
-              targets = [t for t in targets if t.strip()]
+              # FIX #3: filter invalid targets at load time too, log how many dropped
+              raw_count = len(targets)
+              targets = [t for t in targets if t.strip() and is_valid_target(
+                  t.split("|||", 1)[1].strip() if "|||" in t else t
+              )]
+              dropped = raw_count - len(targets)
 
-              log.info(f"ALL_PROXY = {os.environ.get('ALL_PROXY', 'NOT SET — traffic bypasses Tor!')}")
-              log.info(f"Targets: {len(targets)} | Workers: {MAX_WORKERS} | Log: {LOG_FILE}")
+              log.info(f"ALL_PROXY = {os.environ.get('ALL_PROXY', 'NOT SET — bypasses Tor!')}")
+              log.info(
+                  f"Loaded {raw_count} lines → {len(targets)} valid targets "
+                  f"({dropped} dropped as invalid/log lines)"
+              )
+              log.info(f"Workers: {MAX_WORKERS} | Retries: {MAX_RETRIES} | Log: {LOG_FILE}")
 
-              # Clear output files
               open(OUT_ANIONE, "w").close()
               open(OUT_OTHERS, "w").close()
 
@@ -256,10 +290,6 @@ jobs:
 
       - name: Extract Playlists using yt-dlp inside Docker
         run: |
-          # Format per line: CHANNEL_ID|||PLAYLIST_URL
-          # This preserves channel context through the playlist extraction step
-          # so Python can correctly route AniOne ID playlists even though the
-          # playlist URL itself has no channel info in it.
           CHANNELS=(
             "UCUn0hEbVJc273anl_0ozDMQ|https://www.youtube.com/channel/UCUn0hEbVJc273anl_0ozDMQ/playlists"
             "UCC-g5hWSvCbdB8HQQIA0_pg|https://www.youtube.com/channel/UCC-g5hWSvCbdB8HQQIA0_pg/playlists"
@@ -276,12 +306,14 @@ jobs:
           for ENTRY in "${CHANNELS[@]}"; do
             CHAN_ID="${ENTRY%%|*}"
             CHAN_URL="${ENTRY#*|}"
-            echo "Grabbing playlists for $CHAN_ID ($CHAN_URL)..."
+            echo "Grabbing playlists for $CHAN_ID ..."
+            # FIX #1b: 2>/dev/null suppresses any container stderr (Tor notices)
+            # that survive despite the entrypoint redirect — belt and suspenders
             docker run --rm \
               -v ${{ github.workspace }}:/workspace \
               media-scraper \
-              yt-dlp --flat-playlist --print "%(url)s" "$CHAN_URL" \
-              | awk -v id="$CHAN_ID" 'NF{print id "|||" $0}' >> all_playlists.txt
+              yt-dlp --flat-playlist --print "%(url)s" "$CHAN_URL" 2>/dev/null \
+              | awk -v id="$CHAN_ID" 'NF && /youtube\.com/{print id "|||" $0}' >> all_playlists.txt
           done
 
           echo "=== all_playlists.txt preview (first 10 lines) ==="
@@ -309,5 +341,7 @@ jobs:
           echo "=== AniOne ID sample (first 6 lines) ==="
           head -6 filtered_channel_anioneid.txt 2>/dev/null || echo "(empty)"
           echo ""
-          echo "=== Log file ==="
-          cat scrape_log_*.txt 2>/dev/null | grep -E "(RESULT|FAILED|OVERRIDE|0 videos)" || echo "No log found"
+          echo "=== Log summary ==="
+          cat scrape_log_*.txt 2>/dev/null \
+            | grep -E "(RESULT|FAILED|OVERRIDE|dropped|0 videos|retrying)" \
+            || echo "No log found"
