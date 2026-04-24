@@ -18,8 +18,6 @@ jobs:
           RUN pip install --no-cache-dir yt-dlp scrapetube requests[socks]
           RUN mkdir -p /etc && echo "--proxy socks5://localhost:9050" > /etc/yt-dlp.conf
           RUN echo 'ExitNodes {id}\nStrictNodes 1\nSocksPort 0.0.0.0:9050' >> /etc/tor/torrc
-          # FIX #1a: redirect ALL Tor output to /dev/null in the entrypoint
-          # so it never bleeds into pipes that capture stdout
           RUN printf '#!/bin/bash\ntor --RunAsDaemon 1 >/dev/null 2>&1\nwhile ! nc -z localhost 9050; do sleep 1; done\nsleep 3\nexec "$@"\n' > /entrypoint.sh && chmod +x /entrypoint.sh
           WORKDIR /workspace
           ENTRYPOINT ["/entrypoint.sh"]
@@ -40,104 +38,76 @@ jobs:
 
           MAX_WORKERS = 4
           MAX_RETRIES = 3
-          RETRY_DELAY = 5  # seconds between retries on connection errors
+          RETRY_DELAY = 5
 
-          # update_data.js: /^filtered.*\.txt$/i — prefix mandatory
-          OUT_ANIONE = "filtered_channel_anioneid.txt"
-          OUT_OTHERS = "filtered_combined_all.txt"
-          LOG_FILE   = f"scrape_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+          # Single raw output — sorting happens in the awk post-step
+          # update_data.js prefix rule applies to the FINAL sorted files, not this one
+          RAW_OUT      = "raw_all_scraped.txt"
+          FAILED_OUT   = "failed_playlists.txt"   # yt-dlp fallback reads this
+          LOG_FILE     = f"scrape_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
 
-          lock_anione = threading.Lock()
-          lock_others = threading.Lock()
+          raw_lock    = threading.Lock()
+          failed_lock = threading.Lock()
 
           log = logging.getLogger("scraper")
           log.setLevel(logging.DEBUG)
           _fmt = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s", datefmt="%H:%M:%S")
-          _fh = logging.FileHandler(LOG_FILE, encoding="utf-8")
+          _fh  = logging.FileHandler(LOG_FILE, encoding="utf-8")
           _fh.setFormatter(_fmt)
-          _sh = logging.StreamHandler(sys.stdout)
+          _sh  = logging.StreamHandler(sys.stdout)
           _sh.setFormatter(_fmt)
           log.addHandler(_fh)
           log.addHandler(_sh)
 
-          ANI_ONE_CHANNEL_MARKERS = [
-              "UCUn0hEbVJc273anl_0ozDMQ",
-              "UUUn0hEbVJc273anl_0ozDMQ",
-              "AniOneID",
-          ]
-          _ANIONE_TITLE_RE = re.compile(r'Ani[-\s]?One\s+Indonesia', re.IGNORECASE)
-
-          # FIX #3: strict validation — only accept real YouTube targets
-          # Rejects anything that looks like a log line (spaces, brackets, colons)
+          # Validation — rejects Tor log bleed lines
           _VALID_YT_RE = re.compile(
               r'^(https?://|@|UC|UU|PL)[a-zA-Z0-9@._/\-?=&%]+$'
           )
-
           def is_valid_target(t):
-              if not t or len(t) < 4:
-                  return False
-              if not _VALID_YT_RE.match(t):
-                  return False
-              # Reject anything with spaces (log lines always have spaces)
-              if ' ' in t:
-                  return False
-              return True
+              return bool(t and len(t) >= 4 and ' ' not in t and _VALID_YT_RE.match(t))
 
-          def is_anione_channel(tag):
-              if not tag:
-                  return False
-              return any(m in tag for m in ANI_ONE_CHANNEL_MARKERS)
-
-          def is_anione_title(title):
-              return bool(_ANIONE_TITLE_RE.search(title))
+          def log_failed(playlist_url, reason):
+              """Append failed playlist URL to failed_playlists.txt for yt-dlp fallback."""
+              with failed_lock:
+                  with open(FAILED_OUT, "a", encoding="utf-8") as f:
+                      f.write(f"{playlist_url}\n")
+              log.warning(f"  QUEUED FOR YT-DLP FALLBACK: {playlist_url} ({reason})")
 
           def scrape_target(raw_target):
               raw_target = raw_target.strip()
-              if not raw_target:
+              if not raw_target or not is_valid_target(raw_target):
+                  log.debug(f"SKIPPED invalid: {repr(raw_target[:80])}")
                   return
 
-              source_chan = None
               target = raw_target
-              if "|||" in raw_target:
-                  source_chan, target = raw_target.split("|||", 1)
-                  target = target.strip()
-
-              # FIX #3: validate BEFORE doing anything with the target
-              if not is_valid_target(target):
-                  log.debug(f"SKIPPED invalid target (likely Tor log line): {repr(target[:80])}")
-                  return
-
-              route_anione = is_anione_channel(source_chan)
-
               is_playlist = False
               params      = {}
               playlist_id = None
 
               if "list=" in target:
                   m = re.search(r'list=([a-zA-Z0-9_-]+)', target)
-                  playlist_id  = m.group(1) if m else target
-                  is_playlist  = True
-                  label        = playlist_id
-                  log.info(f"[{source_chan or '?'}] playlist → {playlist_id}")
+                  playlist_id = m.group(1) if m else target
+                  is_playlist = True
+                  label       = playlist_id
+                  log.info(f"playlist → {playlist_id}")
               elif re.match(r'^(PL|UU)[a-zA-Z0-9_-]+$', target):
-                  playlist_id  = target
-                  is_playlist  = True
-                  label        = playlist_id
-                  log.info(f"[{source_chan or '?'}] playlist ID → {playlist_id}")
+                  playlist_id = target
+                  is_playlist = True
+                  label       = playlist_id
+                  log.info(f"playlist ID → {playlist_id}")
               elif "youtube.com/" in target or "youtu.be/" in target:
                   params = {"channel_url": target}
-                  label  = target.split("/")[-1]
-                  log.info(f"[{source_chan or '?'}] channel URL → {target}")
-              elif target.startswith("@"):  # FIX #2: removed erroneous space
+                  label  = target.rstrip("/").split("/")[-1]
+                  log.info(f"channel URL → {target}")
+              elif target.startswith("@"):
                   params = {"channel_url": f"https://www.youtube.com/{target}"}
                   label  = target
-                  log.info(f"[{source_chan or '?'}] handle → {target}")
+                  log.info(f"handle → {target}")
               else:
                   params = {"channel_id": target}
                   label  = target
-                  log.info(f"[{source_chan or '?'}] channel ID → {target}")
+                  log.info(f"channel ID → {target}")
 
-              # FIX #4: retry loop for Tor connection drops
               for attempt in range(1, MAX_RETRIES + 1):
                   try:
                       if is_playlist:
@@ -145,9 +115,8 @@ jobs:
                       else:
                           videos = scrapetube.get_channel(**params, content_type="videos")
 
-                      lines        = []
-                      count        = 0
-                      title_checks = 0
+                      lines = []
+                      count = 0
 
                       for video in videos:
                           try:
@@ -157,27 +126,9 @@ jobs:
                                       title = video['title']['runs'][0]['text']
                                   elif 'simpleText' in video['title']:
                                       title = video['title']['simpleText']
-
                               video_id = video.get('videoId')
-                              if not video_id:
-                                  log.debug(f"  [{label}] skip: no videoId — {str(video)[:80]}")
+                              if not video_id or not title:
                                   continue
-                              if not title:
-                                  log.debug(f"  [{label}] skip: no title for {video_id}")
-                                  continue
-
-                              # Title-based override (first 5 videos)
-                              if title_checks < 5:
-                                  if is_anione_title(title):
-                                      if not route_anione:
-                                          log.warning(
-                                              f"  [{label}] TITLE OVERRIDE: "
-                                              f"'Ani-One Indonesia' found in title, "
-                                              f"chan_tag='{source_chan}' → rerouting to {OUT_ANIONE}"
-                                          )
-                                      route_anione = True
-                                  title_checks += 1
-
                               url = f"https://www.youtube.com/watch?v={video_id}"
                               lines.append(f"{title}\n{url}\n\n")
                               count += 1
@@ -188,43 +139,55 @@ jobs:
                               continue
 
                       if count == 0:
-                          log.warning(
-                              f"  [{label}] 0 videos — private/deleted/region-locked? "
-                              f"(chan={source_chan}, attempt={attempt})"
+                          # 0 videos = private, region-locked, or empty playlist
+                          # Send to yt-dlp fallback which handles region differently
+                          url_for_fallback = (
+                              f"https://www.youtube.com/playlist?list={playlist_id}"
+                              if is_playlist else target
                           )
+                          log_failed(url_for_fallback, "0 videos from scrapetube")
                           return
 
-                      out_file = OUT_ANIONE if route_anione else OUT_OTHERS
-                      lock     = lock_anione if route_anione else lock_others
-                      block    = "".join(lines)
-                      with lock:
-                          with open(out_file, "a", encoding="utf-8") as f:
+                      block = "".join(lines)
+                      with raw_lock:
+                          with open(RAW_OUT, "a", encoding="utf-8") as f:
                               f.write(block)
 
-                      log.info(
-                          f"  [{label}] DONE: {count} videos → {out_file} "
-                          f"(anione={route_anione}, attempt={attempt})"
-                      )
-                      return  # success — exit retry loop
+                      log.info(f"  [{label}] DONE: {count} videos → {RAW_OUT} (attempt={attempt})")
+                      return
 
                   except Exception as e:
                       err_str = str(e)
-                      is_conn_err = any(k in err_str for k in [
+
+                      # continuationCommand = scrapetube pagination bug, not retriable
+                      # yt-dlp handles this playlist type correctly
+                      if "continuationCommand" in err_str:
+                          url_for_fallback = (
+                              f"https://www.youtube.com/playlist?list={playlist_id}"
+                              if is_playlist else target
+                          )
+                          log_failed(url_for_fallback, f"scrapetube continuationCommand bug")
+                          return
+
+                      # Connection errors are retriable
+                      is_conn = any(k in err_str for k in [
                           "RemoteDisconnected", "ConnectionError",
-                          "ConnectionAborted", "Connection aborted"
+                          "ConnectionAborted",  "Connection aborted",
+                          "JSONDecodeError",
                       ])
-                      if is_conn_err and attempt < MAX_RETRIES:
+                      if is_conn and attempt < MAX_RETRIES:
                           log.warning(
-                              f"  [{label}] connection drop (attempt {attempt}/{MAX_RETRIES}), "
-                              f"retrying in {RETRY_DELAY}s..."
+                              f"  [{label}] connection drop attempt {attempt}/{MAX_RETRIES}"
+                              f" — retry in {RETRY_DELAY}s"
                           )
                           time.sleep(RETRY_DELAY)
-                          continue
                       else:
-                          log.error(
-                              f"  [{label}] FAILED after {attempt} attempt(s): {e}",
-                              exc_info=True
+                          url_for_fallback = (
+                              f"https://www.youtube.com/playlist?list={playlist_id}"
+                              if is_playlist else target
                           )
+                          log_failed(url_for_fallback, f"FAILED after {attempt} attempts: {err_str[:60]}")
+                          log.error(f"  [{label}] FAILED after {attempt} attempt(s): {e}", exc_info=True)
                           return
 
 
@@ -242,7 +205,6 @@ jobs:
 
               targets = []
               raw_args = sys.argv[1:] if len(sys.argv) > 1 else default_targets
-
               for item in raw_args:
                   if os.path.isfile(item):
                       with open(item, 'r', encoding='utf-8') as f:
@@ -250,22 +212,16 @@ jobs:
                   else:
                       targets.append(item)
 
-              # FIX #3: filter invalid targets at load time too, log how many dropped
               raw_count = len(targets)
-              targets = [t for t in targets if t.strip() and is_valid_target(
-                  t.split("|||", 1)[1].strip() if "|||" in t else t
-              )]
-              dropped = raw_count - len(targets)
+              targets = [t for t in targets if t.strip() and is_valid_target(t)]
+              dropped  = raw_count - len(targets)
 
               log.info(f"ALL_PROXY = {os.environ.get('ALL_PROXY', 'NOT SET — bypasses Tor!')}")
-              log.info(
-                  f"Loaded {raw_count} lines → {len(targets)} valid targets "
-                  f"({dropped} dropped as invalid/log lines)"
-              )
+              log.info(f"Loaded {raw_count} → {len(targets)} valid ({dropped} dropped)")
               log.info(f"Workers: {MAX_WORKERS} | Retries: {MAX_RETRIES} | Log: {LOG_FILE}")
 
-              open(OUT_ANIONE, "w").close()
-              open(OUT_OTHERS, "w").close()
+              open(RAW_OUT,  "w").close()
+              open(FAILED_OUT, "w").close()
 
               with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
                   futures = {executor.submit(scrape_target, t): t for t in targets}
@@ -275,12 +231,11 @@ jobs:
                       except Exception as e:
                           log.error(f"Unhandled thread exception: {e}", exc_info=True)
 
-              anione_urls = sum(1 for l in open(OUT_ANIONE, encoding='utf-8') if l.startswith('http'))
-              others_urls = sum(1 for l in open(OUT_OTHERS, encoding='utf-8') if l.startswith('http'))
-
+              total_raw = sum(1 for l in open(RAW_OUT, encoding='utf-8') if l.startswith('http'))
+              failed_count = sum(1 for l in open(FAILED_OUT, encoding='utf-8') if l.strip())
               log.info("═" * 60)
-              log.info(f"RESULT  {OUT_ANIONE}  →  {anione_urls} URLs")
-              log.info(f"RESULT  {OUT_OTHERS}  →  {others_urls} URLs")
+              log.info(f"RAW RESULT  {RAW_OUT}  →  {total_raw} URLs")
+              log.info(f"QUEUED FOR YT-DLP FALLBACK  →  {failed_count} playlists")
               log.info(f"LOG FILE: {LOG_FILE}")
               log.info("═" * 60)
           PYEOF
@@ -288,40 +243,31 @@ jobs:
       - name: Build Scraper Image
         run: docker build -t media-scraper .
 
-      - name: Extract Playlists using yt-dlp inside Docker
+      - name: Phase 1 — Extract Playlist URLs via yt-dlp
         run: |
           CHANNELS=(
-            "UCUn0hEbVJc273anl_0ozDMQ|https://www.youtube.com/channel/UCUn0hEbVJc273anl_0ozDMQ/playlists"
-            "UCC-g5hWSvCbdB8HQQIA0_pg|https://www.youtube.com/channel/UCC-g5hWSvCbdB8HQQIA0_pg/playlists"
-            "UCqyqBNOAlZgJ3dQoDSCbCjQ|https://www.youtube.com/channel/UCqyqBNOAlZgJ3dQoDSCbCjQ/playlists"
-            "UCxxnxya_32jcKj4yN1_kD7A|https://www.youtube.com/@MuseIndonesia/playlists"
-            "UCcYw1UUwxjIMYfvmdQrcyUA|https://www.youtube.com/channel/UCcYw1UUwxjIMYfvmdQrcyUA/playlists"
-            "UCrcQMdsFqYpZOHDbm-fnNlw|https://www.youtube.com/channel/UCrcQMdsFqYpZOHDbm-fnNlw/playlists"
-            "UCqX5I4e5iTpAt3tMYZJzZTQ|https://www.youtube.com/channel/UCqX5I4e5iTpAt3tMYZJzZTQ/playlists"
-            "UC0wNSTMWIL3qaorLx0jie6A|https://www.youtube.com/channel/UC0wNSTMWIL3qaorLx0jie6A/playlists"
+            "https://www.youtube.com/channel/UCUn0hEbVJc273anl_0ozDMQ/playlists"
+            "https://www.youtube.com/channel/UCC-g5hWSvCbdB8HQQIA0_pg/playlists"
+            "https://www.youtube.com/channel/UCqyqBNOAlZgJ3dQoDSCbCjQ/playlists"
+            "https://www.youtube.com/@MuseIndonesia/playlists"
+            "https://www.youtube.com/channel/UCcYw1UUwxjIMYfvmdQrcyUA/playlists"
+            "https://www.youtube.com/channel/UCrcQMdsFqYpZOHDbm-fnNlw/playlists"
+            "https://www.youtube.com/channel/UCqX5I4e5iTpAt3tMYZJzZTQ/playlists"
+            "https://www.youtube.com/channel/UC0wNSTMWIL3qaorLx0jie6A/playlists"
           )
-
           touch all_playlists.txt
-
-          for ENTRY in "${CHANNELS[@]}"; do
-            CHAN_ID="${ENTRY%%|*}"
-            CHAN_URL="${ENTRY#*|}"
-            echo "Grabbing playlists for $CHAN_ID ..."
-            # FIX #1b: 2>/dev/null suppresses any container stderr (Tor notices)
-            # that survive despite the entrypoint redirect — belt and suspenders
+          for CHANNEL in "${CHANNELS[@]}"; do
+            echo "Grabbing playlists for $CHANNEL ..."
             docker run --rm \
               -v ${{ github.workspace }}:/workspace \
               media-scraper \
-              yt-dlp --flat-playlist --print "%(url)s" "$CHAN_URL" 2>/dev/null \
-              | awk -v id="$CHAN_ID" 'NF && /youtube\.com/{print id "|||" $0}' >> all_playlists.txt
+              yt-dlp --flat-playlist --print "%(url)s" "$CHANNEL" 2>/dev/null \
+              | awk 'NF && /youtube\.com/' >> all_playlists.txt
           done
+          echo "=== all_playlists.txt: $(wc -l < all_playlists.txt) entries ==="
+          head -5 all_playlists.txt
 
-          echo "=== all_playlists.txt preview (first 10 lines) ==="
-          head -10 all_playlists.txt
-          echo "=== Total playlist entries ==="
-          wc -l all_playlists.txt
-
-      - name: Run scrape_uu_v3.py inside Docker (PySocks via ALL_PROXY)
+      - name: Phase 2 — Bulk Scrape via scrapetube
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/workspace \
@@ -331,17 +277,63 @@ jobs:
             media-scraper \
             python scrape_uu_v3.py all_playlists.txt
 
-      - name: Sanity check outputs
+          echo "=== raw_all_scraped.txt: $(grep -c '^https' raw_all_scraped.txt 2>/dev/null || echo 0) URLs ==="
+          echo "=== failed_playlists.txt: $(wc -l < failed_playlists.txt 2>/dev/null || echo 0) playlists ==="
+
+      - name: Phase 3 — yt-dlp Fallback for Failed Playlists
         run: |
-          echo "=== filtered_channel_anioneid.txt ==="
-          wc -l filtered_channel_anioneid.txt 2>/dev/null || echo "MISSING"
-          echo "=== filtered_combined_all.txt ==="
-          wc -l filtered_combined_all.txt      2>/dev/null || echo "MISSING"
+          if [ ! -s failed_playlists.txt ]; then
+            echo "No failed playlists — skipping yt-dlp fallback"
+            exit 0
+          fi
+
+          FAIL_COUNT=$(wc -l < failed_playlists.txt)
+          echo "Running yt-dlp fallback for $FAIL_COUNT playlists..."
+
+          while IFS= read -r playlist_url || [ -n "$playlist_url" ]; do
+            [ -z "$playlist_url" ] && continue
+            echo "  yt-dlp fallback: $playlist_url"
+            docker run --rm \
+              -v ${{ github.workspace }}:/workspace \
+              media-scraper \
+              yt-dlp \
+                --flat-playlist \
+                --print "%(title)s" \
+                --print "%(webpage_url)s" \
+                --print "" \
+                --no-warnings \
+                --quiet \
+                "$playlist_url" 2>/dev/null >> raw_all_scraped.txt || \
+              echo "  [WARN] yt-dlp also failed for $playlist_url"
+          done < failed_playlists.txt
+
+          echo "=== After fallback: $(grep -c '^https' raw_all_scraped.txt 2>/dev/null || echo 0) total URLs ==="
+
+      - name: Phase 4 — Sort into filtered files via awk
+        run: |
+          # awk paragraph mode (RS="") reads each title+url block as one record
+          # Matches "Ani-One Indonesia" (with or without hyphen, case-insensitive via tolower)
+          # → filtered_channel_anioneid.txt
+          # Everything else → filtered_combined_all.txt
+          awk '
+            BEGIN { RS=""; ORS="\n\n" }
+            {
+              if (tolower($0) ~ /ani.?one indonesia/) {
+                print > "filtered_channel_anioneid.txt"
+              } else {
+                print > "filtered_combined_all.txt"
+              }
+            }
+          ' raw_all_scraped.txt
+
+          echo "=== Sort results ==="
+          echo "filtered_channel_anioneid.txt : $(grep -c '^https' filtered_channel_anioneid.txt 2>/dev/null || echo 0) URLs"
+          echo "filtered_combined_all.txt     : $(grep -c '^https' filtered_combined_all.txt 2>/dev/null || echo 0) URLs"
           echo ""
           echo "=== AniOne ID sample (first 6 lines) ==="
-          head -6 filtered_channel_anioneid.txt 2>/dev/null || echo "(empty)"
+          head -6 filtered_channel_anioneid.txt 2>/dev/null || echo "(empty — check raw_all_scraped.txt for Ani-One Indonesia titles)"
           echo ""
           echo "=== Log summary ==="
           cat scrape_log_*.txt 2>/dev/null \
-            | grep -E "(RESULT|FAILED|OVERRIDE|dropped|0 videos|retrying)" \
+            | grep -E "(RESULT|FAILED|FALLBACK|dropped|continuationCommand|═)" \
             || echo "No log found"
