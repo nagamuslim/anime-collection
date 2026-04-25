@@ -25,7 +25,7 @@ jobs:
           mkdir shared-upload
           mv anime-offline-database-minified.json LICENSE shared-upload/
           cd shared-upload
-          7z a anime-offline-database-minified.zip anime-offline-database-minified.json LICENSE
+          7z a anime-offline-database-minified.zip anime-offline-database-minified.json
           
           # 3. Create clean git history
           git init
