@@ -13,6 +13,7 @@ jobs:
       - name: Download latest database
         run: |
           curl -L -o anime-offline-database-minified.json "https://github.com/manami-project/anime-offline-database/releases/latest/download/anime-offline-database-minified.json"
+          curl -L -o LICENSE "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/LICENSE"
 
       - name: Deploy to Shared Repo
         run: |
@@ -22,14 +23,14 @@ jobs:
           
           # 2. Setup clean folder
           mkdir shared-upload
-          mv anime-offline-database-minified.json shared-upload/
+          mv anime-offline-database-minified.json LICENSE shared-upload/
           cd shared-upload
-          7z a anime-offline-database-minified.zip anime-offline-database-minified.json
+          7z a anime-offline-database-minified.zip anime-offline-database-minified.json LICENSE
           
           # 3. Create clean git history
           git init
           git checkout -b main
-          git add anime-offline-database-minified.json anime-offline-database-minified.zip
+          git add anime-offline-database-minified.json anime-offline-database-minified.zip LICENSE
           git commit -m "Auto-update database: $(date +%F)"
           
           # 4. TRICK: Embed the token DIRECTLY into the URL so Git has permission to push!
