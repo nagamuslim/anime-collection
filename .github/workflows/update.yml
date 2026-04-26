@@ -15,7 +15,9 @@ jobs:
           cat <<'EOF' > Dockerfile
           FROM python:slim-trixie
           RUN apt-get update && apt-get install -y tor curl netcat-openbsd unzip && apt-get clean
+          # requests[socks] pulls in PySocks — lets requests honour ALL_PROXY=socks5h://
           RUN pip install --no-cache-dir yt-dlp scrapetube requests[socks]
+          # yt-dlp routes through Tor via config (ALL_PROXY doesn't apply to yt-dlp)
           RUN mkdir -p /etc && echo "--proxy socks5://localhost:9050" > /etc/yt-dlp.conf
           RUN echo 'ExitNodes {id}\nStrictNodes 1\nSocksPort 0.0.0.0:9050' >> /etc/tor/torrc
           RUN printf '#!/bin/bash\ntor --RunAsDaemon 1 >/dev/null 2>&1\nwhile ! nc -z localhost 9050; do sleep 1; done\nsleep 3\nexec "$@"\n' > /entrypoint.sh && chmod +x /entrypoint.sh
@@ -23,6 +25,11 @@ jobs:
           ENTRYPOINT ["/entrypoint.sh"]
           EOF
 
+      # ── Python script: old v3 code, copied verbatim ──────────────────────
+      # The only "logging" change is tee in Phase 2 bash — no Python edits.
+      # AniOne channel-ID detection still present but will route everything to
+      # filtered_combined_all.txt (playlist URLs never contain the channel ID),
+      # which is fine — Phase 4 awk re-sorts by title content anyway.
       - name: Prepare Python Scraper Script
         run: |
           cat <<'PYEOF' > scrape_uu_v3.py
@@ -31,215 +38,142 @@ jobs:
           import os
           import re
           import threading
-          import logging
-          import time
           from datetime import datetime
           from concurrent.futures import ThreadPoolExecutor, as_completed
 
-          MAX_WORKERS       = 4
-          SCRAPETUBE_TRIES  = 2   # attempts 1+2 use scrapetube
-                                  # attempt 3 → yt-dlp fallback queue
-          RETRY_DELAY       = 5
+          MAX_WORKERS = 4
 
-          RAW_OUT    = "raw_all_scraped.txt"
-          FAILED_OUT = "failed_playlists.txt"
-          LOG_FILE   = f"scrape_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+          # update_data.js line 1037: .filter(f => /^filtered.*\.txt$/i.test(f))
+          # Both filenames MUST start with "filtered" or update_data.js silently ignores them
+          OUT_ANIONE = "filtered_channel_anioneid.txt"
+          OUT_OTHERS = "filtered_combined_all.txt"
 
-          raw_lock    = threading.Lock()
-          failed_lock = threading.Lock()
+          lock_anione = threading.Lock()
+          lock_others = threading.Lock()
 
-          log = logging.getLogger("scraper")
-          log.setLevel(logging.DEBUG)
-          _fmt = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s", datefmt="%H:%M:%S")
-          _fh  = logging.FileHandler(LOG_FILE, encoding="utf-8")
-          _fh.setFormatter(_fmt)
-          _sh  = logging.StreamHandler(sys.stdout)
-          _sh.setFormatter(_fmt)
-          log.addHandler(_fh)
-          log.addHandler(_sh)
+          ANI_ONE_MARKERS = [
+              "AniOneID",
+              "UCUn0hEbVJc273anl_0ozDMQ",
+              "UUUn0hEbVJc273anl_0ozDMQ"
+          ]
 
-          # No CHAN_ID|||URL parsing needed — awk sorts by title content
-          _VALID_YT_RE = re.compile(
-              r'^(https?://|@|UC|UU|PL)[a-zA-Z0-9@._/\-?=&%]+$'
-          )
-          def is_valid_target(t):
-              return bool(t and len(t) >= 4 and ' ' not in t and _VALID_YT_RE.match(t))
-
-          def queue_ytdlp(playlist_url, reason):
-              """Queue URL for yt-dlp phase 3 fallback."""
-              with failed_lock:
-                  with open(FAILED_OUT, "a", encoding="utf-8") as f:
-                      f.write(f"{playlist_url}\n")
-              log.warning(f"  → YT-DLP FALLBACK: {playlist_url}  reason=({reason})")
+          def is_anione(target):
+              return any(m in target for m in ANI_ONE_MARKERS)
 
           def scrape_target(target):
               target = target.strip()
-              if not target or not is_valid_target(target):
-                  log.debug(f"SKIPPED invalid: {repr(target[:80])}")
+              if not target:
                   return
 
               is_playlist = False
               params      = {}
-              playlist_id = None
+              target_clean = target.split("/")[-1].replace("@", "")
 
               if "list=" in target:
-                  m = re.search(r'list=([a-zA-Z0-9_-]+)', target)
-                  playlist_id = m.group(1) if m else target
-                  is_playlist = True
-                  label       = playlist_id
-                  log.info(f"playlist → {playlist_id}")
-              elif re.match(r'^(PL|UU)[a-zA-Z0-9_-]+$', target):
-                  playlist_id = target
-                  is_playlist = True
-                  label       = playlist_id
-                  log.info(f"playlist ID → {playlist_id}")
+                  match = re.search(r'list=([a-zA-Z0-9_-]+)', target)
+                  playlist_id  = match.group(1) if match else target
+                  print(f"\nScraping Playlist URL: {playlist_id}")
+                  is_playlist  = True
+                  target_clean = playlist_id
+              elif target.startswith("PL") or target.startswith("UU"):
+                  playlist_id  = target
+                  print(f"\nScraping Playlist ID: {playlist_id}")
+                  is_playlist  = True
               elif "youtube.com/" in target or "youtu.be/" in target:
                   params = {"channel_url": target}
-                  label  = target.rstrip("/").split("/")[-1]
-                  log.info(f"channel URL → {target}")
+                  print(f"\nScraping Channel URL: {target}")
               elif target.startswith("@"):
                   params = {"channel_url": f"https://www.youtube.com/{target}"}
-                  label  = target
-                  log.info(f"handle → {target}")
+                  print(f"\nScraping Channel Handle: {target}")
               else:
                   params = {"channel_id": target}
-                  label  = target
-                  log.info(f"channel ID → {target}")
+                  print(f"\nScraping Channel ID: {target}")
 
-              # Canonical URL for fallback queue
-              fallback_url = (
-                  f"https://www.youtube.com/playlist?list={playlist_id}"
-                  if is_playlist else target
-              )
+              try:
+                  if is_playlist:
+                      videos = scrapetube.get_playlist(playlist_id)
+                  else:
+                      videos = scrapetube.get_channel(**params, content_type="videos")
 
-              # ── Attempts 1 & 2: scrapetube ───────────────────────────────
-              for attempt in range(1, SCRAPETUBE_TRIES + 1):
-                  try:
-                      if is_playlist:
-                          videos = scrapetube.get_playlist(playlist_id)
-                      else:
-                          videos = scrapetube.get_channel(**params, content_type="videos")
-
-                      lines = []
-                      count = 0
-
-                      for video in videos:
-                          try:
-                              title = ""
-                              if 'title' in video:
-                                  if 'runs' in video['title']:
-                                      title = video['title']['runs'][0]['text']
-                                  elif 'simpleText' in video['title']:
-                                      title = video['title']['simpleText']
-                              video_id = video.get('videoId')
-                              if not video_id or not title:
-                                  continue
-                              url = f"https://www.youtube.com/watch?v={video_id}"
-                              lines.append(f"{title}\n{url}\n\n")
-                              count += 1
-                              if count % 50 == 0:
-                                  log.info(f"  [{label}] {count} videos so far...")
-                          except Exception as e:
-                              log.debug(f"  [{label}] per-video error: {e}")
+                  lines = []
+                  count = 0
+                  for video in videos:
+                      try:
+                          title = ""
+                          if 'title' in video:
+                              if 'runs' in video['title']:
+                                  title = video['title']['runs'][0]['text']
+                              elif 'simpleText' in video['title']:
+                                  title = video['title']['simpleText']
+                          video_id = video.get('videoId')
+                          if not video_id or not title:
                               continue
+                          url = f"https://www.youtube.com/watch?v={video_id}"
+                          lines.append(f"{title}\n{url}\n\n")
+                          count += 1
+                          if count % 50 == 0:
+                              print(f"  [{target_clean}] Fetched {count} videos...")
+                      except Exception:
+                          continue
 
-                      if count == 0:
-                          # 0 videos on attempt 1 → retry once more with scrapetube
-                          # 0 videos on attempt 2 → give up, send to yt-dlp
-                          if attempt < SCRAPETUBE_TRIES:
-                              log.warning(f"  [{label}] 0 videos attempt {attempt} — retrying scrapetube in {RETRY_DELAY}s...")
-                              time.sleep(RETRY_DELAY)
-                              continue
-                          else:
-                              queue_ytdlp(fallback_url, "0 videos after 2 scrapetube attempts")
-                              return
-
-                      # Success — write and exit
-                      block = "".join(lines)
-                      with raw_lock:
-                          with open(RAW_OUT, "a", encoding="utf-8") as f:
-                              f.write(block)
-                      log.info(f"  [{label}] DONE: {count} videos (scrapetube attempt {attempt})")
+                  if count == 0:
+                      print(f"No videos found for {target}.")
                       return
 
-                  except Exception as e:
-                      err_str = str(e)
+                  block = "".join(lines)
+                  if is_anione(target):
+                      with lock_anione:
+                          with open(OUT_ANIONE, "a", encoding="utf-8") as f:
+                              f.write(block)
+                      print(f"  [{target_clean}] {count} videos → {OUT_ANIONE}")
+                  else:
+                      with lock_others:
+                          with open(OUT_OTHERS, "a", encoding="utf-8") as f:
+                              f.write(block)
+                      print(f"  [{target_clean}] {count} videos → {OUT_OTHERS}")
 
-                      # continuationCommand = scrapetube pagination bug, not retriable at all
-                      if "continuationCommand" in err_str:
-                          queue_ytdlp(fallback_url, "scrapetube continuationCommand bug")
-                          return
-
-                      # Connection error on attempt 1 → retry with scrapetube
-                      # Connection error on attempt 2 → send to yt-dlp
-                      is_conn = any(k in err_str for k in [
-                          "RemoteDisconnected", "ConnectionError",
-                          "ConnectionAborted",  "Connection aborted",
-                          "JSONDecodeError",
-                      ])
-                      if is_conn and attempt < SCRAPETUBE_TRIES:
-                          log.warning(
-                              f"  [{label}] connection drop attempt {attempt}/{SCRAPETUBE_TRIES}"
-                              f" — retrying scrapetube in {RETRY_DELAY}s..."
-                          )
-                          time.sleep(RETRY_DELAY)
-                          continue
-                      else:
-                          queue_ytdlp(fallback_url, f"error after {attempt} scrapetube tries: {err_str[:60]}")
-                          log.error(f"  [{label}] scrapetube exhausted: {e}", exc_info=True)
-                          return
-
-              # Should not reach here — safety net
-              queue_ytdlp(fallback_url, "exhausted scrapetube attempts (safety net)")
-
+              except Exception as e:
+                  print(f"Error scraping {target}: {str(e)}")
 
           if __name__ == "__main__":
               default_targets = [
-                  "UCUn0hEbVJc273anl_0ozDMQ",
-                  "UCC-g5hWSvCbdB8HQQIA0_pg",
-                  "UCqyqBNOAlZgJ3dQoDSCbCjQ",
-                  "UCxxnxya_32jcKj4yN1_kD7A",
-                  "UCcYw1UUwxjIMYfvmdQrcyUA",
-                  "UCrcQMdsFqYpZOHDbm-fnNlw",
-                  "UCqX5I4e5iTpAt3tMYZJzZTQ",
-                  "UC0wNSTMWIL3qaorLx0jie6A"
+                  "UCUn0hEbVJc273anl_0ozDMQ",  # AniOneID
+                  "UCC-g5hWSvCbdB8HQQIA0_pg",  # TropicsAnimeAsia
+                  "UCqyqBNOAlZgJ3dQoDSCbCjQ",  # AnimiforAsia
+                  "UCxxnxya_32jcKj4yN1_kD7A",  # MuseIndonesia
+                  "UCcYw1UUwxjIMYfvmdQrcyUA",  # youkuanimation
+                  "UCrcQMdsFqYpZOHDbm-fnNlw",  # YuewenAnimationIndonesia
+                  "UCqX5I4e5iTpAt3tMYZJzZTQ",  # popsanimeindonesia
+                  "UC0wNSTMWIL3qaorLx0jie6A"   # AniOneAsia
               ]
 
               targets = []
               raw_args = sys.argv[1:] if len(sys.argv) > 1 else default_targets
+
               for item in raw_args:
                   if os.path.isfile(item):
-                      with open(item, 'r', encoding='utf-8') as f:
-                          targets.extend(line.strip() for line in f if line.strip())
+                      with open(item, 'r') as f:
+                          targets.extend(f.read().splitlines())
                   else:
                       targets.append(item)
 
-              raw_count = len(targets)
-              targets   = [t for t in targets if t.strip() and is_valid_target(t)]
-              dropped   = raw_count - len(targets)
+              targets = [t for t in targets if t.strip()]
 
-              log.info(f"ALL_PROXY = {os.environ.get('ALL_PROXY', 'NOT SET — bypasses Tor!')}")
-              log.info(f"Loaded {raw_count} → {len(targets)} valid ({dropped} dropped)")
-              log.info(f"Workers: {MAX_WORKERS} | Scrapetube tries: {SCRAPETUBE_TRIES} | Log: {LOG_FILE}")
+              # Clear both output files before run so reruns don't stack
+              open(OUT_ANIONE, "w").close()
+              open(OUT_OTHERS, "w").close()
 
-              open(RAW_OUT,    "w").close()
-              open(FAILED_OUT, "w").close()
+              print(f"Starting scrape for {len(targets)} targets with {MAX_WORKERS} workers...")
+              print(f"Proxy: {os.environ.get('ALL_PROXY', 'NOT SET — traffic will NOT go through Tor!')}")
 
               with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-                  futures = {executor.submit(scrape_target, t): t for t in targets}
+                  futures = [executor.submit(scrape_target, t) for t in targets]
                   for future in as_completed(futures):
-                      try:
-                          future.result()
-                      except Exception as e:
-                          log.error(f"Unhandled thread exception: {e}", exc_info=True)
+                      future.result()
 
-              total_raw    = sum(1 for l in open(RAW_OUT,    encoding='utf-8') if l.startswith('http'))
-              failed_count = sum(1 for l in open(FAILED_OUT, encoding='utf-8') if l.strip())
-              log.info("═" * 60)
-              log.info(f"RAW RESULT   {RAW_OUT}   → {total_raw} URLs")
-              log.info(f"YT-DLP QUEUE {FAILED_OUT} → {failed_count} playlists")
-              log.info(f"LOG FILE: {LOG_FILE}")
-              log.info("═" * 60)
+              print(f"\nDone.")
+              print(f"  AniOne ID only : {OUT_ANIONE}  ({sum(1 for l in open(OUT_ANIONE) if l.startswith('http'))} URLs)")
+              print(f"  All others     : {OUT_OTHERS}  ({sum(1 for l in open(OUT_OTHERS) if l.startswith('http'))} URLs)")
           PYEOF
 
       - name: Build Scraper Image
@@ -269,6 +203,10 @@ jobs:
           echo "=== all_playlists.txt: $(wc -l < all_playlists.txt) entries ==="
           head -5 all_playlists.txt
 
+      # ── Phase 2: run old Python, tee stdout+stderr to scrape_log.txt ─────
+      # tee is the ONLY logging addition — Python code is untouched.
+      # Afterwards we merge both output files into raw_all_scraped.txt so
+      # Phase 3 (yt-dlp fallback) and Phase 4 (awk sort) can read one file.
       - name: Phase 2 — Bulk Scrape via scrapetube
         run: |
           docker run --rm \
@@ -277,19 +215,40 @@ jobs:
             -e HTTPS_PROXY=socks5h://127.0.0.1:9050 \
             -e HTTP_PROXY=socks5h://127.0.0.1:9050 \
             media-scraper \
-            python scrape_uu_v3.py all_playlists.txt
+            python scrape_uu_v3.py all_playlists.txt 2>&1 | tee scrape_log.txt
+
+          # Merge Python's two output files → single raw file for Phase 3/4
+          # (AniOne detection via channel-ID won't fire on playlist URLs,
+          #  so everything lands in filtered_combined_all.txt — that's fine,
+          #  Phase 4 awk re-sorts by title content.)
+          cat filtered_channel_anioneid.txt filtered_combined_all.txt > raw_all_scraped.txt
 
           echo "=== raw_all_scraped.txt : $(grep -c '^https' raw_all_scraped.txt 2>/dev/null || echo 0) URLs ==="
-          echo "=== failed_playlists.txt: $(wc -l < failed_playlists.txt 2>/dev/null || echo 0) playlists ==="
+          echo "=== scrape_log.txt      : $(wc -l < scrape_log.txt) lines ==="
 
+      # ── Phase 3: grep log for both error patterns → yt-dlp fallback ──────
+      # Pattern 1 (continuationCommand / any exception):
+      #   "Error scraping https://....: <reason>"
+      # Pattern 2 (empty playlist):
+      #   "No videos found for https://....  "  (trailing period)
       - name: Phase 3 — yt-dlp Fallback for Failed Playlists
         run: |
-          if [ ! -s failed_playlists.txt ]; then
+          # Extract failed URLs from the tee'd log
+          grep -E '^(Error scraping|No videos found for) https' scrape_log.txt \
+            | sed -E \
+                -e 's/^Error scraping (https[^ ]+):.*/\1/' \
+                -e 's/^No videos found for (https[^.]+)\..*/\1/' \
+            | grep '^https' \
+            | sort -u > failed_playlists.txt
+
+          FAIL_COUNT=$(wc -l < failed_playlists.txt)
+          echo "=== failed_playlists.txt: $FAIL_COUNT playlists ==="
+
+          if [ "$FAIL_COUNT" -eq 0 ]; then
             echo "No failed playlists — skipping yt-dlp fallback"
             exit 0
           fi
 
-          FAIL_COUNT=$(wc -l < failed_playlists.txt)
           echo "Running yt-dlp fallback for $FAIL_COUNT playlists..."
 
           while IFS= read -r playlist_url || [ -n "$playlist_url" ]; do
@@ -311,6 +270,9 @@ jobs:
 
           echo "=== After fallback: $(grep -c '^https' raw_all_scraped.txt 2>/dev/null || echo 0) total URLs ==="
 
+      # ── Phase 4: awk re-sorts raw file into the two filtered outputs ──────
+      # This is where AniOne detection actually happens (by title content),
+      # replacing the broken channel-ID check in the old Python.
       - name: Phase 4 — Sort into filtered files via awk
         run: |
           awk '
@@ -331,7 +293,7 @@ jobs:
           echo "=== AniOne ID sample (first 6 lines) ==="
           head -6 filtered_channel_anioneid.txt 2>/dev/null || echo "(empty)"
           echo ""
-          echo "=== Log summary ==="
-          cat scrape_log_*.txt 2>/dev/null \
-            | grep -E "(RESULT|FALLBACK|dropped|continuationCommand|═)" \
-            || echo "No log found"
+          echo "=== Log error summary ==="
+          grep -E '^(Error scraping|No videos found for)' scrape_log.txt \
+            | sed -E 's/^(Error scraping|No videos found for) (https[^ .]+).*/\1 → \2/' \
+            || echo "No errors in log"
