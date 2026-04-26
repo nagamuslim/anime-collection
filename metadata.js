@@ -700,10 +700,15 @@ onconnect = function(e) {
         return null;
     };
 
-    // ── Jikan — overwrites tags, adds synopsis + demographics ─────────
-    // Uses /full endpoint so we get fullData for the player overview tab.
+    // ── Jikan — raw fetch by MAL ID (PUBLIC) ──────────────────────────
+    // Exported so callers that already have a malId (e.g. bookmark.js MALSync
+    // after a MAL list sync) can hit Jikan directly without a name lookup.
+    // Returns: { tags[], synopsis, demographics[], fullData } or null on failure.
+    // NO localStorage write, NO offline DB merge — caller owns those.
+    // Use fetchJikanForAnime(animeName) if you want persistence + merging.
     // Tags mirror the Manami Project's flattening: genres + explicit_genres + themes
     // all collapsed into one flat array (same shape as offline DB tags[]).
+    // Handles 429 with exponential backoff via fetchWithRetry.
     const fetchJikan = async malId => {
         const d = await fetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/full`);
         if (!d) return null;
@@ -1239,5 +1244,5 @@ onconnect = function(e) {
 
     return { loadOfflineDb, getMetadata, batchProcess, findMalId, getMalId, findRecord, clearAll,
              normalizeTag, normalizeTags, enrichAnimeList, loadMetadataJson, setupMetadata,
-             fetchJikanForAnime, fetchReviews, fetchForum, fetchRecommendations, injectOfflineDb };
+             fetchJikan, fetchJikanForAnime, fetchReviews, fetchForum, fetchRecommendations, injectOfflineDb };
 }));
