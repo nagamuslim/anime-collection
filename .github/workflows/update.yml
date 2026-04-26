@@ -237,7 +237,7 @@ jobs:
           grep -E '^(Error scraping|No videos found for) https' scrape_log.txt \
             | sed -E \
                 -e 's/^Error scraping (https[^ ]+):.*/\1/' \
-                -e 's/^No videos found for (https[^.]+)\..*/\1/' \
+                -e 's/^No videos found for (https[^ ]+)\.$/\1/' \
             | grep '^https' \
             | sort -u > failed_playlists.txt
 
