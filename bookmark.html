@@ -95,6 +95,25 @@
         #mal-copy-btn:hover,#mal-paste-btn:hover{background:rgba(255,255,255,.15);}
         #mal-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(10px);background:rgba(30,20,60,0.95);border:1px solid rgba(255,255,255,0.15);color:#e0e0e0;padding:8px 18px;border-radius:20px;font-size:0.84em;opacity:0;pointer-events:none;transition:all .25s;z-index:9999;white-space:nowrap;}
         #mal-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+        /* ── Guide Button ───────────────────────────────────────────── */
+        .mal-btn-guide{color:#c3b1e1;border-color:rgba(195,177,225,.25);}
+        .mal-btn-guide:hover{background:rgba(195,177,225,.12);}
+
+        /* ── Guide Modal ────────────────────────────────────────────── */
+        #guide-overlay{display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:12px;}
+        #guide-overlay.open{display:flex;}
+        /* height:92vh gives iframe a concrete dimension to flex into — without it flex:1 collapses to 0 on mobile */
+        #guide-modal{background:linear-gradient(160deg,#18153a 0%,#1e1a42 100%);border:1px solid rgba(255,255,255,0.12);border-radius:16px;width:100%;max-width:780px;height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.7);}
+        #guide-modal-header{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0;}
+        #guide-modal-header span{color:#fff;font-weight:700;font-size:0.97em;flex:1;}
+        .guide-modal-close{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:#bbb;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:1em;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0;}
+        .guide-modal-close:hover{background:rgba(220,50,50,.25);color:#fff;border-color:rgba(220,50,50,.3);}
+        /* flex:1 now has a concrete parent height to expand into */
+        #guide-iframe{border:none;flex:1;width:100%;display:block;min-height:0;}
+        #guide-modal-footer{padding:8px 16px;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:flex-end;flex-shrink:0;}
+        .guide-newtab-btn{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:#ccc;padding:7px 16px;border-radius:8px;font-size:0.81em;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .2s;}
+        .guide-newtab-btn:hover{background:rgba(255,255,255,0.14);color:#fff;}
     </style>
 </head>
 <body>
@@ -117,6 +136,7 @@
           <span id="mal-last-sync"></span>
           <div class="mal-hdr-btns">
             <button class="mal-btn-sm mal-btn-sync" id="mal-sync-btn" style="display:none">Sinkron Sekarang ↺</button>
+            <button class="mal-btn-sm mal-btn-guide" id="mal-guide-btn">📖 Panduan</button>
             <button class="mal-btn-sm" id="mal-toggle-btn">Hubungkan ▾</button>
             <button class="mal-btn-sm mal-btn-disc" id="mal-disconnect-btn" style="display:none">Putuskan</button>
           </div>
@@ -171,6 +191,20 @@
         <div class="grid" id="historyGrid">
             <div class="loading">&#9203; Memuat riwayat...</div>
         </div>
+    </div>
+
+    <!-- Guide Modal -->
+    <div id="guide-overlay" role="dialog" aria-modal="true" aria-label="Panduan MAL">
+      <div id="guide-modal">
+        <div id="guide-modal-header">
+          <span>📖 Panduan Sinkronisasi MyAnimeList</span>
+          <button class="guide-modal-close" id="guide-close-btn" title="Tutup">✕</button>
+        </div>
+        <iframe id="guide-iframe" title="Panduan MAL" sandbox="allow-scripts allow-same-origin"></iframe>
+        <div id="guide-modal-footer">
+          <button class="guide-newtab-btn" id="guide-newtab-btn">↗ Buka di tab baru</button>
+        </div>
+      </div>
     </div>
 
     <script src="metadata.js" onerror="void 0"></script>
@@ -339,186 +373,7 @@
     //  2. Copied to clipboard via copyGasCode()
     //  3. Displayed in the audit code block inside the guide
     //  4. Injected into the standalone new-tab version via JSON.stringify
-    var GAS_CODE = `/**
- * MAL GAS Proxy — 2-mode OAuth
- *
- * doGet has TWO modes, selected by the state parameter:
- *
- * MODE 1 — DISPLAY (default, state has no ":poll" suffix)
- *   GAS shows the code prominently on screen with a Copy button.
- *   User copies it manually and pastes into the tester.
- *   Zero server storage. Works for any number of concurrent users.
- *   State format: "NONCE" (plain, no colon-poll)
- *
- * MODE 2 — POLL (state ends with ":SESSIONID:poll")
- *   GAS stores code in CacheService keyed by sessionId.
- *   Tester polls every 2s via CHECK_CODE action.
- *   Fully hands-free after clicking Allow.
- *   State format: "NONCE:SESSIONID:poll"
- */
-
-function doGet(e) {
-  var params   = e.parameter || {};
-  var code     = params.code;
-  var error    = params.error;
-  var rawState = params.state || '';
-
-  if (!code && !error) {
-    return HtmlService.createHtmlOutput(
-      '<p style="font-family:monospace;padding:20px">MAL GAS Proxy running. Send POST requests.</p>'
-    );
-  }
-  if (error) {
-    return HtmlService.createHtmlOutput(
-      '<p style="font-family:monospace;padding:20px;color:red">OAuth error: ' + error + '</p>'
-    );
-  }
-
-  // Parse state to determine mode
-  // Poll mode state: "NONCE:SESSIONID:poll"
-  // Display mode state: anything else
-  var parts = rawState.split(':');
-  var isPollMode = parts.length >= 3 && parts[parts.length - 1] === 'poll';
-  var sessionId  = isPollMode ? parts[parts.length - 2] : null;
-
-  if (isPollMode && sessionId) {
-    // ── POLL MODE ────────────────────────────────────────────────────────
-    // Store in CacheService for 120 seconds — tester will poll for it
-    CacheService.getScriptCache().put('mal_code_' + sessionId, code, 120);
-
-    return HtmlService.createHtmlOutput(
-      buildPage(
-        '✓', '#39d98a',
-        'Authorized!',
-        'Code stored in GAS Cache.<br>The tester page is polling and will pick it up automatically.<br>You can close this tab.',
-        null // no code to display
-      )
-    );
-  } else {
-    // ── DISPLAY MODE ─────────────────────────────────────────────────────
-    // Show code prominently — user copies it manually
-    // Trusted Types is enforced so we build the HTML carefully
-    return HtmlService.createHtmlOutput(buildPage(
-      '✓', '#39d98a',
-      'Authorized! Copy your code:',
-      'Copy the code below and paste it into the tester, then click Exchange.',
-      code
-    ));
-  }
-}
-
-function buildPage(icon, iconColor, title, subtitle, code) {
-  var codeSection = '';
-  if (code) {
-    codeSection =
-      '<div style="background:#0a0a0d;border:2px solid #39d98a;border-radius:10px;padding:16px;margin:16px 0;max-width:600px;width:100%;">'
-      + '<div style="font-size:11px;color:#6b6b80;margin-bottom:8px;font-family:monospace">Authorization Code — copy all of it:</div>'
-      + '<div id="codeVal" style="font-family:monospace;font-size:12px;color:#39d98a;word-break:break-all;line-height:1.6;">' + code + '</div>'
-      + '</div>'
-      + '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">'
-      + '<button onclick="copyCode()" style="background:#39d98a;color:#000;border:none;border-radius:8px;padding:10px 22px;font-family:monospace;font-size:13px;font-weight:bold;cursor:pointer;">📋 Copy Code</button>'
-      + '</div>'
-      + '<script>'
-      + 'function copyCode(){'
-      + 'var t=document.getElementById("codeVal").textContent;'
-      + 'if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){document.querySelector("button").textContent="✅ Copied!";});}'
-      + 'else{var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);document.querySelector("button").textContent="✅ Copied!";}'
-      + '}'
-      + '<\/script>';
-  }
-
-  return \'<!DOCTYPE html><html><head>\'
-    + \'<meta name="viewport" content="width=device-width,initial-scale=1">\'
-    + \'<style>\'
-    + \'body{font-family:monospace;background:#0d0d0f;color:#e8e8f0;\'
-    + \'display:flex;flex-direction:column;align-items:center;\'
-    + \'justify-content:center;min-height:100vh;margin:0;gap:14px;text-align:center;padding:20px;}\'
-    + \'p{color:#6b6b80;font-size:13px;line-height:1.6;max-width:500px;}\'
-    + \'</style>\'
-    + \'</head><body>\'
-    + \'<div style="font-size:48px;color:\' + iconColor + \'">\' + icon + \'</div>\'
-    + \'<h2 style="color:\' + iconColor + \';margin:0">\' + title + \'</h2>\'
-    + \'<p>\' + subtitle + \'</p>\'
-    + codeSection
-    + \'</body></html>\';
-}
-
-// ── Token exchange ─────────────────────────────────────────────────────────
-function exchangeToken_(params) {
-  var qs = Object.keys(params)
-    .map(function(k){ return encodeURIComponent(k)+\'=\'+encodeURIComponent(params[k]); })
-    .join(\'&\');
-  var res = UrlFetchApp.fetch(\'https://myanimelist.net/v1/oauth2/token\', {
-    method:\'post\',
-    headers:{\'Content-Type\':\'application/x-www-form-urlencoded\'},
-    payload:qs, muteHttpExceptions:true
-  });
-  try { return JSON.parse(res.getContentText()); }
-  catch(e){ return { error:\'parse_failed\', raw:res.getContentText() }; }
-}
-
-// ── List API ───────────────────────────────────────────────────────────────
-class MalApi {
-  constructor(token) {
-    if (!token) throw new Error(\'Token required\');
-    this.base = \'https://api.myanimelist.net/v2\';
-    this.tok  = token;
-    this.fields = [
-      \'id\',\'title\',\'main_picture\',\'alternative_titles\',
-      \'start_date\',\'end_date\',\'synopsis\',\'mean\',\'rank\',
-      \'popularity\',\'num_list_users\',\'num_scoring_users\',\'nsfw\',
-      \'genres\',\'created_at\',\'updated_at\',\'media_type\',\'status\',
-      \'my_list_status\',\'num_episodes\',\'start_season\',\'broadcast\',
-      \'source\',\'average_episode_duration\',\'rating\',\'studios\',
-      \'score\',\'num_watched_episodes\',\'is_rewatching\',
-      \'finish_date\',\'priority\',\'num_times_rewatched\',\'rewatch_value\',\'tags\'
-    ];
-  }
-  _qs(p){return Object.keys(p).filter(k=>p[k]!==undefined&&p[k]!==null&&p[k]!==\'\').map(k=>encodeURIComponent(k)+\'=\'+encodeURIComponent(p[k])).join(\'&\');}
-  _ok(r){try{return JSON.parse(r.getContentText());}catch(e){return{message:\'ok (empty body)\'}; }}
-  auth(){return{Authorization:\'Bearer \'+this.tok};}
-  
-  // --- TAMBAHAN BARU: Fungsi Ambil Profil ---
-  getProfile() {
-    return this._ok(UrlFetchApp.fetch(this.base + \'/users/@me\', {
-      method: \'get\',
-      headers: this.auth(),
-      muteHttpExceptions: true
-    }));
-  }
-
-  getList(user,offset,limit){
-    user=user||\'@me\'; offset=(offset!==undefined&&offset!==null)?Number(offset):0; limit=limit?Number(limit):100;
-    return this._ok(UrlFetchApp.fetch(this.base+\'/users/\'+user+\'/animelist?\'+this._qs({fields:this.fields.join(\',\'),offset,limit}),{method:\'get\',headers:this.auth(),muteHttpExceptions:true}));
-  }
-  updateList(id,data){return this._ok(UrlFetchApp.fetch(this.base+\'/anime/\'+id+\'/my_list_status\',{method:\'put\',headers:Object.assign(this.auth(),{\'Content-Type\':\'application/x-www-form-urlencoded\'}),payload:this._qs(data),muteHttpExceptions:true}));}
-  deleteList(id){return this._ok(UrlFetchApp.fetch(this.base+\'/anime/\'+id+\'/my_list_status\',{method:\'delete\',headers:this.auth(),muteHttpExceptions:true}));}
-}
-
-// ── doPost ─────────────────────────────────────────────────────────────────
-function doPost(e) {
-  try {
-    var req=JSON.parse(e.postData.contents), result;
-    if(req.action===\'CHECK_CODE\'){
-      var cache=CacheService.getScriptCache(), key=\'mal_code_\'+req.sessionId, code=cache.get(key);
-      if(code){cache.remove(key);result={code:code,found:true};}else{result={found:false};}
-    }
-    // --- TAMBAHAN BARU: Handler GET_PROFILE ---
-    else if(req.action===\'GET_ME\') { 
-      result = new MalApi(req.token).getProfile(); 
-    }
-    else if(req.action===\'GET\'){result=new MalApi(req.token).getList(req.userName,req.offset,req.limit);}
-    else if(req.action===\'UPDATE\'){result=new MalApi(req.token).updateList(req.animeId,req.updateData);}
-    else if(req.action===\'DELETE\'){result=new MalApi(req.token).deleteList(req.animeId);}
-    else if(req.action===\'GET_TOKEN\'){result=exchangeToken_({client_id:req.clientId,client_secret:req.clientSecret,code:req.code,code_verifier:req.codeVerifier,grant_type:\'authorization_code\',redirect_uri:req.redirectUri});}
-    else if(req.action===\'REFRESH_TOKEN\'){result=exchangeToken_({client_id:req.clientId,client_secret:req.clientSecret,refresh_token:req.refreshToken,grant_type:\'refresh_token\'});}
-    else throw new Error(\'Unknown action: \'+req.action);
-    return ContentService.createTextOutput(JSON.stringify({success:true,data:result})).setMimeType(ContentService.MimeType.JSON);
-  }catch(err){
-    return ContentService.createTextOutput(JSON.stringify({success:false,error:err.toString()})).setMimeType(ContentService.MimeType.JSON);
-  }
-}
-\`;
+    var GAS_CODE = '/**\n * MAL GAS Proxy — 2-mode OAuth\n *\n * doGet has TWO modes, selected by the state parameter:\n *\n * MODE 1 — DISPLAY (default, state has no ":poll" suffix)\n *   GAS shows the code prominently on screen with a Copy button.\n *   User copies it manually and pastes into the tester.\n *   Zero server storage. Works for any number of concurrent users.\n *   State format: "NONCE" (plain, no colon-poll)\n *\n * MODE 2 — POLL (state ends with ":SESSIONID:poll")\n *   GAS stores code in CacheService keyed by sessionId.\n *   Tester polls every 2s via CHECK_CODE action.\n *   Fully hands-free after clicking Allow.\n *   State format: "NONCE:SESSIONID:poll"\n */\n\nfunction doGet(e) {\n  var params   = e.parameter || {};\n  var code     = params.code;\n  var error    = params.error;\n  var rawState = params.state || \'\';\n\n  if (!code && !error) {\n    return HtmlService.createHtmlOutput(\n      \'<p style="font-family:monospace;padding:20px">MAL GAS Proxy running. Send POST requests.</p>\'\n    );\n  }\n  if (error) {\n    return HtmlService.createHtmlOutput(\n      \'<p style="font-family:monospace;padding:20px;color:red">OAuth error: \' + error + \'</p>\'\n    );\n  }\n\n  var parts = rawState.split(\':\');\n  var isPollMode = parts.length >= 3 && parts[parts.length - 1] === \'poll\';\n  var sessionId  = isPollMode ? parts[parts.length - 2] : null;\n\n  if (isPollMode && sessionId) {\n    CacheService.getScriptCache().put(\'mal_code_\' + sessionId, code, 120);\n    return HtmlService.createHtmlOutput(\n      buildPage(\n        \'\\u2713\', \'#39d98a\',\n        \'Authorized!\',\n        \'Code stored in GAS Cache.<br>The tester page is polling and will pick it up automatically.<br>You can close this tab.\',\n        null\n      )\n    );\n  } else {\n    return HtmlService.createHtmlOutput(buildPage(\n      \'\\u2713\', \'#39d98a\',\n      \'Authorized! Copy your code:\',\n      \'Copy the code below and paste it into the tester, then click Exchange.\',\n      code\n    ));\n  }\n}\n\nfunction buildPage(icon, iconColor, title, subtitle, code) {\n  var codeSection = \'\';\n  if (code) {\n    codeSection =\n      \'<div style="background:#0a0a0d;border:2px solid #39d98a;border-radius:10px;padding:16px;margin:16px 0;max-width:600px;width:100%;">\'\n      + \'<div style="font-size:11px;color:#6b6b80;margin-bottom:8px;font-family:monospace">Authorization Code \\u2014 copy all of it:</div>\'\n      + \'<div id="codeVal" style="font-family:monospace;font-size:12px;color:#39d98a;word-break:break-all;line-height:1.6;">\' + code + \'</div>\'\n      + \'</div>\'\n      + \'<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">\'\n      + \'<button onclick="copyCode()" style="background:#39d98a;color:#000;border:none;border-radius:8px;padding:10px 22px;font-family:monospace;font-size:13px;font-weight:bold;cursor:pointer;">\\ud83d\\udccb Copy Code</button>\'\n      + \'</div>\'\n      + \'<script>\'\n      + \'function copyCode(){\'\n      + \'var t=document.getElementById("codeVal").textContent;\'\n      + \'if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){document.querySelector("button").textContent="\\u2705 Copied!";});}\'\n      + \'else{var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);document.querySelector("button").textContent="\\u2705 Copied!";}\'\n      + \'}\'\n      + \'<\\/script>\';\n  }\n\n  return \'<!DOCTYPE html><html><head>\'\n    + \'<meta name="viewport" content="width=device-width,initial-scale=1">\'\n    + \'<style>\'\n    + \'body{font-family:monospace;background:#0d0d0f;color:#e8e8f0;\'\n    + \'display:flex;flex-direction:column;align-items:center;\'\n    + \'justify-content:center;min-height:100vh;margin:0;gap:14px;text-align:center;padding:20px;}\'\n    + \'p{color:#6b6b80;font-size:13px;line-height:1.6;max-width:500px;}\'\n    + \'</style>\'\n    + \'</head><body>\'\n    + \'<div style="font-size:48px;color:\' + iconColor + \'">\' + icon + \'</div>\'\n    + \'<h2 style="color:\' + iconColor + \';margin:0">\' + title + \'</h2>\'\n    + \'<p>\' + subtitle + \'</p>\'\n    + codeSection\n    + \'</body></html>\';\n}\n\nfunction exchangeToken_(params) {\n  var qs = Object.keys(params)\n    .map(function(k){ return encodeURIComponent(k)+\'=\'+encodeURIComponent(params[k]); })\n    .join(\'&\');\n  var res = UrlFetchApp.fetch(\'https://myanimelist.net/v1/oauth2/token\', {\n    method:\'post\',\n    headers:{\'Content-Type\':\'application/x-www-form-urlencoded\'},\n    payload:qs, muteHttpExceptions:true\n  });\n  try { return JSON.parse(res.getContentText()); }\n  catch(e){ return { error:\'parse_failed\', raw:res.getContentText() }; }\n}\n\nclass MalApi {\n  constructor(token) {\n    if (!token) throw new Error(\'Token required\');\n    this.base = \'https://api.myanimelist.net/v2\';\n    this.tok  = token;\n    this.fields = [\n      \'id\',\'title\',\'main_picture\',\'alternative_titles\',\n      \'start_date\',\'end_date\',\'synopsis\',\'mean\',\'rank\',\n      \'popularity\',\'num_list_users\',\'num_scoring_users\',\'nsfw\',\n      \'genres\',\'created_at\',\'updated_at\',\'media_type\',\'status\',\n      \'my_list_status\',\'num_episodes\',\'start_season\',\'broadcast\',\n      \'source\',\'average_episode_duration\',\'rating\',\'studios\',\n      \'score\',\'num_watched_episodes\',\'is_rewatching\',\n      \'finish_date\',\'priority\',\'num_times_rewatched\',\'rewatch_value\',\'tags\'\n    ];\n  }\n  _qs(p){return Object.keys(p).filter(k=>p[k]!==undefined&&p[k]!==null&&p[k]!==\'\').map(k=>encodeURIComponent(k)+\'=\'+encodeURIComponent(p[k])).join(\'&\');}\n  _ok(r){try{return JSON.parse(r.getContentText());}catch(e){return{message:\'ok (empty body)\'}; }}\n  auth(){return{Authorization:\'Bearer \'+this.tok};}\n  getProfile() {\n    return this._ok(UrlFetchApp.fetch(this.base + \'/users/@me\', {\n      method: \'get\',\n      headers: this.auth(),\n      muteHttpExceptions: true\n    }));\n  }\n  getList(user,offset,limit){\n    user=user||\'@me\'; offset=(offset!==undefined&&offset!==null)?Number(offset):0; limit=limit?Number(limit):100;\n    return this._ok(UrlFetchApp.fetch(this.base+\'/users/\'+user+\'/animelist?\'+this._qs({fields:this.fields.join(\',\'),offset,limit}),{method:\'get\',headers:this.auth(),muteHttpExceptions:true}));\n  }\n  updateList(id,data){return this._ok(UrlFetchApp.fetch(this.base+\'/anime/\'+id+\'/my_list_status\',{method:\'put\',headers:Object.assign(this.auth(),{\'Content-Type\':\'application/x-www-form-urlencoded\'}),payload:this._qs(data),muteHttpExceptions:true}));}\n  deleteList(id){return this._ok(UrlFetchApp.fetch(this.base+\'/anime/\'+id+\'/my_list_status\',{method:\'delete\',headers:this.auth(),muteHttpExceptions:true}));}\n}\n\nfunction doPost(e) {\n  try {\n    var req=JSON.parse(e.postData.contents), result;\n    if(req.action===\'CHECK_CODE\'){\n      var cache=CacheService.getScriptCache(), key=\'mal_code_\'+req.sessionId, code=cache.get(key);\n      if(code){cache.remove(key);result={code:code,found:true};}else{result={found:false};}\n    }\n    else if(req.action===\'GET_ME\') { result = new MalApi(req.token).getProfile(); }\n    else if(req.action===\'GET\'){result=new MalApi(req.token).getList(req.userName,req.offset,req.limit);}\n    else if(req.action===\'UPDATE\'){result=new MalApi(req.token).updateList(req.animeId,req.updateData);}\n    else if(req.action===\'DELETE\'){result=new MalApi(req.token).deleteList(req.animeId);}\n    else if(req.action===\'GET_TOKEN\'){result=exchangeToken_({client_id:req.clientId,client_secret:req.clientSecret,code:req.code,code_verifier:req.codeVerifier,grant_type:\'authorization_code\',redirect_uri:req.redirectUri});}\n    else if(req.action===\'REFRESH_TOKEN\'){result=exchangeToken_({client_id:req.clientId,client_secret:req.clientSecret,refresh_token:req.refreshToken,grant_type:\'refresh_token\'});}\n    else throw new Error(\'Unknown action: \'+req.action);\n    return ContentService.createTextOutput(JSON.stringify({success:true,data:result})).setMimeType(ContentService.MimeType.JSON);\n  }catch(err){\n    return ContentService.createTextOutput(JSON.stringify({success:false,error:err.toString()})).setMimeType(ContentService.MimeType.JSON);\n  }\n}';
 
     function getGuideHtml() {
         // Inject GAS_CODE and base image URL into the guide document at render time.
@@ -530,7 +385,7 @@ function doPost(e) {
         var apiImgUrl = imgBase + 'image/api.jpg';
         var apiImgFallback = imgBase + 'api.jpg';
 
-        return \`<!DOCTYPE html>
+        return `<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -609,7 +464,7 @@ function doPost(e) {
         <p>Hubungkan akunmu ke MAL agar progres nonton otomatis tersimpan — tanpa perlu mengetik username atau password di sini.</p>
     </div>
     <div class="tldr">
-        <strong>Singkatnya:</strong> Buat \"Aplikasi API\" gratis di MAL sekali saja → salin 2 kode darinya → tempel di sini → selesai.
+        <strong>Singkatnya:</strong> Buat "Aplikasi API" gratis di MAL sekali saja → salin 2 kode darinya → tempel di sini → selesai.
         Datamu <strong>tidak pernah tersimpan di server manapun</strong> — semua ada di browser kamu sendiri.
     </div>
     <div class="section">
@@ -619,49 +474,49 @@ function doPost(e) {
                 <span class="step-letter">A</span>
                 <div class="step-body">
                     <p>Buka halaman ini di <strong>tab baru</strong> (kamu harus sudah login MAL):</p>
-                    <p style=\"margin-top:5px;\"><a href=\"https://myanimelist.net/apiconfig\" target=\"_blank\" rel=\"noopener noreferrer\">↗ myanimelist.net/apiconfig</a></p>
+                    <p style="margin-top:5px;"><a href="https://myanimelist.net/apiconfig" target="_blank" rel="noopener noreferrer">↗ myanimelist.net/apiconfig</a></p>
                 </div>
             </div>
             <div class="step">
                 <span class="step-letter">B</span>
-                <div class="step-body"><p>Klik tombol <strong>\"Create ID\"</strong> di pojok kanan atas halaman tersebut.</p></div>
+                <div class="step-body"><p>Klik tombol <strong>"Create ID"</strong> di pojok kanan atas halaman tersebut.</p></div>
             </div>
             <div class="step">
                 <span class="step-letter">C</span>
                 <div class="step-body">
                     <p>Isi formulir. <strong>Tiga kolom bertanda ⚠️ paling penting</strong> — salah mengisi di sini adalah penyebab error paling umum:</p>
                     <div class="field-box">
-                        <span class="fl">App Name</span><span class="fv" style=\"color:#ddd;font-weight:400;\">Bebas, misal: <em>Anime Tracker</em></span>
+                        <span class="fl">App Name</span><span class="fv" style="color:#ddd;font-weight:400;">Bebas, misal: <em>Anime Tracker</em></span>
                         <span class="fl">App Type ⚠️</span><span class="fv good">✔ Pilih <strong>web</strong></span>
-                        <span class="fl" style=\"color:#ff8a80;font-size:0.83em;\">Jangan pilih:</span><span class="fv bad">other</span>
-                        <span class="fl">App Description</span><span class="fv" style=\"color:#aaa;font-weight:400;font-size:0.9em;font-style:italic;\">A simple local web application to update my anime list status using the official API</span>
-                        <span class="fl">App Redirect URL ⚠️</span><span class="fv" style=\"color:#ddd;font-weight:400;\">Salin persis dari kotak di bawah ini ↓</span>
-                        <span class="fl">Homepage URL</span><span class="fv" style=\"color:#ddd;font-weight:400;\">Boleh isi <code>http://localhost:8000/</code></span>
+                        <span class="fl" style="color:#ff8a80;font-size:0.83em;">Jangan pilih:</span><span class="fv bad">other</span>
+                        <span class="fl">App Description</span><span class="fv" style="color:#aaa;font-weight:400;font-size:0.9em;font-style:italic;">A simple local web application to update my anime list status using the official API</span>
+                        <span class="fl">App Redirect URL ⚠️</span><span class="fv" style="color:#ddd;font-weight:400;">Salin persis dari kotak di bawah ini ↓</span>
+                        <span class="fl">Homepage URL</span><span class="fv" style="color:#ddd;font-weight:400;">Boleh isi <code>http://localhost:8000/</code></span>
                         <span class="fl">Commercial ⚠️</span><span class="fv good">✔ Pilih <strong>non-commercial</strong></span>
                         <span class="fl">Purpose of Use</span><span class="fv good">✔ Pilih <strong>hobbyist</strong></span>
                     </div>
-                    <p style=\"margin-top:12px;margin-bottom:4px;font-size:0.9em;color:#ccc;\">Salin URL ini → tempel ke kolom <strong>App Redirect URL</strong> di MAL:</p>
+                    <p style="margin-top:12px;margin-bottom:4px;font-size:0.9em;color:#ccc;">Salin URL ini → tempel ke kolom <strong>App Redirect URL</strong> di MAL:</p>
                     <div class="copy-row">
-                        <span class="copy-val" id=\"gas-url-val\">https://script.google.com/macros/s/AKfycbyFxnexHxeO9l34KeFJG8LvasAZk0x-RHFSox-hYliU3EGFKF6KBEZW_2GOIwrBGI0s/exec</span>
-                        <button class="copy-btn" onclick=\"copyText('gas-url-val',this)\">📋 Salin</button>
+                        <span class="copy-val" id="gas-url-val">https://script.google.com/macros/s/AKfycbyFxnexHxeO9l34KeFJG8LvasAZk0x-RHFSox-hYliU3EGFKF6KBEZW_2GOIwrBGI0s/exec</span>
+                        <button class="copy-btn" onclick="copyText('gas-url-val',this)">📋 Salin</button>
                     </div>
-                    <div class=\"callout warn\"><span class=\"ci\">⚠️</span><div>URL di atas harus ditempel <strong>persis sama</strong> ke App Redirect URL — tanpa spasi, tanpa tambahan apapun. Satu karakter berbeda = error <code>invalid_redirect_uri</code>.</div></div>
-                    <p style=\"margin-top:14px;margin-bottom:6px;font-size:0.85em;color:#888;\">Contoh formulir yang sudah diisi dengan benar (panah menunjukkan field penting):</p>
-                    <div class=\"screenshot\">
-                        <img id=\"api-img\"
-                            src=\"\${apiImgUrl}\"
-                            onerror=\"this.onerror=null;this.src='\${apiImgFallback}';this.onerror=function(){this.closest('.screenshot').innerHTML='<div class=\\\\\\'screenshot-missing\\\\\\'>📸 Gambar tidak ditemukan — pastikan file <code>api.jpg</code> ada di folder <code>image/</code>.</div>'}\"
-                            alt=\"Formulir MAL API Config: App Type = web ditunjuk panah merah, Client ID dan Client Secret ditunjuk panah merah besar, App Redirect URL sudah terisi URL GAS\"
+                    <div class="callout warn"><span class="ci">⚠️</span><div>URL di atas harus ditempel <strong>persis sama</strong> ke App Redirect URL — tanpa spasi, tanpa tambahan apapun. Satu karakter berbeda = error <code>invalid_redirect_uri</code>.</div></div>
+                    <p style="margin-top:14px;margin-bottom:6px;font-size:0.85em;color:#888;">Contoh formulir yang sudah diisi dengan benar (panah menunjukkan field penting):</p>
+                    <div class="screenshot">
+                        <img id="api-img"
+                            src="${apiImgUrl}"
+                            onerror="this.onerror=null;this.src='${apiImgFallback}';this.onerror=function(){this.closest('.screenshot').innerHTML='<div class=\\'screenshot-missing\\'>📸 Gambar tidak ditemukan — pastikan file <code>api.jpg</code> ada di folder <code>image/</code>.</div>'}"
+                            alt="Formulir MAL API Config: App Type = web ditunjuk panah merah, Client ID dan Client Secret ditunjuk panah merah besar, App Redirect URL sudah terisi URL GAS"
                         />
                     </div>
-                    <p style=\"font-size:0.78em;color:#666;margin-top:5px;padding-left:2px;\">↑ Panah kanan = App Type harus <strong>web</strong>. Panah kiri = letak Client ID &amp; Client Secret yang akan kamu salin setelah submit.</p>
+                    <p style="font-size:0.78em;color:#666;margin-top:5px;padding-left:2px;">↑ Panah kanan = App Type harus <strong>web</strong>. Panah kiri = letak Client ID &amp; Client Secret yang akan kamu salin setelah submit.</p>
                 </div>
             </div>
             <div class="step">
                 <span class="step-letter">D</span>
                 <div class="step-body">
-                    <p>Klik <strong>\"Submit\"</strong>. Halaman berikutnya menampilkan <strong>Client ID</strong> dan <strong>Client Secret</strong> milikmu.</p>
-                    <div class=\"callout warn\"><span class=\"ci\">⚠️</span><span><strong>Jangan tutup halaman itu dulu!</strong> Salin kedua kode tersebut sekarang — terutama Client Secret, karena hanya muncul sekali saat pertama kali dibuat.</span></div>
+                    <p>Klik <strong>"Submit"</strong>. Halaman berikutnya menampilkan <strong>Client ID</strong> dan <strong>Client Secret</strong> milikmu.</p>
+                    <div class="callout warn"><span class="ci">⚠️</span><span><strong>Jangan tutup halaman itu dulu!</strong> Salin kedua kode tersebut sekarang — terutama Client Secret, karena hanya muncul sekali saat pertama kali dibuat.</span></div>
                 </div>
             </div>
         </div>
@@ -673,73 +528,73 @@ function doPost(e) {
                 <span class="step-letter">A</span>
                 <div class="step-body">
                     <p>Tutup panduan ini, lalu isi kolom <code>Client ID</code> dan <code>Client Secret</code> dengan kode yang baru kamu salin dari MAL.</p>
-                    <div class=\"callout info\"><span class=\"ci\">ℹ️</span><span>Client ID dan Secret adalah <strong>identitas aplikasimu ke MAL</strong> — bukan username atau password akunmu. Keduanya tersimpan hanya di browser-mu.</span></div>
+                    <div class="callout info"><span class="ci">ℹ️</span><span>Client ID dan Secret adalah <strong>identitas aplikasimu ke MAL</strong> — bukan username atau password akunmu. Keduanya tersimpan hanya di browser-mu.</span></div>
                 </div>
             </div>
             <div class="step">
                 <span class="step-letter">B</span>
                 <div class="step-body">
-                    <p>Centang <strong>\"Auto mode\"</strong> agar setelah klik <em>Allow</em> di MAL, situs ini otomatis mendeteksinya tanpa perlu copy-paste kode tambahan.</p>
-                    <div class=\"callout ok\"><span class=\"ci\">✅</span><span><strong>Tidak centang Auto mode:</strong> halaman GAS akan menampilkan kode yang perlu disalin manual ke kolom yang muncul. Sama aman, hanya lebih manual.</span></div>
+                    <p>Centang <strong>"Auto mode"</strong> agar setelah klik <em>Allow</em> di MAL, situs ini otomatis mendeteksinya tanpa perlu copy-paste kode tambahan.</p>
+                    <div class="callout ok"><span class="ci">✅</span><span><strong>Tidak centang Auto mode:</strong> halaman GAS akan menampilkan kode yang perlu disalin manual ke kolom yang muncul. Sama aman, hanya lebih manual.</span></div>
                 </div>
             </div>
             <div class="step">
                 <span class="step-letter">C</span>
-                <div class="step-body"><p>Klik <strong>\"Hubungkan MAL ↗\"</strong>. Tab baru terbuka ke halaman MAL → klik <strong>\"Allow\"</strong>.</p></div>
+                <div class="step-body"><p>Klik <strong>"Hubungkan MAL ↗"</strong>. Tab baru terbuka ke halaman MAL → klik <strong>"Allow"</strong>.</p></div>
             </div>
             <div class="step">
                 <span class="step-letter">D</span>
-                <div class="step-body"><p>Selesai! Kembali ke situs ini. Kalau berhasil, nama akunmu muncul dan titik <span style=\"color:#6bcf7f;font-weight:bold;\">●</span> menyala hijau. Data dari daftar MAL-mu akan otomatis dimuat.</p></div>
+                <div class="step-body"><p>Selesai! Kembali ke situs ini. Kalau berhasil, nama akunmu muncul dan titik <span style="color:#6bcf7f;font-weight:bold;">●</span> menyala hijau. Data dari daftar MAL-mu akan otomatis dimuat.</p></div>
             </div>
         </div>
     </div>
     <div class="section">
         <div class="section-title"><span class="step-num">?</span> Pertanyaan Umum</div>
-        <div style=\"display:flex;flex-direction:column;gap:13px;\">
-            <div><p style=\"color:#fff;font-weight:600;margin-bottom:3px;\">🔒 Apakah data MAL-ku aman?</p><p style=\"color:#b0b0c0;font-size:0.89em;\">Ya. Client ID, Secret, dan token MAL-mu tersimpan <strong>hanya di browser-mu</strong> (cookies dan localStorage). Relay (GAS) bersifat stateless — ia hanya meneruskan permintaan ke MAL lalu melupakannya.</p></div>
+        <div style="display:flex;flex-direction:column;gap:13px;">
+            <div><p style="color:#fff;font-weight:600;margin-bottom:3px;">🔒 Apakah data MAL-ku aman?</p><p style="color:#b0b0c0;font-size:0.89em;">Ya. Client ID, Secret, dan token MAL-mu tersimpan <strong>hanya di browser-mu</strong> (cookies dan localStorage). Relay (GAS) bersifat stateless — ia hanya meneruskan permintaan ke MAL lalu melupakannya.</p></div>
             <hr>
-            <div><p style=\"color:#fff;font-weight:600;margin-bottom:3px;\">🤔 Apa itu GAS / Google Apps Script?</p><p style=\"color:#b0b0c0;font-size:0.89em;\">MAL memblokir permintaan langsung dari browser (CORS). GAS berfungsi sebagai \"kurir\" — browser-mu menitipkan permintaan ke GAS, GAS meneruskannya ke MAL, lalu mengirim jawaban kembali. GAS tidak menyimpan apapun.</p></div>
+            <div><p style="color:#fff;font-weight:600;margin-bottom:3px;">🤔 Apa itu GAS / Google Apps Script?</p><p style="color:#b0b0c0;font-size:0.89em;">MAL memblokir permintaan langsung dari browser (CORS). GAS berfungsi sebagai "kurir" — browser-mu menitipkan permintaan ke GAS, GAS meneruskannya ke MAL, lalu mengirim jawaban kembali. GAS tidak menyimpan apapun.</p></div>
             <hr>
-            <div><p style=\"color:#fff;font-weight:600;margin-bottom:3px;\">❓ Kenapa tidak pakai username dan password?</p><p style=\"color:#b0b0c0;font-size:0.89em;\">MAL menggunakan OAuth 2.0 — standar keamanan yang sama dipakai Google dan GitHub. Password-mu tidak pernah meninggalkan server MAL.</p></div>
+            <div><p style="color:#fff;font-weight:600;margin-bottom:3px;">❓ Kenapa tidak pakai username dan password?</p><p style="color:#b0b0c0;font-size:0.89em;">MAL menggunakan OAuth 2.0 — standar keamanan yang sama dipakai Google dan GitHub. Password-mu tidak pernah meninggalkan server MAL.</p></div>
             <hr>
-            <div><p style=\"color:#fff;font-weight:600;margin-bottom:3px;\">🔴 Error: <code>invalid_redirect_uri</code></p><p style=\"color:#b0b0c0;font-size:0.89em;\">Redirect URL di pengaturan aplikasi MAL-mu tidak cocok. Buka <a href=\"https://myanimelist.net/apiconfig\" target=\"_blank\" rel=\"noopener noreferrer\">myanimelist.net/apiconfig</a> → klik Edit → periksa App Redirect URL sudah persis sama dengan URL di Langkah 1C.</p></div>
+            <div><p style="color:#fff;font-weight:600;margin-bottom:3px;">🔴 Error: <code>invalid_redirect_uri</code></p><p style="color:#b0b0c0;font-size:0.89em;">Redirect URL di pengaturan aplikasi MAL-mu tidak cocok. Buka <a href="https://myanimelist.net/apiconfig" target="_blank" rel="noopener noreferrer">myanimelist.net/apiconfig</a> → klik Edit → periksa App Redirect URL sudah persis sama dengan URL di Langkah 1C.</p></div>
             <hr>
-            <div><p style=\"color:#fff;font-weight:600;margin-bottom:3px;\">🔴 Error: <code>invalid_client</code></p><p style=\"color:#b0b0c0;font-size:0.89em;\">Client ID atau Secret yang dimasukkan salah. Salin ulang dari halaman apiconfig MAL — perhatikan tidak ada spasi tersembunyi.</p></div>
+            <div><p style="color:#fff;font-weight:600;margin-bottom:3px;">🔴 Error: <code>invalid_client</code></p><p style="color:#b0b0c0;font-size:0.89em;">Client ID atau Secret yang dimasukkan salah. Salin ulang dari halaman apiconfig MAL — perhatikan tidak ada spasi tersembunyi.</p></div>
             <hr>
-            <div><p style=\"color:#fff;font-weight:600;margin-bottom:3px;\">⏱ Auto mode tidak terdeteksi</p><p style=\"color:#b0b0c0;font-size:0.89em;\">Auto mode menunggu hingga 2 menit. Jika belum berhasil, nonaktifkan centang Auto mode lalu ulangi — halaman GAS akan menampilkan kode yang perlu disalin manual.</p></div>
+            <div><p style="color:#fff;font-weight:600;margin-bottom:3px;">⏱ Auto mode tidak terdeteksi</p><p style="color:#b0b0c0;font-size:0.89em;">Auto mode menunggu hingga 2 menit. Jika belum berhasil, nonaktifkan centang Auto mode lalu ulangi — halaman GAS akan menampilkan kode yang perlu disalin manual.</p></div>
         </div>
     </div>
     <div class="section">
         <div class="section-title"><span class="step-num">⚙</span> Pengguna Mahir: Deploy GAS Sendiri</div>
-        <p style=\"color:#777;font-size:0.87em;margin-bottom:8px;\">Tidak diperlukan untuk pengguna biasa — GAS bawaan sudah cukup.</p>
-        <button class=\"adv-toggle\" id=\"adv-btn\" onclick=\"var c=document.getElementById('adv-content');var open=c.classList.toggle('open');this.textContent=open?'▲ Sembunyikan':'▼ Tampilkan langkah-langkah';\">▼ Tampilkan langkah-langkah</button>
-        <div class=\"adv-content\" id=\"adv-content\">
-            <div class=\"steps\" style=\"margin-top:16px;\">
-                <div class=\"step\"><span class=\"step-letter\">A</span>
-                    <div class=\"step-body\">
+        <p style="color:#777;font-size:0.87em;margin-bottom:8px;">Tidak diperlukan untuk pengguna biasa — GAS bawaan sudah cukup.</p>
+        <button class="adv-toggle" id="adv-btn" onclick="var c=document.getElementById('adv-content');var open=c.classList.toggle('open');this.textContent=open?'▲ Sembunyikan':'▼ Tampilkan langkah-langkah';">▼ Tampilkan langkah-langkah</button>
+        <div class="adv-content" id="adv-content">
+            <div class="steps" style="margin-top:16px;">
+                <div class="step"><span class="step-letter">A</span>
+                    <div class="step-body">
                         <p>Unduh atau salin kode GAS berikut:</p>
-                        <div style=\"display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 6px;\">
-                            <button class=\"dl-btn\" onclick=\"downloadGas()\">⬇ Unduh gas-proxy.gs</button>
-                            <button class=\"dl-btn copy-gas\" id=\"gas-copy-btn\" onclick=\"copyGasCode(this)\">📋 Salin ke Clipboard</button>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 6px;">
+                            <button class="dl-btn" onclick="downloadGas()">⬇ Unduh gas-proxy.gs</button>
+                            <button class="dl-btn copy-gas" id="gas-copy-btn" onclick="copyGasCode(this)">📋 Salin ke Clipboard</button>
                         </div>
-                        <button class=\"adv-toggle\" style=\"font-size:0.78em;padding:5px 12px;margin-top:2px;\" onclick=\"var c=document.getElementById('gas-code-block');var open=c.classList.toggle('open');this.textContent=open?'▲ Sembunyikan kode':'👁 Lihat isi kode (audit keamanan)';\">👁 Lihat isi kode (audit keamanan)</button>
-                        <div class=\"gas-code-block\" id=\"gas-code-block\">
-                            <div class=\"callout info\" style=\"margin:8px 0 6px;font-size:0.82em;\"><span class=\"ci\">🔍</span><span>Ini <strong>seluruh</strong> kode yang berjalan di GAS-mu. Kamu bisa verifikasi sendiri: tidak ada panggilan ke server selain <code>myanimelist.net</code>, tidak ada penyimpanan data, tidak ada backdoor.</span></div>
-                            <pre class=\"gas-code-pre\" id=\"gas-code-pre\"></pre>
+                        <button class="adv-toggle" style="font-size:0.78em;padding:5px 12px;margin-top:2px;" onclick="var c=document.getElementById('gas-code-block');var open=c.classList.toggle('open');this.textContent=open?'▲ Sembunyikan kode':'👁 Lihat isi kode (audit keamanan)';">👁 Lihat isi kode (audit keamanan)</button>
+                        <div class="gas-code-block" id="gas-code-block">
+                            <div class="callout info" style="margin:8px 0 6px;font-size:0.82em;"><span class="ci">🔍</span><span>Ini <strong>seluruh</strong> kode yang berjalan di GAS-mu. Kamu bisa verifikasi sendiri: tidak ada panggilan ke server selain <code>myanimelist.net</code>, tidak ada penyimpanan data, tidak ada backdoor.</span></div>
+                            <pre class="gas-code-pre" id="gas-code-pre"></pre>
                         </div>
                     </div>
                 </div>
-                <div class=\"step\"><span class=\"step-letter\">B</span><div class=\"step-body\"><p>Buka <a href=\"https://script.google.com\" target=\"_blank\" rel=\"noopener noreferrer\">script.google.com</a> → klik <strong>\"New Project\"</strong> → hapus semua kode yang ada → tempelkan seluruh isi file yang diunduh.</p></div></div>
-                <div class=\"step\"><span class=\"step-letter\">C</span><div class=\"step-body\"><p>Klik <strong>Deploy → New Deployment</strong>, atur seperti ini:</p><div class=\"field-box\"><span class=\"fl\">Type</span><span class=\"fv good\">Web app</span><span class=\"fl\">Execute as</span><span class=\"fv good\">Me</span><span class=\"fl\">Who has access ⚠️</span><span class=\"fv good\">✔ <strong>Anyone</strong></span><span class=\"fl\" style=\"color:#ff8a80;font-size:0.83em;\">Jangan pilih:</span><span class=\"fv bad\">Anyone with Google account</span></div><div class=\"callout warn\"><span class=\"ci\">⚠️</span><span>Harus <strong>\"Anyone\"</strong> (anonim) — bukan \"Anyone with Google account\".</span></div></div></div>
-                <div class=\"step\"><span class=\"step-letter\">D</span><div class=\"step-body\"><p>Klik <strong>Deploy</strong> → ikuti proses otorisasi Google → salin <strong>Web app URL</strong> yang dihasilkan.</p></div></div>
-                <div class=\"step\"><span class=\"step-letter\">E</span><div class=\"step-body\"><p>URL ini digunakan di <strong>dua tempat</strong>:</p><div style=\"display:flex;flex-direction:column;gap:8px;margin-top:6px;\"><div class=\"callout info\" style=\"margin:0;\"><span class=\"ci\">①</span><span>Di pengaturan MAL (Langkah 1C) — sebagai <strong>App Redirect URL</strong>.</span></div><div class=\"callout info\" style=\"margin:0;\"><span class=\"ci\">②</span><span>Di formulir sinkronisasi — klik <strong>⚙ Advanced</strong> lalu tempelkan ke kolom <code>GAS Web App URL</code>.</span></div></div></div></div>
+                <div class="step"><span class="step-letter">B</span><div class="step-body"><p>Buka <a href="https://script.google.com" target="_blank" rel="noopener noreferrer">script.google.com</a> → klik <strong>"New Project"</strong> → hapus semua kode yang ada → tempelkan seluruh isi file yang diunduh.</p></div></div>
+                <div class="step"><span class="step-letter">C</span><div class="step-body"><p>Klik <strong>Deploy → New Deployment</strong>, atur seperti ini:</p><div class="field-box"><span class="fl">Type</span><span class="fv good">Web app</span><span class="fl">Execute as</span><span class="fv good">Me</span><span class="fl">Who has access ⚠️</span><span class="fv good">✔ <strong>Anyone</strong></span><span class="fl" style="color:#ff8a80;font-size:0.83em;">Jangan pilih:</span><span class="fv bad">Anyone with Google account</span></div><div class="callout warn"><span class="ci">⚠️</span><span>Harus <strong>"Anyone"</strong> (anonim) — bukan "Anyone with Google account".</span></div></div></div>
+                <div class="step"><span class="step-letter">D</span><div class="step-body"><p>Klik <strong>Deploy</strong> → ikuti proses otorisasi Google → salin <strong>Web app URL</strong> yang dihasilkan.</p></div></div>
+                <div class="step"><span class="step-letter">E</span><div class="step-body"><p>URL ini digunakan di <strong>dua tempat</strong>:</p><div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;"><div class="callout info" style="margin:0;"><span class="ci">①</span><span>Di pengaturan MAL (Langkah 1C) — sebagai <strong>App Redirect URL</strong>.</span></div><div class="callout info" style="margin:0;"><span class="ci">②</span><span>Di formulir sinkronisasi — klik <strong>⚙ Advanced</strong> lalu tempelkan ke kolom <code>GAS Web App URL</code>.</span></div></div></div></div>
             </div>
         </div>
     </div>
 </div>
 <script>
 // GAS_CODE is injected from the parent page's JS variable via JSON.stringify
-var GAS_CODE = \${injectedGasCode};
+var GAS_CODE = ${injectedGasCode};
 
 // Populate code block when page loads
 document.addEventListener('DOMContentLoaded', function() {
@@ -776,6 +631,54 @@ function downloadGas() {
     }
 }
 <\/script>
+</body>
+</html>`;
+    }
+
+    // ── Guide Modal Logic ─────────────────────────────────────────────
+    var _guideBlobUrl = null;
+
+    function openGuide() {
+        var overlay = document.getElementById('guide-overlay');
+        var iframe  = document.getElementById('guide-iframe');
+        if (!overlay || !iframe) return;
+        iframe.srcdoc = getGuideHtml();
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeGuide() {
+        var overlay = document.getElementById('guide-overlay');
+        if (!overlay) return;
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    function openGuideNewTab() {
+        // getGuideHtml() already injects absolute image URLs (resolved at call time
+        // from window.location), so the blob URL page loads images correctly.
+        var html = getGuideHtml();
+        try {
+            var blob = new Blob([html], { type: 'text/html' });
+            if (_guideBlobUrl) URL.revokeObjectURL(_guideBlobUrl);
+            _guideBlobUrl = URL.createObjectURL(blob);
+            window.open(_guideBlobUrl, '_blank');
+        } catch(e) {
+            window.open('data:text/html;charset=utf-8,' + encodeURIComponent(html), '_blank');
+        }
+    }
+
+    document.getElementById('mal-guide-btn').addEventListener('click', openGuide);
+    document.getElementById('guide-close-btn').addEventListener('click', closeGuide);
+    document.getElementById('guide-newtab-btn').addEventListener('click', openGuideNewTab);
+
+    document.getElementById('guide-overlay').addEventListener('click', function(e) {
+        if (e.target === this) closeGuide();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeGuide();
+    });
+    </script>
 
     <script>
     (function malBarInit(){
