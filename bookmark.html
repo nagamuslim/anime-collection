@@ -1,3 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Tontonan</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%); color: #e0e0e0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height: 100vh; }
+
+        .header { background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); padding: 15px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
+        .back-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; white-space: nowrap; }
+        .back-btn:hover { background: rgba(255,255,255,0.2); transform: translateX(-3px); }
+        .page-title { font-size: 1.5em; font-weight: 600; color: white; flex: 1; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .clear-btn { background: rgba(220,50,50,0.15); border: 1px solid rgba(220,50,50,0.3); color: #ff8a80; padding: 8px 16px; border-radius: 8px; font-size: 0.82em; font-weight: 600; cursor: pointer; transition: all 0.3s ease; white-space: nowrap; }
+        .clear-btn:hover { background: rgba(220,50,50,0.28); }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+
+        .anime-card { background: rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; border: 1px solid rgba(255,255,255,0.1); display: block; text-decoration: none; color: inherit; position: relative; }
+        .anime-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.6); border-color: rgba(102,126,234,0.5); }
+
+        /* Remove-from-history button */
+        .remove-btn { position: absolute; top: 10px; left: 10px; width: 28px; height: 28px; background: rgba(0,0,0,0.6); color: #aaa; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); cursor: pointer; z-index: 20; display: flex; align-items: center; justify-content: center; font-size: 0.75em; font-weight: bold; transition: all 0.2s ease; }
+        .remove-btn:hover { background: rgba(220,50,50,0.75); color: white; border-color: transparent; transform: scale(1.1); }
+
+        .thumbnail { position: relative; width: 100%; padding-top: 56.25%; overflow: hidden; }
+        .thumb-img { position: absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; display:block; }
+        .thumb-fallback { position: absolute; top:0; left:0; width:100%; height:100%; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .anime-icon { font-size: 4em; opacity: 0.9; }
+
+        /* "Terakhir ditonton" badge */
+        .badge-last { position: absolute; bottom: 8px; right: 8px; padding: 3px 8px; border-radius: 5px; font-size: 0.72em; font-weight: 600; color: white; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.15); white-space: nowrap; }
+
+        .info { padding: 14px 16px 16px; }
+        .title { color: #fff; font-size: 1.05em; font-weight: 600; margin-bottom: 10px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 3em; }
+
+        /* Progress / stats box */
+        .progress-box { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; gap: 5px; }
+        .stat-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.82em; color: #aaa; }
+        .stat-val { color: #a8e6cf; font-weight: 600; }
+        .stat-val.ep { color: #c3b1e1; }
+
+        /* "Lanjutkan" button inside card */
+        .resume-btn { display: block; margin-top: 12px; padding: 9px; border-radius: 8px; text-align: center; font-size: 0.83em; font-weight: 700; color: white; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); text-decoration: none; transition: opacity 0.2s; }
+        .resume-btn:hover { opacity: 0.82; }
+
+        .loading { text-align: center; padding: 60px; color: #b0b0b0; font-size: 1.2em; grid-column: 1 / -1; }
+        .no-results { text-align: center; padding: 60px; color: #888; grid-column: 1 / -1; }
+        .no-results-icon { font-size: 4em; margin-bottom: 16px; opacity: 0.5; }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+            .header-content { flex-wrap: wrap; }
+        }
+
+        /* ── MAL Sync Bar ──────────────────────────────────────────── */
+        .mal-bar{max-width:1400px;margin:0 auto 20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:12px;padding:12px 18px;}
+        .mal-status-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+        .mal-avatar{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,.2);flex-shrink:0;display:none;}
+        .mal-dot{width:8px;height:8px;border-radius:50%;background:#666;flex-shrink:0;transition:background .3s;}
+        .mal-dot.ok{background:#6bcf7f;box-shadow:0 0 6px rgba(107,207,127,.6);}
+        #mal-status-text{font-size:0.86em;color:#b0b0b0;font-weight:600;}
+        #mal-last-sync{font-size:0.78em;color:#777;}
+        .mal-hdr-btns{margin-left:auto;display:flex;gap:8px;flex-shrink:0;}
+        .mal-btn-sm{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#ccc;padding:5px 12px;border-radius:7px;font-size:0.78em;font-family:inherit;cursor:pointer;transition:background .2s;white-space:nowrap;}
+        .mal-btn-sm:hover{background:rgba(255,255,255,0.14);}
+        .mal-btn-sync{color:#a8e6cf;border-color:rgba(168,230,175,.3);}
+        .mal-btn-sync:hover{background:rgba(168,230,175,.1);}
+        .mal-btn-disc{color:#ff8a80;border-color:rgba(220,50,50,.25);}
+        .mal-btn-disc:hover{background:rgba(220,50,50,.12);}
+        #mal-panel{margin-top:14px;border-top:1px solid rgba(255,255,255,0.07);padding-top:14px;}
+        .mal-fields{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+        .mal-field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:170px;}
+        .mal-field label{font-size:0.76em;color:#888;}
+        .mal-field input{background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.12);color:#e0e0e0;border-radius:8px;padding:8px 11px;font-size:0.86em;font-family:inherit;width:100%;}
+        .mal-field input:focus{outline:none;border-color:rgba(102,126,234,.5);}
+        .mal-options-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:8px;}
+        .mal-check-label{display:flex;align-items:center;gap:7px;font-size:0.84em;color:#ccc;cursor:pointer;}
+        .mal-check-label input[type=checkbox]{accent-color:#667eea;width:14px;height:14px;cursor:pointer;}
+        .mal-check-hint{color:#777;font-size:0.82em;}
+        .mal-adv-btn{background:none;border:none;color:#667eea;font-size:0.78em;cursor:pointer;padding:0;font-family:inherit;}
+        .mal-adv-btn:hover{color:#a8e6cf;}
+        #mal-adv-section{margin-top:8px;}
+        #mal-paste-row{display:flex;gap:8px;align-items:flex-end;margin-top:10px;}
+        #mal-paste-row .mal-field{flex:1;}
+        .mal-action-row{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap;}
+        .mal-btn-primary{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border:none;color:#fff;padding:9px 20px;border-radius:8px;font-size:0.86em;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity .2s;}
+        .mal-btn-primary:hover{opacity:.85;}
+        #mal-code-box{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;background:rgba(102,126,234,.08);border:1px solid rgba(102,126,234,.25);border-radius:8px;padding:9px 13px;}
+        #mal-code-val{color:#a8e6cf;font-family:monospace;font-size:0.82em;flex:1;word-break:break-all;line-height:1.5;}
+        #mal-copy-btn,#mal-paste-btn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#ccc;padding:5px 10px;border-radius:6px;font-size:0.78em;font-family:inherit;cursor:pointer;white-space:nowrap;}
+        #mal-copy-btn:hover,#mal-paste-btn:hover{background:rgba(255,255,255,.15);}
+        #mal-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(10px);background:rgba(30,20,60,0.95);border:1px solid rgba(255,255,255,0.15);color:#e0e0e0;padding:8px 18px;border-radius:20px;font-size:0.84em;opacity:0;pointer-events:none;transition:all .25s;z-index:9999;white-space:nowrap;}
+        #mal-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="index.html" class="back-btn">&#8592; Beranda</a>
+            <div class="page-title">&#128250; Riwayat Tontonan</div>
+            <button class="clear-btn" id="clearAllBtn">&#128465; Hapus Semua</button>
+        </div>
+    </div>
+
+
+    <!-- MAL Sync Bar -->
+    <div class="container" style="padding-bottom:0;padding-top:20px">
+      <div class="mal-bar" id="mal-bar">
+        <div class="mal-status-row">
+          <img class="mal-avatar" id="mal-avatar" src="" alt="avatar"/>
+          <span class="mal-dot" id="mal-dot"></span>
+          <span id="mal-status-text">MAL: Belum terhubung</span>
+          <span id="mal-last-sync"></span>
+          <div class="mal-hdr-btns">
+            <button class="mal-btn-sm mal-btn-sync" id="mal-sync-btn" style="display:none">Sinkron Sekarang ↺</button>
+            <button class="mal-btn-sm" id="mal-toggle-btn">Hubungkan ▾</button>
+            <button class="mal-btn-sm mal-btn-disc" id="mal-disconnect-btn" style="display:none">Putuskan</button>
+          </div>
+        </div>
+
+        <div id="mal-panel" style="display:none">
+          <div class="mal-fields">
+            <div class="mal-field">
+              <label>Client ID</label>
+              <input type="text" id="mal-cid" placeholder="MAL Client ID" autocomplete="off"/>
+            </div>
+            <div class="mal-field">
+              <label>Client Secret</label>
+              <input type="password" id="mal-csec" placeholder="MAL Client Secret" autocomplete="off"/>
+            </div>
+          </div>
+          <div class="mal-options-row">
+            <label class="mal-check-label">
+              <input type="checkbox" id="mal-auto-cb"/>
+              <span>Auto mode <span class="mal-check-hint">(tanpa tempel kode manual)</span></span>
+            </label>
+            <button class="mal-adv-btn" id="mal-adv-btn">⚙ Advanced</button>
+          </div>
+          <div id="mal-adv-section" style="display:none">
+            <div class="mal-fields">
+              <div class="mal-field" style="min-width:100%">
+                <label>GAS Web App URL (opsional — sudah ada default)</label>
+                <input type="url" id="mal-gas-url" placeholder="https://script.google.com/macros/s/.../exec"/>
+              </div>
+            </div>
+          </div>
+          <div id="mal-paste-row" style="display:none">
+            <div class="mal-field">
+              <label>Kode Otorisasi (dari halaman GAS)</label>
+              <input type="text" id="mal-auth-code" placeholder="Tempel kode di sini..."/>
+            </div>
+            <button class="mal-btn-primary" id="mal-exchange-btn">Tukar →</button>
+          </div>
+          <div id="mal-code-box" style="display:none">
+            <div id="mal-code-val"></div>
+            <button id="mal-copy-btn">Salin</button>
+            <button id="mal-paste-btn">Tempel ke field →</button>
+          </div>
+          <div class="mal-action-row">
+            <button class="mal-btn-primary" id="mal-connect-btn">Hubungkan MAL ↗</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="mal-toast"></div>
+    <div class="container">
+        <div class="grid" id="historyGrid">
+            <div class="loading">&#9203; Memuat riwayat...</div>
+        </div>
+    </div>
+
+    <script src="metadata.js" onerror="void 0"></script>
+    <script src="bookmark.js" onerror="void 0"></script>
+    <script>
+        'use strict';
+
+        // For thumbnail lookups we need the master anime data
+        let animeDataMap = new Map();
+
+        const icons  = ['🎭','⚔️','⭐','🔥','💧','⚡','🎯','🌸','🎪','🎨','🎵','🎮','🌙','☀️','🎁'];
+        const colors = ['#ff6b6b','#4ecdc4','#ffe66d','#a8e6cf','#ffd93d','#6bcf7f','#95e1d3','#f38181','#aa96da','#fcbad3'];
+
+        function hashStr(s) {
+            let h = 0;
+            for (let i = 0; i < s.length; i++) h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
+            return Math.abs(h);
+        }
+
+        function timeAgo(ts) {
+            if (!ts) return '-';
+            const diff = Date.now() - ts;
+            const m = Math.floor(diff / 60000);
+            if (m < 1)  return 'Baru saja';
+            if (m < 60) return m + ' menit lalu';
+            const h = Math.floor(m / 60);
+            if (h < 24) return h + ' jam lalu';
+            const d = Math.floor(h / 24);
+            if (d < 7)  return d + ' hari lalu';
+            return new Date(ts).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function removeEntry(e, animeName) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (typeof BookmarkManager === 'undefined') return;
+            BookmarkManager.clearEntry(animeName);
+            renderHistory();
+        }
+
+        function createCard(entry) {
+            const name     = entry.name;
+            const animeObj = animeDataMap.get(name);
+            const thumbId  = animeObj ? animeObj.thumbnail_video_id : null;
+            const hqUrl    = thumbId ? 'https://img.youtube.com/vi/' + thumbId + '/hqdefault.jpg' : null;
+            const mqUrl    = thumbId ? 'https://img.youtube.com/vi/' + thumbId + '/mqdefault.jpg' : null;
+
+            const h     = hashStr(name);
+            const icon  = icons[h % icons.length];
+            const color = colors[h % colors.length];
+
+            const epNum   = entry.lastWatchedEpisodeNumber;
+            const epTitle = entry.lastWatchedEpisodeTitle || (epNum ? 'Episode ' + epNum : null);
+            const visits  = entry.visitCount || 1;
+
+            // Player URL — link to the episode they stopped at if known
+            const savedTime = entry.lastWatchedTime && entry.lastWatchedTime > 5 ? entry.lastWatchedTime : null;
+            const playerUrl = 'player.html?anime=' + encodeURIComponent(name) +
+                              (epNum ? '&episode=' + epNum : '') +
+                              (savedTime ? '&time=' + savedTime : '');
+
+            // Card is a <div> not an <a> so the remove button doesn't bubble
+            const card = document.createElement('div');
+            card.className = 'anime-card';
+            card.style.cursor = 'pointer';
+
+            const lastSeenBadge = entry.lastWatchedAt
+                ? '<div class="badge-last">' + timeAgo(entry.lastWatchedAt) + '</div>'
+                : '';
+
+            card.innerHTML =
+                '<button class="remove-btn" title="Hapus dari riwayat">&#10005;</button>' +
+                '<div class="thumbnail">' +
+                (hqUrl
+                    ? '<img class="thumb-img" src="' + hqUrl + '" alt="' + name.replace(/"/g,'&quot;') + '"' +
+                      ' onerror="this.src=\'' + mqUrl + '\';this.onerror=function(){this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';}"/>'
+                    : '') +
+                '<div class="thumb-fallback" style="background:linear-gradient(135deg,' + color + '33 0%,' + color + '66 100%);' + (hqUrl ? '' : 'display:flex;') + '">' +
+                '<div class="anime-icon">' + icon + '</div></div>' +
+                lastSeenBadge +
+                '</div>' +
+                '<div class="info">' +
+                  '<div class="title">' + name + '</div>' +
+                  '<div class="progress-box">' +
+                    (epTitle
+                        ? '<div class="stat-row"><span>Terakhir ditonton</span><span class="stat-val ep">' + epTitle + '</span></div>'
+                        : '') +
+                    '<div class="stat-row"><span>Episode dibuka</span><span class="stat-val">' + visits + 'x</span></div>' +
+                  '</div>' +
+                  '<a href="' + playerUrl + '" class="resume-btn">&#9654; Lanjutkan Menonton</a>' +
+                '</div>';
+
+            // Clicking anywhere on the card (except the remove button) → player
+            card.addEventListener('click', function (e) {
+                if (e.target.closest('.remove-btn')) return;
+                window.location.href = playerUrl;
+            });
+
+            card.querySelector('.remove-btn').addEventListener('click', function (e) {
+                removeEntry(e, name);
+            });
+
+            return card;
+        }
+
+        function renderHistory() {
+            const grid = document.getElementById('historyGrid');
+
+            if (typeof BookmarkManager === 'undefined') {
+                grid.innerHTML = '<div class="no-results"><div class="no-results-icon">&#128274;</div>' +
+                    '<h2>BookmarkManager tidak tersedia</h2>' +
+                    '<p>Pastikan bookmark.js ada di direktori yang sama.</p></div>';
+                return;
+            }
+
+            const history = BookmarkManager.getWatchHistory();
+
+            if (history.length === 0) {
+                grid.innerHTML = '<div class="no-results"><div class="no-results-icon">&#128250;</div>' +
+                    '<h2>Belum Ada Riwayat</h2>' +
+                    '<p>Buka anime dan putar episode untuk mulai melacak tontonanmu.</p></div>';
+                return;
+            }
+
+            grid.innerHTML = '';
+            history.forEach(entry => grid.appendChild(createCard(entry)));
+        }
+
+        async function loadMasterData() {
+            // Try to load thumbnail / episode-count info from master data.
+            // Failure here is non-fatal — cards still render without thumbnails.
+            try {
+                let data = null;
+                const raw = localStorage.getItem('anime_data');
+                if (raw) data = JSON.parse(raw);
+                if (!data) data = await (await fetch('anime_data.json')).json();
+                if (data && data.anime_list) {
+                    data.anime_list.forEach(a => animeDataMap.set(a.name, a));
+                }
+            } catch (e) {
+                // silent — thumbnails won't load but everything else works
+            }
+
+            renderHistory();
+        }
+
+        document.getElementById('clearAllBtn').addEventListener('click', function () {
+            if (typeof BookmarkManager === 'undefined') return;
+            const history = BookmarkManager.getWatchHistory();
+            if (history.length === 0) return;
+            if (confirm('Hapus seluruh riwayat tontonan (' + history.length + ' anime)?\nData ini tidak bisa dikembalikan.')) {
+                BookmarkManager.clearAll();
+                renderHistory();
+            }
+        });
+
+        loadMasterData();
+    </script>
+
     <script>
     // ── Embedded MAL Guide ────────────────────────────────────────────
     // Stored inline so no extra file is needed in the repo.
@@ -95,18 +427,18 @@ function buildPage(icon, iconColor, title, subtitle, code) {
       + '<\/script>';
   }
 
-  return '<!DOCTYPE html><html><head>'
-    + '<meta name="viewport" content="width=device-width,initial-scale=1">'
-    + '<style>'
-    + 'body{font-family:monospace;background:#0d0d0f;color:#e8e8f0;'
-    + 'display:flex;flex-direction:column;align-items:center;'
-    + 'justify-content:center;min-height:100vh;margin:0;gap:14px;text-align:center;padding:20px;}'
-    + 'p{color:#6b6b80;font-size:13px;line-height:1.6;max-width:500px;}'
-    + '</style>'
-    + '</head><body>'
-    + '<div style="font-size:48px;color:\' + iconColor + \'">\' + icon + \'</div>'
-    + '<h2 style="color:\' + iconColor + \';margin:0">\' + title + \'</h2>'
-    + '<p>\' + subtitle + \'</p>\'
+  return \'<!DOCTYPE html><html><head>\'
+    + \'<meta name="viewport" content="width=device-width,initial-scale=1">\'
+    + \'<style>\'
+    + \'body{font-family:monospace;background:#0d0d0f;color:#e8e8f0;\'
+    + \'display:flex;flex-direction:column;align-items:center;\'
+    + \'justify-content:center;min-height:100vh;margin:0;gap:14px;text-align:center;padding:20px;}\'
+    + \'p{color:#6b6b80;font-size:13px;line-height:1.6;max-width:500px;}\'
+    + \'</style>\'
+    + \'</head><body>\'
+    + \'<div style="font-size:48px;color:\' + iconColor + \'">\' + icon + \'</div>\'
+    + \'<h2 style="color:\' + iconColor + \';margin:0">\' + title + \'</h2>\'
+    + \'<p>\' + subtitle + \'</p>\'
     + codeSection
     + \'</body></html>\';
 }
@@ -187,3 +519,341 @@ function doPost(e) {
   }
 }
 \`;
+
+    function getGuideHtml() {
+        // Inject GAS_CODE and base image URL into the guide document at render time.
+        // JSON.stringify safely escapes the code string for embedding as a JS literal.
+        var injectedGasCode  = JSON.stringify(GAS_CODE);
+        // Build absolute URL for image/api.jpg so it works in both srcdoc iframe
+        // AND blob URL tab (blob URLs have no base URL for relative paths).
+        var imgBase = window.location.href.replace(/\/[^\/]*(\?.*)?$/, '/');
+        var apiImgUrl = imgBase + 'image/api.jpg';
+        var apiImgFallback = imgBase + 'api.jpg';
+
+        return \`<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Sinkronisasi MAL</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 24px 16px 40px;
+        }
+        .guide { max-width: 740px; margin: 0 auto; font-size: 0.92em; line-height: 1.7; }
+        .guide-header { background: rgba(102,126,234,0.12); border: 1px solid rgba(102,126,234,0.3); border-radius: 14px; padding: 18px 22px; margin-bottom: 20px; }
+        .guide-header h2 { font-size: 1.3em; color: #fff; font-weight: 700; margin-bottom: 5px; display: flex; align-items: center; gap: 9px; }
+        .guide-header p { color: #b0b0c0; font-size: 0.91em; }
+        .tldr { background: rgba(107,207,127,0.08); border: 1px solid rgba(107,207,127,0.25); border-radius: 10px; padding: 13px 17px; margin-bottom: 20px; font-size: 0.88em; color: #c8f0d0; }
+        .tldr strong { color: #a8e6cf; }
+        .section { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-radius: 12px; padding: 18px 20px; margin-bottom: 18px; }
+        .section-title { font-size: 1.03em; font-weight: 700; color: #fff; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+        .step-num { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; border-radius: 50%; width: 27px; height: 27px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8em; font-weight: 800; flex-shrink: 0; }
+        .steps { display: flex; flex-direction: column; gap: 14px; }
+        .step { display: flex; gap: 12px; align-items: flex-start; }
+        .step-letter { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #c3cfff; border-radius: 6px; min-width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.74em; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+        .step-body { flex: 1; }
+        .step-body p { color: #d0d0e0; margin-bottom: 5px; }
+        .screenshot { margin: 10px 0 2px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); line-height: 0; }
+        .screenshot img { width: 100%; height: auto; display: block; border-radius: 9px; }
+        .screenshot-missing { padding: 14px 16px; display: flex; align-items: center; gap: 10px; color: #667eea; font-size: 0.82em; line-height: 1.4; border: 2px dashed rgba(102,126,234,0.3); border-radius: 9px; }
+        code { background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.12); color: #a8e6cf; padding: 2px 7px; border-radius: 5px; font-family: 'Consolas','Courier New',monospace; font-size: 0.87em; }
+        .copy-row { display: flex; align-items: stretch; gap: 0; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; overflow: hidden; margin: 8px 0; }
+        .copy-val { flex: 1; padding: 9px 12px; color: #a8e6cf; font-family: 'Consolas','Courier New',monospace; font-size: 0.82em; word-break: break-all; line-height: 1.5; user-select: all; }
+        .copy-btn { background: rgba(102,126,234,0.2); border: none; border-left: 1px solid rgba(255,255,255,0.1); color: #c3cfff; padding: 0 14px; cursor: pointer; font-size: 0.8em; font-weight: 600; font-family: inherit; white-space: nowrap; transition: background 0.2s; flex-shrink: 0; }
+        .copy-btn:hover { background: rgba(102,126,234,0.38); }
+        .copy-btn.copied { background: rgba(107,207,127,0.25); color: #a8e6cf; }
+        .dl-btn { display: inline-flex; align-items: center; gap: 7px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18); color: #d0d0e0; padding: 8px 16px; border-radius: 8px; font-size: 0.83em; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.2s; margin: 0; text-decoration: none; }
+        .dl-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
+        .dl-btn.copy-gas { background: rgba(102,126,234,0.15); border-color: rgba(102,126,234,0.4); color: #c3cfff; }
+        .dl-btn.copy-gas:hover { background: rgba(102,126,234,0.28); color: #fff; }
+        .callout { border-radius: 8px; padding: 10px 14px; margin: 10px 0; font-size: 0.87em; display: flex; gap: 9px; align-items: flex-start; }
+        .callout.warn { background: rgba(255,140,0,0.1); border: 1px solid rgba(255,140,0,0.3); color: #ffd090; }
+        .callout.info { background: rgba(102,126,234,0.1); border: 1px solid rgba(102,126,234,0.3); color: #c3cfff; }
+        .callout.ok   { background: rgba(107,207,127,0.08); border: 1px solid rgba(107,207,127,0.25); color: #c0f0cc; }
+        .callout .ci  { font-size: 1.15em; flex-shrink: 0; margin-top: 1px; }
+        .field-box { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 14px; margin: 8px 0; display: grid; grid-template-columns: 160px 1fr; gap: 7px 14px; font-size: 0.86em; }
+        .fl { color: #888; display: flex; align-items: center; }
+        .fv { color: #fff; font-weight: 600; }
+        .fv.good { color: #a8e6cf; }
+        .fv.bad  { color: #ff8a80; text-decoration: line-through; opacity: 0.7; }
+        hr { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 16px 0; }
+        .adv-toggle { background: none; border: 1px solid rgba(255,255,255,0.12); color: #888; padding: 6px 14px; border-radius: 8px; font-size: 0.81em; cursor: pointer; font-family: inherit; margin-top: 6px; transition: all 0.2s; }
+        .adv-toggle:hover { background: rgba(255,255,255,0.07); color: #ccc; }
+        .adv-content { margin-top: 14px; display: none; }
+        .adv-content.open { display: block; }
+        .gas-code-block { display: none; margin-top: 10px; }
+        .gas-code-block.open { display: block; }
+        .gas-code-pre { background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 14px; font-family: 'Consolas','Courier New',monospace; font-size: 0.72em; color: #a8e6cf; overflow-x: auto; overflow-y: auto; max-height: 300px; line-height: 1.55; white-space: pre; margin: 0; }
+        .gas-code-pre::-webkit-scrollbar { width: 5px; height: 5px; }
+        .gas-code-pre::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+        a { color: #93c5fd; text-decoration: none; }
+        a:hover { color: #bfdbfe; text-decoration: underline; }
+        @media (max-width: 520px) {
+            body { padding: 14px 11px 30px; }
+            .field-box { grid-template-columns: 1fr; gap: 3px 0; }
+            .fl { font-size: 0.79em; color: #666; }
+            .copy-val { font-size: 0.75em; }
+        }
+    </style>
+</head>
+<body>
+<div class="guide">
+    <div class="guide-header">
+        <h2>🔗 Panduan Sinkronisasi MyAnimeList</h2>
+        <p>Hubungkan akunmu ke MAL agar progres nonton otomatis tersimpan — tanpa perlu mengetik username atau password di sini.</p>
+    </div>
+    <div class="tldr">
+        <strong>Singkatnya:</strong> Buat \"Aplikasi API\" gratis di MAL sekali saja → salin 2 kode darinya → tempel di sini → selesai.
+        Datamu <strong>tidak pernah tersimpan di server manapun</strong> — semua ada di browser kamu sendiri.
+    </div>
+    <div class="section">
+        <div class="section-title"><span class="step-num">1</span> Buat Aplikasi API di MyAnimeList (gratis, sekali saja)</div>
+        <div class="steps">
+            <div class="step">
+                <span class="step-letter">A</span>
+                <div class="step-body">
+                    <p>Buka halaman ini di <strong>tab baru</strong> (kamu harus sudah login MAL):</p>
+                    <p style=\"margin-top:5px;\"><a href=\"https://myanimelist.net/apiconfig\" target=\"_blank\" rel=\"noopener noreferrer\">↗ myanimelist.net/apiconfig</a></p>
+                </div>
+            </div>
+            <div class="step">
+                <span class="step-letter">B</span>
+                <div class="step-body"><p>Klik tombol <strong>\"Create ID\"</strong> di pojok kanan atas halaman tersebut.</p></div>
+            </div>
+            <div class="step">
+                <span class="step-letter">C</span>
+                <div class="step-body">
+                    <p>Isi formulir. <strong>Tiga kolom bertanda ⚠️ paling penting</strong> — salah mengisi di sini adalah penyebab error paling umum:</p>
+                    <div class="field-box">
+                        <span class="fl">App Name</span><span class="fv" style=\"color:#ddd;font-weight:400;\">Bebas, misal: <em>Anime Tracker</em></span>
+                        <span class="fl">App Type ⚠️</span><span class="fv good">✔ Pilih <strong>web</strong></span>
+                        <span class="fl" style=\"color:#ff8a80;font-size:0.83em;\">Jangan pilih:</span><span class="fv bad">other</span>
+                        <span class="fl">App Description</span><span class="fv" style=\"color:#aaa;font-weight:400;font-size:0.9em;font-style:italic;\">A simple local web application to update my anime list status using the official API</span>
+                        <span class="fl">App Redirect URL ⚠️</span><span class="fv" style=\"color:#ddd;font-weight:400;\">Salin persis dari kotak di bawah ini ↓</span>
+                        <span class="fl">Homepage URL</span><span class="fv" style=\"color:#ddd;font-weight:400;\">Boleh isi <code>http://localhost:8000/</code></span>
+                        <span class="fl">Commercial ⚠️</span><span class="fv good">✔ Pilih <strong>non-commercial</strong></span>
+                        <span class="fl">Purpose of Use</span><span class="fv good">✔ Pilih <strong>hobbyist</strong></span>
+                    </div>
+                    <p style=\"margin-top:12px;margin-bottom:4px;font-size:0.9em;color:#ccc;\">Salin URL ini → tempel ke kolom <strong>App Redirect URL</strong> di MAL:</p>
+                    <div class="copy-row">
+                        <span class="copy-val" id=\"gas-url-val\">https://script.google.com/macros/s/AKfycbyFxnexHxeO9l34KeFJG8LvasAZk0x-RHFSox-hYliU3EGFKF6KBEZW_2GOIwrBGI0s/exec</span>
+                        <button class="copy-btn" onclick=\"copyText('gas-url-val',this)\">📋 Salin</button>
+                    </div>
+                    <div class=\"callout warn\"><span class=\"ci\">⚠️</span><div>URL di atas harus ditempel <strong>persis sama</strong> ke App Redirect URL — tanpa spasi, tanpa tambahan apapun. Satu karakter berbeda = error <code>invalid_redirect_uri</code>.</div></div>
+                    <p style=\"margin-top:14px;margin-bottom:6px;font-size:0.85em;color:#888;\">Contoh formulir yang sudah diisi dengan benar (panah menunjukkan field penting):</p>
+                    <div class=\"screenshot\">
+                        <img id=\"api-img\"
+                            src=\"\${apiImgUrl}\"
+                            onerror=\"this.onerror=null;this.src='\${apiImgFallback}';this.onerror=function(){this.closest('.screenshot').innerHTML='<div class=\\\\\\'screenshot-missing\\\\\\'>📸 Gambar tidak ditemukan — pastikan file <code>api.jpg</code> ada di folder <code>image/</code>.</div>'}\"
+                            alt=\"Formulir MAL API Config: App Type = web ditunjuk panah merah, Client ID dan Client Secret ditunjuk panah merah besar, App Redirect URL sudah terisi URL GAS\"
+                        />
+                    </div>
+                    <p style=\"font-size:0.78em;color:#666;margin-top:5px;padding-left:2px;\">↑ Panah kanan = App Type harus <strong>web</strong>. Panah kiri = letak Client ID &amp; Client Secret yang akan kamu salin setelah submit.</p>
+                </div>
+            </div>
+            <div class="step">
+                <span class="step-letter">D</span>
+                <div class="step-body">
+                    <p>Klik <strong>\"Submit\"</strong>. Halaman berikutnya menampilkan <strong>Client ID</strong> dan <strong>Client Secret</strong> milikmu.</p>
+                    <div class=\"callout warn\"><span class=\"ci\">⚠️</span><span><strong>Jangan tutup halaman itu dulu!</strong> Salin kedua kode tersebut sekarang — terutama Client Secret, karena hanya muncul sekali saat pertama kali dibuat.</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="section-title"><span class="step-num">2</span> Masukkan Kode ke Formulir Sinkronisasi</div>
+        <div class="steps">
+            <div class="step">
+                <span class="step-letter">A</span>
+                <div class="step-body">
+                    <p>Tutup panduan ini, lalu isi kolom <code>Client ID</code> dan <code>Client Secret</code> dengan kode yang baru kamu salin dari MAL.</p>
+                    <div class=\"callout info\"><span class=\"ci\">ℹ️</span><span>Client ID dan Secret adalah <strong>identitas aplikasimu ke MAL</strong> — bukan username atau password akunmu. Keduanya tersimpan hanya di browser-mu.</span></div>
+                </div>
+            </div>
+            <div class="step">
+                <span class="step-letter">B</span>
+                <div class="step-body">
+                    <p>Centang <strong>\"Auto mode\"</strong> agar setelah klik <em>Allow</em> di MAL, situs ini otomatis mendeteksinya tanpa perlu copy-paste kode tambahan.</p>
+                    <div class=\"callout ok\"><span class=\"ci\">✅</span><span><strong>Tidak centang Auto mode:</strong> halaman GAS akan menampilkan kode yang perlu disalin manual ke kolom yang muncul. Sama aman, hanya lebih manual.</span></div>
+                </div>
+            </div>
+            <div class="step">
+                <span class="step-letter">C</span>
+                <div class="step-body"><p>Klik <strong>\"Hubungkan MAL ↗\"</strong>. Tab baru terbuka ke halaman MAL → klik <strong>\"Allow\"</strong>.</p></div>
+            </div>
+            <div class="step">
+                <span class="step-letter">D</span>
+                <div class="step-body"><p>Selesai! Kembali ke situs ini. Kalau berhasil, nama akunmu muncul dan titik <span style=\"color:#6bcf7f;font-weight:bold;\">●</span> menyala hijau. Data dari daftar MAL-mu akan otomatis dimuat.</p></div>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="section-title"><span class="step-num">?</span> Pertanyaan Umum</div>
+        <div style=\"display:flex;flex-direction:column;gap:13px;\">
+            <div><p style=\"color:#fff;font-weight:600;margin-bottom:3px;\">🔒 Apakah data MAL-ku aman?</p><p style=\"color:#b0b0c0;font-size:0.89em;\">Ya. Client ID, Secret, dan token MAL-mu tersimpan <strong>hanya di browser-mu</strong> (cookies dan localStorage). Relay (GAS) bersifat stateless — ia hanya meneruskan permintaan ke MAL lalu melupakannya.</p></div>
+            <hr>
+            <div><p style=\"color:#fff;font-weight:600;margin-bottom:3px;\">🤔 Apa itu GAS / Google Apps Script?</p><p style=\"color:#b0b0c0;font-size:0.89em;\">MAL memblokir permintaan langsung dari browser (CORS). GAS berfungsi sebagai \"kurir\" — browser-mu menitipkan permintaan ke GAS, GAS meneruskannya ke MAL, lalu mengirim jawaban kembali. GAS tidak menyimpan apapun.</p></div>
+            <hr>
+            <div><p style=\"color:#fff;font-weight:600;margin-bottom:3px;\">❓ Kenapa tidak pakai username dan password?</p><p style=\"color:#b0b0c0;font-size:0.89em;\">MAL menggunakan OAuth 2.0 — standar keamanan yang sama dipakai Google dan GitHub. Password-mu tidak pernah meninggalkan server MAL.</p></div>
+            <hr>
+            <div><p style=\"color:#fff;font-weight:600;margin-bottom:3px;\">🔴 Error: <code>invalid_redirect_uri</code></p><p style=\"color:#b0b0c0;font-size:0.89em;\">Redirect URL di pengaturan aplikasi MAL-mu tidak cocok. Buka <a href=\"https://myanimelist.net/apiconfig\" target=\"_blank\" rel=\"noopener noreferrer\">myanimelist.net/apiconfig</a> → klik Edit → periksa App Redirect URL sudah persis sama dengan URL di Langkah 1C.</p></div>
+            <hr>
+            <div><p style=\"color:#fff;font-weight:600;margin-bottom:3px;\">🔴 Error: <code>invalid_client</code></p><p style=\"color:#b0b0c0;font-size:0.89em;\">Client ID atau Secret yang dimasukkan salah. Salin ulang dari halaman apiconfig MAL — perhatikan tidak ada spasi tersembunyi.</p></div>
+            <hr>
+            <div><p style=\"color:#fff;font-weight:600;margin-bottom:3px;\">⏱ Auto mode tidak terdeteksi</p><p style=\"color:#b0b0c0;font-size:0.89em;\">Auto mode menunggu hingga 2 menit. Jika belum berhasil, nonaktifkan centang Auto mode lalu ulangi — halaman GAS akan menampilkan kode yang perlu disalin manual.</p></div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="section-title"><span class="step-num">⚙</span> Pengguna Mahir: Deploy GAS Sendiri</div>
+        <p style=\"color:#777;font-size:0.87em;margin-bottom:8px;\">Tidak diperlukan untuk pengguna biasa — GAS bawaan sudah cukup.</p>
+        <button class=\"adv-toggle\" id=\"adv-btn\" onclick=\"var c=document.getElementById('adv-content');var open=c.classList.toggle('open');this.textContent=open?'▲ Sembunyikan':'▼ Tampilkan langkah-langkah';\">▼ Tampilkan langkah-langkah</button>
+        <div class=\"adv-content\" id=\"adv-content\">
+            <div class=\"steps\" style=\"margin-top:16px;\">
+                <div class=\"step\"><span class=\"step-letter\">A</span>
+                    <div class=\"step-body\">
+                        <p>Unduh atau salin kode GAS berikut:</p>
+                        <div style=\"display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 6px;\">
+                            <button class=\"dl-btn\" onclick=\"downloadGas()\">⬇ Unduh gas-proxy.gs</button>
+                            <button class=\"dl-btn copy-gas\" id=\"gas-copy-btn\" onclick=\"copyGasCode(this)\">📋 Salin ke Clipboard</button>
+                        </div>
+                        <button class=\"adv-toggle\" style=\"font-size:0.78em;padding:5px 12px;margin-top:2px;\" onclick=\"var c=document.getElementById('gas-code-block');var open=c.classList.toggle('open');this.textContent=open?'▲ Sembunyikan kode':'👁 Lihat isi kode (audit keamanan)';\">👁 Lihat isi kode (audit keamanan)</button>
+                        <div class=\"gas-code-block\" id=\"gas-code-block\">
+                            <div class=\"callout info\" style=\"margin:8px 0 6px;font-size:0.82em;\"><span class=\"ci\">🔍</span><span>Ini <strong>seluruh</strong> kode yang berjalan di GAS-mu. Kamu bisa verifikasi sendiri: tidak ada panggilan ke server selain <code>myanimelist.net</code>, tidak ada penyimpanan data, tidak ada backdoor.</span></div>
+                            <pre class=\"gas-code-pre\" id=\"gas-code-pre\"></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class=\"step\"><span class=\"step-letter\">B</span><div class=\"step-body\"><p>Buka <a href=\"https://script.google.com\" target=\"_blank\" rel=\"noopener noreferrer\">script.google.com</a> → klik <strong>\"New Project\"</strong> → hapus semua kode yang ada → tempelkan seluruh isi file yang diunduh.</p></div></div>
+                <div class=\"step\"><span class=\"step-letter\">C</span><div class=\"step-body\"><p>Klik <strong>Deploy → New Deployment</strong>, atur seperti ini:</p><div class=\"field-box\"><span class=\"fl\">Type</span><span class=\"fv good\">Web app</span><span class=\"fl\">Execute as</span><span class=\"fv good\">Me</span><span class=\"fl\">Who has access ⚠️</span><span class=\"fv good\">✔ <strong>Anyone</strong></span><span class=\"fl\" style=\"color:#ff8a80;font-size:0.83em;\">Jangan pilih:</span><span class=\"fv bad\">Anyone with Google account</span></div><div class=\"callout warn\"><span class=\"ci\">⚠️</span><span>Harus <strong>\"Anyone\"</strong> (anonim) — bukan \"Anyone with Google account\".</span></div></div></div>
+                <div class=\"step\"><span class=\"step-letter\">D</span><div class=\"step-body\"><p>Klik <strong>Deploy</strong> → ikuti proses otorisasi Google → salin <strong>Web app URL</strong> yang dihasilkan.</p></div></div>
+                <div class=\"step\"><span class=\"step-letter\">E</span><div class=\"step-body\"><p>URL ini digunakan di <strong>dua tempat</strong>:</p><div style=\"display:flex;flex-direction:column;gap:8px;margin-top:6px;\"><div class=\"callout info\" style=\"margin:0;\"><span class=\"ci\">①</span><span>Di pengaturan MAL (Langkah 1C) — sebagai <strong>App Redirect URL</strong>.</span></div><div class=\"callout info\" style=\"margin:0;\"><span class=\"ci\">②</span><span>Di formulir sinkronisasi — klik <strong>⚙ Advanced</strong> lalu tempelkan ke kolom <code>GAS Web App URL</code>.</span></div></div></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+// GAS_CODE is injected from the parent page's JS variable via JSON.stringify
+var GAS_CODE = \${injectedGasCode};
+
+// Populate code block when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    var pre = document.getElementById('gas-code-pre');
+    if (pre) pre.textContent = GAS_CODE;
+});
+
+function copyText(elId, btn) {
+    var text = document.getElementById(elId).textContent.trim();
+    var orig = btn.textContent;
+    function onSuccess() { btn.textContent = '✅ Disalin!'; btn.classList.add('copied'); setTimeout(function(){ btn.textContent = orig; btn.classList.remove('copied'); }, 2200); }
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(onSuccess).catch(fallback); } else { fallback(); }
+    function fallback() { try { var ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); onSuccess(); } catch(e) { btn.textContent = '⚠ Salin manual'; setTimeout(function(){ btn.textContent = orig; }, 2500); } }
+}
+
+function copyGasCode(btn) {
+    var orig = btn.textContent;
+    function onSuccess() { btn.textContent = '✅ Disalin!'; setTimeout(function(){ btn.textContent = orig; }, 2200); }
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(GAS_CODE).then(onSuccess).catch(fallback); } else { fallback(); }
+    function fallback() { try { var ta = document.createElement('textarea'); ta.value = GAS_CODE; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); onSuccess(); } catch(e) { btn.textContent = '⚠ Salin manual'; setTimeout(function(){ btn.textContent = orig; }, 2500); } }
+}
+
+function downloadGas() {
+    try {
+        var blob = new Blob([GAS_CODE], { type: 'text/plain' });
+        var url  = URL.createObjectURL(blob);
+        var a    = document.createElement('a');
+        a.href = url; a.download = 'gas-proxy.gs';
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a);
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    } catch(e) {
+        alert('Download gagal — gunakan tombol Salin ke Clipboard lalu tempel ke editor teks.');
+    }
+}
+<\/script>
+
+    <script>
+    (function malBarInit(){
+        if(typeof MALSync==='undefined') return;
+
+        // ── Pre-fill saved values ─────────────────────────────────────
+        function ck(n){var m=document.cookie.match('(?:^|; )'+n+'=([^;]*)');return m?decodeURIComponent(m[1]):'';}
+        var cid=ck('mal_cid')||localStorage.getItem('cid')||'';
+        var gasUrl=ck('mal_gas')||localStorage.getItem('gas_url')||'';
+        var elCid=document.getElementById('mal-cid'),elGas=document.getElementById('mal-gas-url');
+        if(elCid&&cid) elCid.value=cid;
+        if(elGas&&gasUrl) elGas.value=gasUrl;
+        // Show Advanced only if GAS URL not set (first-time setup)
+        if(!gasUrl){var adv=document.getElementById('mal-adv-section');if(adv)adv.style.display='';}
+
+        // ── Toggle panel ──────────────────────────────────────────────
+        document.getElementById('mal-toggle-btn').addEventListener('click',function(){
+            var panel=document.getElementById('mal-panel');
+            var syncBtn=document.getElementById('mal-sync-btn');
+            var open=panel.style.display!=='none';
+            panel.style.display=open?'none':'';
+            if(!open&&syncBtn) syncBtn.style.display='none'; // hide sync btn while panel open
+        });
+
+        // ── Disconnect ────────────────────────────────────────────────
+        document.getElementById('mal-disconnect-btn').addEventListener('click',function(){
+            if(confirm('Putuskan koneksi MAL?')) MALSync.disconnect();
+        });
+
+        // ── Sync now button ───────────────────────────────────────────
+        var syncBtn=document.getElementById('mal-sync-btn');
+        if(syncBtn) syncBtn.addEventListener('click',function(){ MALSync.importFromMAL(); });
+
+        // ── Advanced toggle ───────────────────────────────────────────
+        document.getElementById('mal-adv-btn').addEventListener('click',function(){
+            var sec=document.getElementById('mal-adv-section');
+            sec.style.display=sec.style.display==='none'?'':'none';
+        });
+
+        // ── Auto mode: show/hide paste row ────────────────────────────
+        document.getElementById('mal-auto-cb').addEventListener('change',function(){
+            var pr=document.getElementById('mal-paste-row');
+            if(pr) pr.style.display='none';
+        });
+
+        // ── Connect button ────────────────────────────────────────────
+        document.getElementById('mal-connect-btn').addEventListener('click',function(){
+            MALSync.startAuth();
+        });
+
+        // ── Exchange button (display mode) ────────────────────────────
+        document.getElementById('mal-exchange-btn').addEventListener('click',function(){
+            var code=(document.getElementById('mal-auth-code')?.value||'').trim();
+            if(!code){MALSync.showToast('Tempel kode terlebih dahulu');return;}
+            MALSync.exchangeCode(code);
+        });
+
+        // ── Code copy / paste ─────────────────────────────────────────
+        document.getElementById('mal-copy-btn').addEventListener('click',function(){
+            var v=document.getElementById('mal-code-val').textContent;
+            navigator.clipboard.writeText(v).then(function(){MALSync.showToast('Disalin');});
+        });
+        document.getElementById('mal-paste-btn').addEventListener('click',function(){
+            var v=document.getElementById('mal-code-val').textContent;
+            var f=document.getElementById('mal-auth-code');
+            if(f){f.value=v;var pr=document.getElementById('mal-paste-row');if(pr)pr.style.display='flex';}
+        });
+
+        // ── Render status + show sync button when connected ───────────
+        MALSync.updateSyncStatus();
+        var connected=MALSync.isConnected();
+        if(connected){
+            var sb=document.getElementById('mal-sync-btn');
+            if(sb) sb.style.display='';
+            // Auto-import in background (silent)
+            MALSync.importFromMAL();
+        }
+    })();
+    </script>
+</body>
+</html>
