@@ -275,7 +275,7 @@ jobs:
       # replacing the broken channel-ID check in the old Python.
       - name: Phase 4 — Sort into filtered files via awk
         run: |
-          awk '
+          sudo awk '
             BEGIN { RS=""; ORS="\n\n" }
             {
               if (tolower($0) ~ /ani.?one indonesia/) {
