@@ -698,6 +698,19 @@
                 const malMap = isDub ? malMapDub : malMapSub;
                 if (!malMap.has(malId)) { malMap.set(malId, i); continue; }
                 const ci = malMap.get(malId);
+                // ── Episode conflict guard (same rule as Phase 4) ────────────
+                // When the resolver maps two different seasons to the same malId
+                // (e.g. all Iruma seasons share "Welcome to Demon School! Iruma-kun"
+                // as a synonym → all resolve to S1's malId), a blind merge here
+                // would silently overwrite earlier seasons with later ones during
+                // buildEntry dedup. Apply the same < 2 conflict threshold Phase 4
+                // uses: if the two buckets share ≥ 2 episode numbers they are
+                // different seasons of the same franchise, not the same show with
+                // a gap — keep them as separate entries.
+                const epSetPhase3 = new Set(buckets[ci].videos.map(v => v.episode));
+                let conflictsPhase3 = 0;
+                for (const v of buckets[i].videos) { if (epSetPhase3.has(v.episode)) conflictsPhase3++; }
+                if (conflictsPhase3 >= 2) continue;
                 buckets[i].displayNames.forEach(n => buckets[ci].displayNames.add(n));
                 buckets[ci].videos.push(...buckets[i].videos);
                 buckets.splice(i, 1);
