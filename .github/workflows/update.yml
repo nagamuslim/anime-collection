@@ -215,7 +215,7 @@ jobs:
             -e HTTPS_PROXY=socks5h://127.0.0.1:9050 \
             -e HTTP_PROXY=socks5h://127.0.0.1:9050 \
             media-scraper \
-            python scrape_uu_v3.py all_playlists.txt 2>&1 | tee scrape_log.txt
+            python scrape_uu_v3.py all_playlists.txt UCUn0hEbVJc273anl_0ozDMQ UCqyqBNOAlZgJ3dQoDSCbCjQ UCC-g5hWSvCbdB8HQQIA0_pg UC0wNSTMWIL3qaorLx0jie6A UCxxnxya_32jcKj4yN1_kD7A 2>&1 | tee scrape_log.txt
 
           # Merge Python's two output files → single raw file for Phase 3/4
           # (AniOne detection via channel-ID won't fire on playlist URLs,
