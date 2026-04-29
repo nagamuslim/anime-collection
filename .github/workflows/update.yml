@@ -215,7 +215,7 @@ jobs:
             -e HTTPS_PROXY=socks5h://127.0.0.1:9050 \
             -e HTTP_PROXY=socks5h://127.0.0.1:9050 \
             media-scraper \
-            python scrape_uu_v3.py all_playlists.txt UCUn0hEbVJc273anl_0ozDMQ UCqyqBNOAlZgJ3dQoDSCbCjQ UCC-g5hWSvCbdB8HQQIA0_pg UC0wNSTMWIL3qaorLx0jie6A UCxxnxya_32jcKj4yN1_kD7A 2>&1 | tee scrape_log.txt
+            python scrape_uu_v3.py UCUn0hEbVJc273anl_0ozDMQ UCqyqBNOAlZgJ3dQoDSCbCjQ UCC-g5hWSvCbdB8HQQIA0_pg UC0wNSTMWIL3qaorLx0jie6A UCxxnxya_32jcKj4yN1_kD7A all_playlists.txt 2>&1 | tee scrape_log.txt
 
           # Merge Python's two output files → single raw file for Phase 3/4
           # (AniOne detection via channel-ID won't fire on playlist URLs,
@@ -297,3 +297,570 @@ jobs:
           grep -E '^(Error scraping|No videos found for)' scrape_log.txt \
             | sed -E 's/^(Error scraping|No videos found for) (https[^ .]+).*/\1 → \2/' \
             || echo "No errors in log"
+            
+      # the scraped files. parseItsAnime handles the Title/URL/Chapters format.
+      - name: Phase 4a 
+        run: |
+          cat <<"PATCH" > patch_metadata.py
+                    #!/usr/bin/env python3
+          '''
+          patch_metadata.py  —  Verified MAL-ID injector for anime-collection metadata.json
+          
+          USAGE (pipe from GitHub):
+              curl -sL https://github.com/manami-project/anime-offline-database/releases/latest/download/anime-offline-database-minified.json \
+                | python3 patch_metadata.py
+          
+          USAGE (local offline DB):
+              python3 patch_metadata.py anime-offline-database-minified.json
+          
+          metadata.json must exist in the current directory (run metadata.js --phase1 first).
+          '''
+          
+          import json, sys, os
+          
+          # ── Load offline DB ───────────────────────────────────────────
+          if len(sys.argv) >= 2 and os.path.isfile(sys.argv[1]):
+              print(f'[INFO] Reading offline DB from file: {sys.argv[1]}')
+              with open(sys.argv[1], 'r', encoding='utf-8') as f:
+                  db = json.load(f)
+          else:
+              print('[INFO] Reading offline DB from stdin (Manami Project)...')
+              db = json.load(sys.stdin)
+          
+          data = db['data']
+          
+          # ── Build MAL ID lookup ───────────────────────────────────────
+          print('[INFO] Building MAL index...')
+          mal_lookup = {}
+          for anime in data:
+              mal_src = next((s for s in anime.get('sources', [])
+                              if 'myanimelist.net/anime/' in s), None)
+              if not mal_src:
+                  continue
+              mal_id = mal_src.split('anime/')[1].split('/')[0]
+              mal_lookup[mal_id] = {
+                  'malId':        mal_id,
+                  'matchedTitle': anime['title'],
+                  'tags':         anime.get('tags', []),
+                  'allTitles':    [anime['title']] + list(anime.get('synonyms', [])),
+                  'score':        anime.get('score', {}).get('arithmeticMean', None),
+              }
+          print(f'[INFO] DB loaded: {len(mal_lookup):,} MAL entries')
+          
+          # ── Load metadata.json ────────────────────────────────────────
+          META_FILE = 'metadata.json'
+          if not os.path.isfile(META_FILE):
+              print(f'[ERROR] {META_FILE} not found. Run: node metadata.js --phase1')
+              sys.exit(1)
+          
+          with open(META_FILE, 'r', encoding='utf-8') as f:
+              meta = json.load(f)
+          
+          PREFIX = 'meta_'
+          before_found = sum(1 for k, v in meta.items() if k.startswith(PREFIX) and not v.get('not_found'))
+          before_nf    = sum(1 for k, v in meta.items() if k.startswith(PREFIX) and v.get('not_found'))
+          print(f'[INFO] metadata.json before: {before_found} matched | {before_nf} not_found')
+          
+          # ── Helpers ───────────────────────────────────────────────────
+          patched = 0
+          warned  = 0
+          
+          def patch(anime_name, mal_id):
+              '''Inject a verified MAL record.'''
+              global patched, warned
+              key = PREFIX + anime_name
+              rec = mal_lookup.get(str(mal_id))
+              if rec:
+                  meta[key] = rec
+                  print(f'  [PATCH] {anime_name[:60]:<60} MAL:{mal_id:<6} {rec['matchedTitle'][:45]}')
+                  patched += 1
+              else:
+                  print(f'  [WARN]  MAL:{mal_id} not in offline DB — setting not_found for: {anime_name}')
+                  meta[key] = {'not_found': True}
+                  warned += 1
+          
+          def mark_not_found(anime_name):
+              '''Mark as genuinely absent from offline DB.'''
+              key = PREFIX + anime_name
+              if key not in meta or meta[key].get('not_found'):
+                  meta[key] = {'not_found': True}
+          
+          def remove_entry(anime_name):
+              '''Remove entries for content that shouldn't be indexed.'''
+              key = PREFIX + anime_name
+              if key in meta:
+                  del meta[key]
+                  print(f'  [DEL]   {anime_name}')
+          
+          # ─────────────────────────────────────────────────────────────
+          # STEP 1 — Remove invalid entries
+          # ─────────────────────────────────────────────────────────────
+          print('\n[STEP 1] Removing invalid entries...')
+          remove_entry('Cuplikan episode Classroom of the Elite S2')
+          remove_entry('Ani-One x Dr. STONE Science Class')
+          
+          # ─────────────────────────────────────────────────────────────
+          # STEP 2 — Patch verified MAL IDs
+          # All IDs triple-checked against the offline DB and YouTube transcripts.
+          # ─────────────────────────────────────────────────────────────
+          print('\n[STEP 2] Applying verified MAL ID patches...')
+          
+          # Replaced Claude's fake BTOOOM! match with the correct localized light novel adaptation
+          patch('Bermain Game Kematian untuk Sesuap Nasi.',                        59711) # Shibou Yuugi de Meshi o Kuu
+          patch('Pahlawan Sampah',                                                 61217) # Yuusha no Kuzu
+          
+          # The new ones identified by Gemini:
+          patch('Blood River',                                                     51727) # Anhe Zhuan / Tales of Dark River
+          patch('Dragon\'s Triumph in the Celestial Realm',                         63416) # Long Po Jiutian
+          patch('Pak Bos, Sudah Waktunya Bertempur',                               40776) # Shachou, Battle no Jikan Desu!
+          
+          # Indonesian titles - all verified against offline DB ──────────
+          patch('(Grimoire of Zero) Kitab Sihir yang Dimulai dari ZERO',           34176)
+          patch('Aku Adalah \"Behemoth\", Monster Rank-S, Tapi Malah Dikira Kucing', 58473)
+          patch('Aku Jadi Populer, Gimana Sih?',                                   32899)
+          patch('Alice dan Zouroku',                                                34350)
+          patch('Ancestors, Please Help Me Season 1',                               57877)
+          patch('Apotek di Dunia Lain',                                             49438)
+          patch('Budak Korps Elite Kota Sihir',                                     50392)
+          patch('Budak Korps Elite Kota Sihir - Musim Kedua',                       58505)
+          patch('Catatan Perjalanan Pengumpul Material di Dunia Lain',              61174)
+          patch('Catatan Perjalanan Pengumpul Material di Dunia Lain (Dub Indo)',   61174)
+          patch('Chinese Thriller',                                                 33339)
+          patch('Chronos Ruler All Episodes',                                       34565)
+          patch('Collapse Galaxy',                                                  33630)
+          patch('Ekskul Host SMA Ouran',                                              853)
+          patch('Ekskul Seni ini Bermasalah',                                       31952)
+          patch('Extra of Yuanchu Mountain: The Demon Saint Awakens',               55655)
+          patch('Gacha Tak Hingga',                                                 60303)
+          patch('Gen AI',                                                           53787)
+          patch('Hang-in There Douki-chan',                                         49605)
+          patch('Kehidupan ke-7 Nona Antagonis',                                    56352)
+          patch('Ketemuan, Gelut 5 Detik Kemudian',                                 43814)
+          patch('Koleksi Ito Junji',                                                36124)
+          patch('Life and Death Replay',                                            47231)
+          patch('Masalah Kecil Sang Putri Sihir',                                   57353)
+          patch('Nailoong VS Bombloong',                                            60822)
+          patch('Pahlawan Pingsan dan Putri Pembunuh',                              60951)
+          patch('Pahlawan Telah Tiada!',                                            51706)
+          patch('Para Penghuni Bawah Tanah',                                        56348)
+          patch('Penguasa Misteri',                                                 49818)
+          patch('Penjinak Binatang yang Bertemu Gadis Bertelinga Hewan',            52046)
+          patch('Pertahanan Wilayah Seru oleh Tuan Tanah Santai',                   61549)
+          patch('Protokol Berwarna Hujan Kita',                                     55894)
+          patch('Rokudo dan Wanita Berandalan',                                     54259)
+          patch('Sahabat Manaria',                                                  31537)
+          patch('Sayap Tempur Gabungan 502 Brave Witches',                          32866)
+          patch('Senko si Rubah Penolong',                                          38759)
+          patch('Soul Buster Episode',                                              33775)
+          patch('Statusku Sebagai Asasin Jauh Lebih Kuat Dari Milik Pahlawan',     61026)
+          patch('Statusku Sebagai Asasin Jauh Lebih Kuat Dari Milik Pahlawan (Dub Indo)', 61026)
+          patch('Teater Kegelapan S9',                                              49110)
+          patch('Teater Kegelapan S10',                                             50599)
+          patch('Telepati Debu Bintang',                                            53262)
+          patch('The Ace Censor',                                                   29087)
+          patch('The Blood of Youth',                                               38918)
+          patch('The Immortal Ascension',                                           41219)
+          patch('The Relentless Quest',                                             50581)
+          patch('Ubur-ubur Tak Bisa Berenang di Malam Hari',                        54839)
+          patch('Waelth and Wonder',                                                61609)
+          patch('联盒圀',                                                             52909)
+          patch('魔動王',                                                             2818)
+          
+          # ─────────────────────────────────────────────────────────────
+          # STEP 3 — Mark genuinely absent entries (not in Manami DB)
+          # These 11 are Motion Comics (Vomics) or POPS Movingtoons 
+          # which are universally banned/rejected by MyAnimeList rules.
+          # ─────────────────────────────────────────────────────────────
+          print('\n[STEP 3] Flagging Motion Comics/Vomics as legitimately not_found...')
+          
+          MISSING_NO_MAL = [
+              'Bad Luck',
+              'Cast Out by My Family, I Awakened 900 Million Stat Points',
+              'Cross Dimension Big Show',
+              'Fantasy Dancer',
+              'My Brother is A T-Rex',
+              'Rise of the Saint King',
+              'Survival Diary of a Villainess 2',
+              'The Flower of Dynasties',
+              'The System Forces Me to Be a Villain',
+              'Yama Reborn: Master of Fate',
+              '团内禁止恋爱',
+          ]
+          
+          for name in MISSING_NO_MAL:
+              mark_not_found(name)
+              print(f'  [FLAG]  {name} marked as not_found (Motion Comic/No MAL ID)')
+          
+          # ── Save ──────────────────────────────────────────────────────
+          with open(META_FILE, 'w', encoding='utf-8') as f:
+              json.dump(meta, f, indent=2, ensure_ascii=False)
+          
+          after_found = sum(1 for k, v in meta.items() if k.startswith(PREFIX) and not v.get('not_found'))
+          after_nf    = sum(1 for k, v in meta.items() if k.startswith(PREFIX) and v.get('not_found'))
+          total       = after_found + after_nf
+          gained      = after_found - before_found
+          
+          print(f'''
+          [SUCCESS] metadata.json patched and saved.
+            Before : {before_found} matched | {before_nf} not_found
+            After  : {after_found} matched | {after_nf} not_found | total {total}
+            Gained : +{gained} new verified entries
+          ''')
+          PATCH
+    
+      - name: Phase 4b — Inject static It's Anime marathon files
+        run: |
+          # ── Jade Dynasty: 78-episode marathon ────────────────────────────
+          cat <<'JADE' > filtered_static_jade.txt
+          Title: Jade Dynasty - Episode 01-78 [It's Anime]
+          URL: https://www.youtube.com/watch?v=dOzZCedkiMI
+          Chapters:
+          - 00:00:00 Episode 1
+          - 00:14:32 Episode 2
+          - 00:29:27 Episode 3
+          - 00:41:12 Episode 4
+          - 00:55:38 Episode 5
+          - 01:10:22 Episode 6
+          - 01:23:31 Episode 7
+          - 01:38:00 Episode 8
+          - 01:53:24 Episode 9
+          - 02:08:14 Episode 10
+          - 02:22:32 Episode 11
+          - 02:36:33 Episode 12
+          - 02:50:42 Episode 13
+          - 03:06:02 Episode 14
+          - 03:22:08 Episode 15
+          - 03:35:02 Episode 16
+          - 03:50:40 Episode 17
+          - 04:04:45 Episode 18
+          - 04:19:09 Episode 19
+          - 04:33:58 Episode 20
+          - 04:48:55 Episode 21
+          - 05:04:07 Episode 22
+          - 05:20:12 Episode 23
+          - 05:35:45 Episode 24
+          - 05:52:32 Episode 25
+          - 06:08:58 Episode 26
+          - 06:32:34 Episode 27
+          - 06:48:10 Episode 28
+          - 07:03:05 Episode 29
+          - 07:17:52 Episode 30
+          - 07:33:43 Episode 31
+          - 07:48:08 Episode 32
+          - 08:02:51 Episode 33
+          - 08:17:52 Episode 34
+          - 08:32:58 Episode 35
+          - 08:47:31 Episode 36
+          - 09:02:29 Episode 37
+          - 09:17:53 Episode 38
+          - 09:32:26 Episode 39
+          - 09:47:01 Episode 40
+          - 10:01:57 Episode 41
+          - 10:16:49 Episode 42
+          - 10:31:54 Episode 43
+          - 10:46:59 Episode 44
+          - 11:02:04 Episode 45
+          - 11:17:10 Episode 46
+          - 11:32:24 Episode 47
+          - 11:47:05 Episode 48
+          - 12:01:59 Episode 49
+          - 12:18:27 Episode 50
+          - 12:34:38 Episode 51
+          - 12:49:49 Episode 52
+          - 13:05:44 Episode 53
+          - 13:22:05 Episode 54
+          - 13:38:13 Episode 55
+          - 13:53:57 Episode 56
+          - 14:11:10 Episode 57
+          - 14:25:26 Episode 58
+          - 14:41:39 Episode 59
+          - 14:58:12 Episode 60
+          - 15:12:08 Episode 61
+          - 15:27:32 Episode 62
+          - 15:41:58 Episode 63
+          - 15:57:04 Episode 64
+          - 16:12:27 Episode 65
+          - 16:27:04 Episode 66
+          - 16:42:49 Episode 67
+          - 16:57:57 Episode 68
+          - 17:13:21 Episode 69
+          - 17:28:38 Episode 70
+          - 17:42:47 Episode 71
+          - 17:56:47 Episode 72
+          - 18:10:41 Episode 73
+          - 18:26:07 Episode 74
+          - 18:42:22 Episode 75
+          - 18:57:33 Episode 76
+          - 19:11:54 Episode 77
+          - 19:26:02 Episode 78
+          --------------------------------------------------------------------------------
+          JADE
+ 
+          # ── It's Anime combined: 9 complete series ────────────────────────
+          # Single-quoted ITSANIME delimiter: apostrophes in titles (It's, I'm,
+          # This isn't) and ! are safe — no shell expansion inside <<'...'
+          cat <<'ITSANIME' > filtered_static_itsanime.txt
+          Title: Tonbo! - Episode 01-26 [It's Anime]
+          URL: https://www.youtube.com/watch?v=m1-bYpL5Cic
+          Chapters:
+          - 00:00:00 Episode 01: Tonbo and the 3-iron
+          - 00:24:13 Episode 02: The secret of the 3-iron!
+          - 00:48:26 Episode 03: Wedges and regrets
+          - 01:12:39 Episode 04: Sashimi Shot
+          - 01:36:52 Episode 05: This isn't real golf!
+          - 02:01:06 Episode 06: The Okinawan Rival!
+          - 02:25:19 Episode 07: The Great Monotony
+          - 02:49:32 Episode 08: The Phantom Hall
+          - 03:13:45 Episode 09: Off to Akureki!
+          - 03:37:58 Episode 10: Criteria for a Famous Golf Hole
+          - 04:02:11 Episode 11: A Line Without an Answer
+          - 04:26:24 Episode 12: Straightforward Feelings
+          - 04:50:37 Episode 13: I'm off!
+          - 05:14:51 Episode 14: I love this island, and I love golf too!
+          - 05:39:03 Episode 15: Tonbo Makes Her Course Debut!
+          - 06:03:11 Episode 16: Igaiga's Parting Gift
+          - 06:30:25 Episode 17: It Begins! The Kyushu Women's Championship!
+          - 06:51:42 Episode 18: Career Average Stroke!
+          - 07:18:39 Episode 19: My Rival is the Title Holder!
+          - 07:40:09 Episode 20: Jack-in-the-box Golf
+          - 08:06:30 Episode 21: The Tossing and Turning Winds
+          - 08:28:35 Episode 22: Hinoki's Troubles
+          - 08:52:48 Episode 23: First Time Under Pressure
+          - 09:17:01 Episode 24: Tonbo, Hole Out
+          - 09:41:14 Episode 25: Winner and Courage
+          - 10:05:27 Episode 26: Tonbo's Challenge: Heroines of Kyushu
+          --------------------------------------------------------------------------------
+          Title: KAWAGOE BOYS SING -Now or Never- - Episode 01-12 [It's Anime]
+          URL: https://www.youtube.com/watch?v=HLeZSylrepo
+          Chapters:
+          - 00:00:00 Episode 01：On the Set
+          - 00:23:40 Episode 02：Towards a bright tomorrow
+          - 00:47:20 Episode 03：Admiring Andalusia
+          - 01:11:00 Episode 04：Comparing heights
+          - 01:34:40 Episode 05：LA LA LA
+          - 01:58:20 Episode 06：Summer Blessing
+          - 02:22:00 Episode 07：Pinecone
+          - 02:45:40 Episode 08：Gettaway
+          - 03:09:20 Episode 09：One Day, I'm Sorry
+          - 03:33:00 Episode 10：Countryside
+          - 03:56:40 Episode 11：Unknown Colors
+          - 04:20:55 Episode 12 : Now or Never
+          --------------------------------------------------------------------------------
+          Title: The Demon Sword Master of Excalibur Academy - Episode 01-12 [It's Anime]
+          URL: https://www.youtube.com/watch?v=wLZMvbvlfPQ
+          Chapters:
+          - 00:00:00 Episode 01: • Revival of the Dark Lord
+          - 00:23:48 Episode 02: • Imposted destiny
+          - 00:47:37 Episode 03: • Awakening Souls
+          - 01:11:25 Episode 04: • Inciting deep grudges
+          - 01:35:14 Episode 05: • A Great Uproar
+          - 01:59:02 Episode 06: • The Dark Lord's Resolve
+          - 02:22:51 Episode 07: • The Princess' Hidden Feelings
+          - 02:46:40 Episode 08: • Unbreakable Bond
+          - 03:10:28 Episode 09: • The Ruined Capital
+          - 03:34:17 Episode 10: • The Elven Hero
+          - 03:58:05 Episode 11: • The Godess' Voice
+          - 04:22:05 Episode 12: • The Truth of the Demon Sword
+          --------------------------------------------------------------------------------
+          Title: I'm Giving the Disgraced Noble Lady I Rescued a Crash Course in Naughtiness - Episode 01-12 [It's Anime]
+          URL: https://www.youtube.com/watch?v=HrJcGXs8PZA
+          Chapters:
+          - 00:00:00 Episode 01: • A Naughty Meeting
+          - 00:23:40 Episode 02: • A Naughty Stress Reliever
+          - 00:47:20 Episode 03: • A Naughty Showdown
+          - 01:11:00 Episode 04: • A Naughty Outing
+          - 01:34:40 Episode 05: • A Naughty Trip to the Hot Spring
+          - 01:58:20 Episode 06: • A Naughty Zoo
+          - 02:22:00 Episode 07: • A Naughty Master
+          - 02:45:40 Episode 08: • A Naughty Act
+          - 03:09:20 Episode 09: • A Naughty Visit
+          - 03:33:00 Episode 10: • A Naughty Reunion
+          - 03:56:40 Episode 11: • A Naughty Dungeon
+          - 04:20:20 Episode 12: • Naughty=Happiness
+          --------------------------------------------------------------------------------
+          Title: My Daughter Left the Nest and Returned an S-Rank Adventurer - Episode 01-13 [It's Anime]
+          URL: https://www.youtube.com/watch?v=5E40bfmwtlo
+          Chapters:
+          - 00:00:00 Episode 01: • Far Away From Tornella
+          - 00:23:40 Episode 02: • A Visit From a Noble Bloodline
+          - 00:47:20 Episode 03: • Homecoming of Angeline
+          - 01:11:00 Episode 04: • Calm daily life of Tornella
+          - 01:34:40 Episode 05: • Bordeaux Incident -Prologue
+          - 01:58:20 Episode 06: • Bordeaux Incident -Act 2
+          - 02:22:00 Episode 07: • Bordeaux Incident -Final Act
+          - 02:45:40 Episode 08: • Encounter with an elf
+          - 03:09:20 Episode 09: • Enigmatic Child
+          - 03:33:00 Episode 10: • Solomon In Motion
+          - 03:56:40 Episode 11: • Chaser Of The Past
+          - 04:20:20 Episode 12: • Angeline Becoming A Princess
+          - 04:44:00 Episode 13: • I'm Home, Dad
+          --------------------------------------------------------------------------------
+          Title: My Deer Friend Nokotan - Episode 01-12 [It's Anime]
+          URL: https://www.youtube.com/watch?v=vJMhT9bZlMU
+          Chapters:
+          - 00:00:00 Episode 01: – Girl Meets Deer
+          - 00:23:35 Episode 02: – Deer Meets Darkness Girl
+          - 00:47:10 Episode 03: – The New Student: Bashame
+          - 01:10:46 Episode 04: – The Deer Club in the Crosshairs
+          - 01:34:20 Episode 05: – Grab Her Weakness!!
+          - 01:57:55 Episode 06: – The Summer Deer Festival
+          - 02:21:30 Episode 07: – Deer Coll, Streaming, Hospitality, etc
+          - 02:45:05 Episode 08: – Goodbye, Old Deer! Hello, New Deer!
+          - 03:08:40 Episode 09: – Get the Sports Festival Done!
+          - 03:32:15 Episode 10: – Blame it on the Spring
+          - 03:55:50 Episode 11: – The Pursuer and the Pursued.
+          - 04:18:35 Episode 12: – Farewell Nokotan!? Long Live the Deer Club!
+          --------------------------------------------------------------------------------
+          Title: The Vexations of a Shut-In Vampire Princess - Episode 01-12 [It's Anime]
+          URL: https://www.youtube.com/watch?v=UIFH4o1lSxM
+          Chapters:
+          - 00:00:00 Episode 01: • The Shut-In Vampire, out and about
+          - 00:23:40 Episode 02: • Rebellion
+          - 00:48:50 Episode 03: • A Shut-In Vampire Princess' Darkness
+          - 01:12:50 Episode 04: • Crimson resentment
+          - 01:36:50 Episode 05: • Sakuna Memoir and the Red Crimson Skies
+          - 02:00:50 Episode 06: • Round Table Gathering of Villains
+          - 02:24:50 Episode 07: • Scarlet Stage
+          - 02:48:50 Episode 08: • Rotating Asterism
+          - 03:12:50 Episode 09: • A Sapphire Tea Party
+          - 03:36:50 Episode 10: • The Princess of Alka Nation
+          - 04:00:50 Episode 11: • The Paradise of Shattered Dreams
+          - 04:24:50 Episode 12: • The Golden World
+          --------------------------------------------------------------------------------
+          Title: TASOKARE HOTEL - Episode 01-12 [It's Anime]
+          URL: https://www.youtube.com/watch?v=W-_xvukufCI
+          Chapters:
+          - 00:00:00 Episode 01: • Twilight Girl
+          - 00:23:40 Episode 02: • The Bet of a Lifetime
+          - 00:47:20 Episode 03: • The Blood-Soaked Pansy
+          - 01:11:00 Episode 04: • Friendship and Responsibility
+          - 01:34:40 Episode 05: • The Seaside Ash-covered Princess
+          - 01:57:35 Episode 06: • Space and Music
+          - 02:22:00 Episode 07: • A Carousel and Brass Knuckles
+          - 02:45:40 Episode 08: • The Idol Girl
+          - 03:09:20 Episode 09: • A Girl's True Face
+          - 03:33:00 Episode 10: • The Hidden Room
+          - 03:56:40 Episode 11: • Handguns and Hell
+          - 04:20:20 Episode 12: • Revenge
+          --------------------------------------------------------------------------------
+          Title: B-PROJECT Passion*Love Call - Episode 01-12 [It's Anime]
+          URL: https://www.youtube.com/watch?v=M9DdVFgZKqE
+          Chapters:
+          - 00:00:00 Episode 01: BIG WAVE
+          - 00:23:41 Episode 02: POSE A PROBLEM
+          - 00:47:23 Episode 03: MESS UP
+          - 01:11:04 Episode 04: ONESELF
+          - 01:34:46 Episode 05: CHEMICAL CHANGE
+          - 01:58:29 Episode 06: THE GOAL
+          - 02:22:13 Episode 07: EACH OTHER
+          - 02:45:56 Episode 08: FELLOWSHIP
+          - 03:09:41 Episode 09: CONFLICT
+          - 03:33:26 Episode 10: HARMONIOUSNESS
+          - 03:57:11 Episode 11: LACK SOMETHING
+          - 04:20:56 Episode 12: LOVE CALL
+          --------------------------------------------------------------------------------
+          ITSANIME
+ 
+          echo "=== Static files injected ==="
+          echo "filtered_static_jade.txt   : $(grep -c '^https' filtered_static_jade.txt) URLs (78 Jade Dynasty eps)"
+          echo "filtered_static_itsanime.txt: $(grep -c '^https' filtered_static_itsanime.txt) URLs (9 It's Anime series)"
+ 
+      # ── Phase 5: Download offline DB once, shared by update_data.js,
+      # metadata.js --phase1, and patch_metadata.py so we only fetch ~60MB once.
+      # update_data.js checks for anime-offline-database-minified.json in
+      # __dirname before falling back to GitHub download.
+      - name: Phase 5 — Download offline DB (shared)
+        run: |
+          echo "Downloading anime-offline-database-minified.json..."
+          curl -L --retry 3 --progress-bar \
+            "https://github.com/manami-project/anime-offline-database/releases/latest/download/anime-offline-database-minified.json" \
+            -o anime-offline-database-minified.json
+          echo "DB downloaded: $(du -sh anime-offline-database-minified.json | cut -f1)"
+ 
+      # ── Phase 5b: update_data.js reads ALL filtered*.txt in its directory
+      # (which is $GITHUB_WORKSPACE after checkout). That includes:
+      #   filtered_channel_anioneid.txt   (Phase 4)
+      #   filtered_combined_all.txt       (Phase 4)
+      #   filtered_static_jade.txt        (Phase 4b)
+      #   filtered_static_itsanime.txt    (Phase 4b)
+      # It merges with the existing anime_data.json from the checkout,
+      # then auto-loads metadata.js as MAL resolver (uses local offline DB).
+      - name: Phase 5b — Build anime_data.json via update_data.js
+        run: |
+          node update_data.js
+          echo "=== anime_data.json results ==="
+          node -e "
+            const d = JSON.parse(require('fs').readFileSync('anime_data.json','utf8'));
+            const eps = d.anime_list.reduce((s, a) => s + a.episode_count, 0);
+            console.log('Series  :', d.total_series);
+            console.log('Episodes:', eps);
+            console.log('Updated :', d.last_updated);
+          "
+ 
+      # ── Phase 5c: jq is pre-installed on ubuntu-latest (jq 1.7+).
+      # Patches is_donghua for series the parsers can't auto-detect:
+      #   - Jade Dynasty: from It's Anime channel (no is_donghua flag in parseItsAnime)
+      #   - Penguasa Misteri: confirmed Chinese animation
+      # Add more | contains("...") clauses here as needed.
+      - name: Phase 5c — Fix is_donghua flags via jq
+        run: |
+          jq '.anime_list |= map(
+            if (.name | (contains("Jade Dynasty") or contains("Penguasa Misteri")))
+            then .is_donghua = true
+            else .
+            end
+          )' anime_data.json > anime_data.json.tmp && mv anime_data.json.tmp anime_data.json
+          echo "is_donghua patch applied"
+          node -e "
+            const d = JSON.parse(require('fs').readFileSync('anime_data.json','utf8'));
+            const donghua = d.anime_list.filter(a => a.is_donghua).map(a => a.name);
+            console.log('Donghua titles (' + donghua.length + '):', donghua.slice(0, 10).join(', ') + (donghua.length > 10 ? '...' : ''));
+          "
+ 
+      # ── Phase 5d: metadata.js --phase1 reads anime_data.json (from Phase 5b)
+      # and anime-offline-database-minified.json (from Phase 5). Writes
+      # metadata.json with { malId, tags, allTitles, score } per anime.
+      # Python 3.x and Node.js are both pre-installed on ubuntu-latest.
+      - name: Phase 5d — Build metadata.json via metadata.js --phase1
+        run: |
+          node metadata.js --phase1
+          echo "=== metadata.json results ==="
+          node -e "
+            const m = JSON.parse(require('fs').readFileSync('metadata.json','utf8'));
+            const keys  = Object.keys(m).filter(k => k.startsWith('meta_'));
+            const found = keys.filter(k => !m[k].not_found).length;
+            const nf    = keys.filter(k =>  m[k].not_found).length;
+            console.log('Matched   :', found);
+            console.log('Not found :', nf);
+            console.log('Total     :', keys.length);
+            console.log('Accuracy  :', (found / keys.length * 100).toFixed(1) + '%');
+          "
+ 
+      # ── Phase 5e: patch_metadata.py must be committed to the repo.
+      # It reads anime-offline-database-minified.json as its first argument
+      # (avoids a second 60MB download) and patches metadata.json in-place
+      # with manually verified MAL IDs that metadata.js --phase1 missed.
+      - name: Phase 5e — Patch metadata.json with verified MAL IDs
+        run: |
+          cat anime-offline-database-minified.json | python3 patch_metadata.py && sudo ls 
+ 
+      # ── Artifacts: upload all useful outputs for manual download.
+      # retention-days: 5 keeps storage usage low (GH default is 90 days).
+      # if: always() ensures files upload even when a prior step fails,
+      # so you always have the scrape logs for debugging.
+      # upload-artifact@v4 silently skips any paths that don't exist
+      # (e.g. metadata.json won't exist if Phase 5d fails).
+      - name: Upload Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scrape-results-${{ github.run_number }}
+          retention-days: 5
+          path: |
+            filtered_channel_anioneid.txt
+            filtered_combined_all.txt
+            failed_playlists.txt
+            scrape_log.txt
+            anime_data.json
+            metadata.json
+ 
