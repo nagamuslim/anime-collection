@@ -6,6 +6,8 @@ on:
 jobs:
   scrape-and-sync:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write     
     steps:
       - name: Checkout Main Repo
         uses: actions/checkout@v4
@@ -843,7 +845,22 @@ jobs:
       - name: Phase 5e — Patch metadata.json with verified MAL IDs
         run: |
           cat anime-offline-database-minified.json | python3 patch_metadata.py && sudo ls 
-          jq -r '.anime_list[].name' anime_data.json > series.txt || true
+          jq -r '.anime_list[].name' anime_data.json | tee series.txt || true
+          echo '=========='
+          jq -r 'to_entries[] | select(.value.not_found == true) | .key | ltrimstr("meta_")' metadata.json | tee lost.txt || true
+
+
+      - name: Commit and Push Results      # ← NEW STEP
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add anime_data.json metadata.json
+          if git diff --cached --quiet; then
+            echo "No changes — skipping commit."
+          else
+            git commit -m "Auto-update: anime_data.json + metadata.json [skip ci]"
+            git push origin main
+          fi
  
       # ── Artifacts: upload all useful outputs for manual download.
       # retention-days: 5 keeps storage usage low (GH default is 90 days).
@@ -862,6 +879,7 @@ jobs:
             filtered_combined_all.txt
             failed_playlists.txt
             series.txt
+            lost.txt
             scrape_log.txt
             anime_data.json
             metadata.json
