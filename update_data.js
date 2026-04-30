@@ -145,6 +145,10 @@
         if (/^FULL EPISODE/i.test(t)) return null;
         if (/Highlight/i.test(t)) return null;
         if (/Science Class/i.test(t)) return null;
+        if (/Making.?of/i.test(t)) return null;
+        if (/Lyric\s*Video/i.test(t)) return null;
+        if (/精華重溫|精彩重溫/i.test(t)) return null;
+        if (/#Shorts/i.test(t)) return null;
 
         let animeName, episode;
 
