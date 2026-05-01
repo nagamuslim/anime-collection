@@ -3,9 +3,200 @@
     else root.AnimeUpdater = factory();
 }(typeof globalThis !== 'undefined' ? globalThis : this, function() {
 
+    // ── Runtime Configuration System ─────────────────────────────────────────────
+    // Browser: localStorage key 'anime_updater_config' (JSON string)
+    // Node:    ./anime_updater_config.json next to update_data.js
+    //
+    // Nothing set = zero effect, behavior identical to original.
+
+    let _config = {};
+
+    (function _loadConfig() {
+        let raw = null;
+        if (typeof localStorage !== 'undefined') {
+            try { raw = localStorage.getItem('anime_updater_config'); } catch(e) {}
+        } else if (typeof require !== 'undefined') {
+            try {
+                const fs   = require('fs');
+                const path = require('path');
+                const DIR  = (typeof __dirname !== 'undefined' && __dirname)
+                    ? __dirname : process.cwd();
+                const p = path.join(DIR, 'anime_updater_config.json');
+                if (fs.existsSync(p)) raw = fs.readFileSync(p, 'utf8');
+            } catch(e) {}
+        }
+        if (!raw) return;
+        try {
+            _config = JSON.parse(raw);
+            console.log('[AnimeUpdater] Config loaded.');
+        } catch(e) {
+            console.warn('[AnimeUpdater] Config parse failed, using defaults:', e.message);
+            _config = {};
+        }
+    }());
+
+    // ── _toRegex ──────────────────────────────────────────────────────────────────
+    // Converts stored config value into a usable RegExp.
+    //
+    // Input can be:
+    //   "somestring"              → /somestring/i     (default: always i)
+    //   { pattern, flags }        → new RegExp(pattern, flags)  (explicit control)
+    //   { pattern }               → /pattern/i        (flags optional, defaults i)
+    //
+    // Plain string default = i flag. This matches how every built-in filter works.
+    // Only use object form if you specifically need case-sensitive or other flags.
+    function _toRegex(p) {
+        if (p instanceof RegExp) return p;
+        if (typeof p === 'string' && p.length > 0)
+            return new RegExp(p, 'i');
+        if (p && typeof p === 'object' && typeof p.pattern === 'string')
+            return new RegExp(p.pattern, p.flags !== undefined ? p.flags : 'i');
+        return null;
+    }
+
+    // ── _buildFilter ──────────────────────────────────────────────────────────────
+    // Builds a test function for a named parser's drop filter.
+    //
+    // overwrite set → use ONLY the overwrite pattern (replaces builtinRegex)
+    // add set       → use builtinRegex PLUS add patterns
+    // neither set   → use ONLY builtinRegex (original behavior, zero change)
+    //
+    // "add" always stacks on top regardless of whether overwrite or builtin is used.
+    // This means:
+    //   overwrite + add → overwrite pattern + add patterns (builtin skipped)
+    //   builtin  + add → builtin pattern + add patterns
+    function _buildFilter(parserName, builtinRegex) {
+        const cfg = ((_config.parserDropFilters || {})[parserName]) || {};
+        const patterns = [];
+
+        if (cfg.overwrite != null) {
+            // overwrite replaces the builtin
+            const r = _toRegex(cfg.overwrite);
+            if (r) patterns.push(r);
+        } else {
+            // no overwrite → use original built-in
+            patterns.push(builtinRegex);
+        }
+
+        // add always appends regardless of overwrite/builtin choice
+        if (Array.isArray(cfg.add)) {
+            cfg.add.forEach(p => {
+                const r = _toRegex(p);
+                if (r) patterns.push(r);
+            });
+        }
+
+        return (t) => patterns.some(p => p.test(t));
+    }
+
+    // ── Build global filter ───────────────────────────────────────────────────────
+    // Same overwrite/add logic, but for the global filter.
+    // Built once at module load time, used in parseContent.
+    const _globalFilter = (function() {
+        const cfg = _config.globalFilter || {};
+        const patterns = [];
+
+        if (cfg.overwrite != null) {
+            const r = _toRegex(cfg.overwrite);
+            if (r) patterns.push(r);
+        } else {
+            // Original built-in global filter — unchanged
+            patterns.push(/(en\s*dub|en-dub|\bpv\b|ULTRA】|members?\s*only)/i);
+        }
+
+        if (Array.isArray(cfg.add)) {
+            cfg.add.forEach(p => {
+                const r = _toRegex(p);
+                if (r) patterns.push(r);
+            });
+        }
+
+        return (title) => patterns.some(p => p.test(title));
+    }());
+
+    // ── Build per-parser filters ──────────────────────────────────────────────────
+    // Each parser's built-in drop regex is registered here alongside its name.
+    // If config has nothing for that parser, the built-in is used unchanged.
+    // Built once at module load — parsers reference these by name when called.
+    const _pf = {
+        aniOneId:   _buildFilter('aniOneId',   /^FULL EPISODE|Science Class/i),
+        aniOneAsia: _buildFilter('aniOneAsia', /^FULL EPISODE|Highlight|Science Class|Making.?of|Lyric\s*Video|精華重溫|精彩重溫|#Shorts/i),
+        aniMiAsia:  _buildFilter('aniMiAsia',  /PV|Highlight|Special Screening|FULL EPISODE/i),
+        takarir:    _buildFilter('takarir',    /Semua Episode|\(Live-Action\)|PUI PUI MOLCAR|Cuplikan/i),
+        itsAnime:   _buildFilter('itsAnime',   /(?!)/), // no built-in drop — regex that matches nothing
+        tropics:    _buildFilter('tropics',    /Members Only|english\s*sub|en\s*sub|en-sub/i),
+        youku:      _buildFilter('youku',      /Highlight|精彩片段|精彩看点|Trailer|Tralier|预告|^精华版|OP|ED|Opening|Ending|全漫同庆|合集|全集|EP\d+[-–]\d+|\d+[-–]\d+集|VIETDUB|JPN\s*DUB|Members?|会员/i),
+        yuewen:     _buildFilter('yuewen',     /Trailer|TRAILER|Highlight|HIGHLIGHT|\bClip\b|\bCLIP\b|Versi Lengkap|Versi Full|Versi Lengkep|\bFULL\b|EP\s?\d+\s?[-–]\s?\d+/i),
+        conan:      _buildFilter('conan',      /COMBINED EPISODE|UNCUT VERSION|SPESIAL EPISODE|\[FULL EPISODE\]|Trailer|TRAILER|Teaser|TEASER|BEST SCENE|TOP SCENE|TOP MOMENT|BEST CUT|HIGHLIGHT|Horror Animation|Animasi Horor|SEGERA TAYANG|Sunday Morning|SMA TALKS|OFFICIAL/i),
+        dub:        _buildFilter('dub',        /(?!)/), // no built-in drop for dub parser
+    };
+
+    // ── _runCustomParser ──────────────────────────────────────────────────────────
+    // Executes a custom parser defined entirely in config.
+    // Config shape for one custom parser:
+    //   {
+    //     name:           string   ← identifier, used for its drop filter key
+    //     channelMatch:   string   ← pattern that triggers this parser in dispatcher
+    //     dropFilter:     { overwrite, add }  ← same overwrite/add system
+    //     namePattern:    string   ← regex, capture group 1 = anime name
+    //     episodePattern: string   ← regex, capture group 1 = episode number
+    //     isDonghua:      bool
+    //     isMarathon:     bool
+    //   }
+    //
+    // The channel parser functions in built-in parsers handle complex extraction.
+    // Custom parsers via config handle the common case:
+    //   extract name from group 1, extract episode from group 1 of second pattern.
+    // For anything more complex, add a real parser function to the source.
+    function _runCustomParser(cfg, t, url, block) {
+        // Build this custom parser's drop filter on first call, cache it
+        if (!_pf['__custom_' + cfg.name]) {
+            _pf['__custom_' + cfg.name] = _buildFilter('__custom_' + cfg.name, /(?!)/);
+        }
+
+        // Register drop filter under its config key so _buildFilter finds it
+        // We need to re-check: parserDropFilters['__custom_myChannel'] in _config
+        if (_pf['__custom_' + cfg.name](t)) return null;
+
+        if (!cfg.namePattern || !cfg.episodePattern) return null;
+
+        const nameM = t.match(new RegExp(cfg.namePattern, 'i'));
+        if (!nameM || !nameM[1]) return null;
+        const animeName = cleanTitle(nameM[1]);
+
+        const epM = t.match(new RegExp(cfg.episodePattern, 'i'));
+        if (!epM || !epM[1]) return null;
+        const episode = parseInt(epM[1], 10);
+        if (isNaN(episode)) return null;
+
+        const video_id = extractVideoId(url);
+        if (!video_id) return null;
+
+        return [{
+            animeName,
+            episode,
+            title:      t,
+            url,
+            video_id,
+            is_donghua: !!cfg.isDonghua,
+            is_marathon: !!cfg.isMarathon
+        }];
+    }
+
     const LS_KEY = 'anime_data';
 
     // ── Helper Utilities ──────────────────────────────────────────────────────
+
+    const normalizeUrl = (url) => {
+        // youtu.be/ID → full watch URL
+        const short = (url || '').match(/^https?:\/\/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+        if (short) url = 'https://www.youtube.com/watch?v=' + short[1];
+        // Strip share-tracking (?si= or &si=) and playlist context (?list= or &list=)
+        url = url.replace(/[?&]si=[^&]*/g, '').replace(/[?&]list=[^&]*/g, '');
+        // Clean up artifacts: doubled ?, trailing &, ?& sequences
+        url = url.replace(/\?&/, '?').replace(/&&+/g, '&').replace(/[?&]$/, '');
+        return url;
+    };
 
     const extractVideoId = (url) => {
         const m = (url || '').match(/[?&]v=([a-zA-Z0-9_-]+)/);
@@ -64,7 +255,7 @@
                     rawBlock += '\n' + lines[k];
                     k++;
                 }
-                pairs.push({ title: lines[i], url: lines[j], rawBlock });
+                pairs.push({ title: lines[i], url: normalizeUrl(lines[j]), rawBlock });
                 i = k;
             } else {
                 i++;
@@ -76,6 +267,7 @@
     // ── 2. Dub Parser (moved to top) ───────────────────────────────────────────
     // Dub Parser — adds " (Dub Indo)" suffix and handles brackets
     const parseDub = (t, url, block) => {
+        if (_pf.dub(t)) return null;
         // TROPICS Dub Style: 【Dub Indonesia】《WITCH WATCH วิทช์วอทช์》｜ตอนที่ 25｜TROPICS ENTERTAINMENT
         const tropicsM = t.match(/【Dub Indonesia】《(.+?)》｜(?:Episode|ตอนที่)\s*(\d+)｜/i);
         if (tropicsM) {
@@ -118,8 +310,7 @@
     // ── 3. Channel Parsers ────────────────────────────────────────────────────
 
     const parseAniOne = (t, url, block) => {
-        if (/^FULL EPISODE/i.test(t)) return null;
-        if (/Science Class/i.test(t)) return null;
+        if (_pf.aniOneId(t)) return null;
         let isSpecial = /^SPECIAL EPISODE/i.test(t);
         let isEncore = /\(ENCORE\)/i.test(t);
 
@@ -142,13 +333,7 @@
     };
 
     const parseAniOneAsia = (t, url, block) => {
-        if (/^FULL EPISODE/i.test(t)) return null;
-        if (/Highlight/i.test(t)) return null;
-        if (/Science Class/i.test(t)) return null;
-        if (/Making.?of/i.test(t)) return null;
-        if (/Lyric\s*Video/i.test(t)) return null;
-        if (/精華重溫|精彩重溫/i.test(t)) return null;
-        if (/#Shorts/i.test(t)) return null;
+        if (_pf.aniOneAsia(t)) return null;
 
         let animeName, episode;
 
@@ -178,8 +363,7 @@
 
     // Ani-Mi Asia parser
     const parseAniMiAsia = (t, url, block) => {
-        // Drop: PV, Highlight, Special Screening, Full Episode
-        if (/(PV|Highlight|Special Screening|FULL EPISODE)/i.test(t)) return null;
+        if (_pf.aniMiAsia(t)) return null;
 
         // Match patterns like "Title #N (ENG sub)【Ani-Mi Asia】" or "Title S3 #N (ENG sub)【Ani-Mi Asia】"
         const m = t.match(/^(.+?)\s+#(\d+(?:\.\d+)?)(?:\s*\((.+?)\))?/i);
@@ -199,10 +383,7 @@
     };
 
         const parseTakarir = (t, url, block) => {
-            if (/Semua Episode/i.test(t)) return null;
-            if (/\(Live-Action\)/i.test(t)) return null;
-            if (/PUI PUI MOLCAR/i.test(t)) return null;
-            if (/Cuplikan/i.test(t)) return null;
+            if (_pf.takarir(t)) return null;
     
             const m = t.match(/^(.+?)\s+-\s+Episode\s*(\d+(?:\s*[-–]\s*\d+)?)\s*\[Takarir Indonesia\]/i);        if (!m) return null;
 
@@ -225,8 +406,7 @@
     };
 
     const parseTropics = (t, url, block) => {
-        if (/Members Only/i.test(t)) return null;
-        if (/(english\s*sub|en\s*sub|en-sub)/i.test(t)) return null;
+        if (_pf.tropics(t)) return null;
 
         const nameM = t.match(/《(.+?)》/);
         if (!nameM) return null;
@@ -240,6 +420,7 @@
     };
 
     const parseItsAnime = (t, url, block) => {
+        if (_pf.itsAnime(t)) return null;
         const video_id = extractVideoId(url);
         if (!video_id) return null;
 
@@ -289,15 +470,7 @@
     //   VIETDUB, JPN DUB, and hashtag-only social posts
 
     const parseYouku = (t, url, block) => {
-        // ── Content filters ──────────────────────────────────────────────
-        if (/Highlight|精彩片段|精彩看点/i.test(t)) return null;
-        if (/Trailer|Tralier|预告/i.test(t)) return null;   // covers 预告话 too
-        if (/^精华版/.test(t)) return null;                  // digest/recap versions
-        if (/\b(OP|ED|Opening|Ending)\b/i.test(t)) return null;
-        if (/全漫同庆|合集|全集/.test(t)) return null;        // promos / batch compilations
-        if (/EP\d+[-–]\d+|\d+[-–]\d+集/i.test(t)) return null; // EP range videos (EP01-66 etc)
-        if (/VIETDUB|JPN\s*DUB/i.test(t)) return null;      // non-sub dubs we don't want
-        if (/\bMembers?\b|会员/i.test(t)) return null;       // member-only / members preview / 会员专享
+        if (_pf.youku(t)) return null;
         // Must have a structured bracket title
         if (!/[【《\[]/.test(t)) return null;
 
@@ -421,13 +594,7 @@
     //   EP range videos (EPxx-yy), descriptive clips with no episode number
 
     const parseYuewen = (t, url, block) => {
-        // ── Content filters ──────────────────────────────────────────────────
-        if (/Trailer|TRAILER/i.test(t)) return null;
-        if (/Highlight|HIGHLIGHT/i.test(t)) return null;
-        if (/\bClip\b|\bCLIP\b/i.test(t)) return null;
-        if (/Versi Lengkap|Versi Full|Versi Lengkep/i.test(t)) return null;
-        if (/\bFULL\b/i.test(t)) return null;         // compilations: FULL EPISODE, S3 FULL, (FULL)
-        if (/EP\s?\d+\s?[-–]\s?\d+/i.test(t)) return null; // EP ranges like EP01-10
+        if (_pf.yuewen(t)) return null;
 
         // Must mention Yuewen and have a valid video ID
         if (!/YUEWEN|Yuewen/i.test(t)) return null;
@@ -533,17 +700,7 @@
     //   Horror Animation / Animasi Horor, SEGERA TAYANG, Sunday Morning, OFFICIAL
 
     const parseConan = (t, url, block) => {
-        // ── Content filters ───────────────────────────────────────────────────
-        if (/COMBINED EPISODE/i.test(t)) return null;
-        if (/UNCUT VERSION/i.test(t)) return null;
-        if (/SPESIAL EPISODE/i.test(t)) return null;      // multi-ep number ranges
-        if (/\[FULL EPISODE\]/i.test(t)) return null;
-        if (/Trailer|TRAILER|Teaser|TEASER/i.test(t)) return null;
-        if (/BEST SCENE|TOP SCENE|TOP MOMENT|BEST CUT|HIGHLIGHT/i.test(t)) return null;
-        if (/Horror Animation|Animasi Horor/i.test(t)) return null;
-        if (/SEGERA TAYANG/i.test(t)) return null;
-        if (/Sunday Morning|SMA TALKS/i.test(t)) return null;
-        if (/OFFICIAL/i.test(t)) return null;
+        if (_pf.conan(t)) return null;
 
         const video_id = extractVideoId(url);
         if (!video_id) return null;
@@ -576,7 +733,7 @@
             const { title, url, rawBlock } = pair;
 
             // Global Drop Filter: skip English dubs, PVs, membership walls (ULTRA), and members-only content
-            if (/(en\s*dub|en-dub|\bpv\b|ULTRA】|members?\s*only)/i.test(title)) continue;
+            if (_globalFilter(title)) continue;
 
             let parsedArray = null;
 
@@ -615,6 +772,18 @@
                 /^Survival Diary of a Villainess\b|^The Flower of Dynasties\b|^The Lost\s+Eps?\b/i.test(title)
             ) {
                 parsedArray = parseConan(title, url, rawBlock);
+            }
+            // Custom parsers from config — checked last, after all built-in parsers
+            else {
+                const customParsers = _config.customParsers || [];
+                for (const cp of customParsers) {
+                    if (!cp.channelMatch) continue;
+                    const matchRe = _toRegex(cp.channelMatch);
+                    if (matchRe && matchRe.test(title)) {
+                        parsedArray = _runCustomParser(cp, title, url, rawBlock);
+                        break;
+                    }
+                }
             }
 
             if (parsedArray) flatVideos.push(...parsedArray);
