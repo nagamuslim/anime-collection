@@ -196,12 +196,15 @@ jobs:
           touch all_playlists.txt
           for CHANNEL in "${CHANNELS[@]}"; do
             echo "Grabbing playlists for $CHANNEL ..."
-            docker run --rm \
-              -v ${{ github.workspace }}:/workspace \
-              media-scraper \
-              yt-dlp --flat-playlist --print "%(url)s" "$CHANNEL" 2>/dev/null \
-              | awk 'NF && /youtube\.com/' >> all_playlists.txt
+            for run in 1 2; do
+              docker run --rm \
+                -v ${{ github.workspace }}:/workspace \
+                media-scraper \
+                yt-dlp --flat-playlist --print "%(url)s" "$CHANNEL" 2>/dev/null \
+                | awk 'NF && /youtube\.com/' >> all_playlists.txt
+            done
           done
+          sort -u all_playlists.txt -o all_playlists.txt
           echo "=== all_playlists.txt: $(wc -l < all_playlists.txt) entries ==="
           head -5 all_playlists.txt
 
