@@ -861,7 +861,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes — skipping commit."
           else
-            git commit -m "Auto-update: anime_data.json + metadata.json [skip ci]"
+            git commit -m "Auto-update: anime_data.json + metadata.json $(date +%F)"
             git push origin main
           fi
  
