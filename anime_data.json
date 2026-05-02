@@ -11034,38 +11034,65 @@
       "name": "Apotheosis2",
       "videos": [
         {
-          "animeName": "Apotheosis3",
+          "animeName": "Apotheosis",
+          "episode": 1,
+          "title": "MULTISUB【Apotheosis】EP01 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=Rec_iuK9T3s",
+          "video_id": "Rec_iuK9T3s",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis",
           "episode": 2,
-          "title": "MULTISUB【Apotheosis3】EP02 | Xianxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=F_n6uQHh0VE",
-          "video_id": "F_n6uQHh0VE",
+          "title": "MULTISUB【Apotheosis】EP02 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=O7JO1V7fMIQ",
+          "video_id": "O7JO1V7fMIQ",
           "is_donghua": true,
           "is_marathon": true
         },
         {
-          "animeName": "Apotheosis3",
+          "animeName": "Apotheosis",
           "episode": 3,
-          "title": "MULTISUB【Apotheosis3】EP03 | Xianxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=aocoYoEUG9E",
-          "video_id": "aocoYoEUG9E",
+          "title": "MULTISUB【Apotheosis】EP03 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=9fElhcYebgs",
+          "video_id": "9fElhcYebgs",
           "is_donghua": true,
           "is_marathon": true
         },
         {
-          "animeName": "Apotheosis3",
+          "animeName": "Apotheosis",
           "episode": 4,
-          "title": "MULTISUB【Apotheosis3】EP04 | Xianxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=6_mlLrAH15Y",
-          "video_id": "6_mlLrAH15Y",
+          "title": "MULTISUB【Apotheosis】EP04 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=9nF7vfVSAwU",
+          "video_id": "9nF7vfVSAwU",
           "is_donghua": true,
           "is_marathon": true
         },
         {
-          "animeName": "Apotheosis3",
+          "animeName": "Apotheosis",
           "episode": 5,
-          "title": "ENGSUB【百炼成神3 Apotheosis3】EP05 真龙少女封念云登场！硬控罗证七日? | 热血古风漫 | 优酷动漫 YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=GUW5O1su5Ho",
-          "video_id": "GUW5O1su5Ho",
+          "title": "MULTISUB【Apotheosis】EP05 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=4HKHo1BJ6Rk",
+          "video_id": "4HKHo1BJ6Rk",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis",
+          "episode": 6,
+          "title": "MULTISUB【Apotheosis】EP06 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=ftWSOVfG8N0",
+          "video_id": "ftWSOVfG8N0",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis",
+          "episode": 7,
+          "title": "MULTISUB【Apotheosis】EP07 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=kgaEfBzK5rA",
+          "video_id": "kgaEfBzK5rA",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -11082,17 +11109,17 @@
           "animeName": "Apotheosis",
           "episode": 9,
           "title": "MULTISUB【Apotheosis】EP09 | Xianxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=2spk0W1GMLE",
-          "video_id": "2spk0W1GMLE",
+          "url": "https://www.youtube.com/watch?v=q_MOS0pvvJs",
+          "video_id": "q_MOS0pvvJs",
           "is_donghua": true,
           "is_marathon": true
         },
         {
-          "animeName": "Apotheosis3",
+          "animeName": "Apotheosis",
           "episode": 10,
-          "title": "🌟Menbers Only🌟MULTISUB【 Apotheosis3】EP10 |  YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=rpKI8uMIbN8",
-          "video_id": "rpKI8uMIbN8",
+          "title": "MULTISUB【Apotheosis】EP10 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=TQzeEMYzetg",
+          "video_id": "TQzeEMYzetg",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -11757,8 +11784,8 @@
           "animeName": "Apotheosis2",
           "episode": 84,
           "title": "MULTISUB【Apotheosis2】EP84 | Xianxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=6QOJGiZ_2uQ",
-          "video_id": "6QOJGiZ_2uQ",
+          "url": "https://www.youtube.com/watch?v=otHgcFObAVI",
+          "video_id": "otHgcFObAVI",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -11952,11 +11979,85 @@
           "is_marathon": true
         }
       ],
-      "episode_count": 102,
+      "episode_count": 105,
+      "thumbnail_video_id": "Rec_iuK9T3s",
+      "min_episode": 1,
+      "marathon_video_id": "Rec_iuK9T3s",
+      "marathon_title": "Apotheosis2",
+      "is_donghua": true
+    },
+    {
+      "name": "Apotheosis3",
+      "videos": [
+        {
+          "animeName": "Apotheosis3",
+          "episode": 2,
+          "title": "MULTISUB【Apotheosis3】EP02 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=F_n6uQHh0VE",
+          "video_id": "F_n6uQHh0VE",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis3",
+          "episode": 3,
+          "title": "MULTISUB【Apotheosis3】EP03 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=3V9p8m6U6f4",
+          "video_id": "3V9p8m6U6f4",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis3",
+          "episode": 4,
+          "title": "MULTISUB【Apotheosis3】EP04 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=6_mlLrAH15Y",
+          "video_id": "6_mlLrAH15Y",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis3",
+          "episode": 5,
+          "title": "ENGSUB【百炼成神3 Apotheosis3】EP05 真龙少女封念云登场！硬控罗证七日? | 热血古风漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=GUW5O1su5Ho",
+          "video_id": "GUW5O1su5Ho",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis3",
+          "episode": 10,
+          "title": "🌟Menbers Only🌟MULTISUB【 Apotheosis3】EP10 |  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=rpKI8uMIbN8",
+          "video_id": "rpKI8uMIbN8",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis3",
+          "episode": 105,
+          "title": "MULTISUB【Apotheosis3】EP105 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=gtiKu2WtzZA",
+          "video_id": "gtiKu2WtzZA",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis3",
+          "episode": 106,
+          "title": "MULTISUB【Apotheosis3】EP106 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=Rd_bzgEfxXM",
+          "video_id": "Rd_bzgEfxXM",
+          "is_donghua": true,
+          "is_marathon": true
+        }
+      ],
+      "episode_count": 7,
       "thumbnail_video_id": "F_n6uQHh0VE",
       "min_episode": 2,
       "marathon_video_id": "F_n6uQHh0VE",
-      "marathon_title": "Apotheosis2",
+      "marathon_title": "Apotheosis3",
       "is_donghua": true
     },
     {
@@ -16047,8 +16148,8 @@
           "episode": 54,
           "chapter_title": "Membuka Portal",
           "title": "Bad Luck Eps 54: Membuka Portal",
-          "url": "https://www.youtube.com/watch?v=vE1jk5DZLDE",
-          "video_id": "vE1jk5DZLDE"
+          "url": "https://www.youtube.com/watch?v=rnFiyGEt6V8",
+          "video_id": "rnFiyGEt6V8"
         }
       ],
       "episode_count": 49,
@@ -42839,225 +42940,225 @@
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 1,
-          "title": "ENGSUB【Everlasting God Of Sword】EP01 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=nMBuyea9TCI",
-          "video_id": "nMBuyea9TCI",
+          "title": "MULTISUB【Everlasting God Of Sword】EP01 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=8PhWuMkO4mM",
+          "video_id": "8PhWuMkO4mM",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 2,
-          "title": "ENGSUB【Everlasting God Of Sword】EP02 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=SwI7Mk6KmAw",
-          "video_id": "SwI7Mk6KmAw",
+          "title": "MULTISUB【Everlasting God Of Sword】EP02 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=Dup1W1wqSlo",
+          "video_id": "Dup1W1wqSlo",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 3,
-          "title": "ENGSUB【Everlasting God Of Sword】EP03 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=U5hCSjnKkwU",
-          "video_id": "U5hCSjnKkwU",
+          "title": "MULTISUB【Everlasting God Of Sword】EP03 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=Tdl9dmx4t3A",
+          "video_id": "Tdl9dmx4t3A",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 4,
-          "title": "ENGSUB【Everlasting God Of Sword】EP04 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=ZyDcyGS1l3E",
-          "video_id": "ZyDcyGS1l3E",
+          "title": "MULTISUB【Everlasting God Of Sword】EP04 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=n_B-_uanf7w",
+          "video_id": "n_B-_uanf7w",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 5,
-          "title": "ENGSUB【Everlasting God Of Sword】EP05 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=xKoeGBtLAN4",
-          "video_id": "xKoeGBtLAN4",
+          "title": "MULTISUB【Everlasting God Of Sword】EP05 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=4laIpuWZODE",
+          "video_id": "4laIpuWZODE",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 6,
-          "title": "ENGSUB【Everlasting God Of Sword】EP06 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=F2lTsTP75sw",
-          "video_id": "F2lTsTP75sw",
+          "title": "MULTISUB【Everlasting God Of Sword】EP06 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=1qkseTTkfZc",
+          "video_id": "1qkseTTkfZc",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 7,
-          "title": "ENGSUB【Everlasting God Of Sword】EP07 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=MmHl3P1e7HY",
-          "video_id": "MmHl3P1e7HY",
+          "title": "MULTISUB【Everlasting God Of Sword】EP07 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=dv3fEgAkZSY",
+          "video_id": "dv3fEgAkZSY",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 8,
-          "title": "ENGSUB【Everlasting God Of Sword】EP08 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=4bc2pCJD7G4",
-          "video_id": "4bc2pCJD7G4",
+          "title": "MULTISUB【Everlasting God Of Sword】EP08 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=Ubs5rVhA28o",
+          "video_id": "Ubs5rVhA28o",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 9,
-          "title": "ENGSUB【Everlasting God Of Sword】EP09 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=XDE6gq9lOMU",
-          "video_id": "XDE6gq9lOMU",
+          "title": "MULTISUB【Everlasting God Of Sword】EP09 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=if1LIEZ8SMs",
+          "video_id": "if1LIEZ8SMs",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 10,
-          "title": "ENGSUB【Everlasting God Of Sword】EP10 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=C02mjKySgbg",
-          "video_id": "C02mjKySgbg",
+          "title": "MULTISUB【Everlasting God Of Sword】EP10 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=eOuJZK1a1hg",
+          "video_id": "eOuJZK1a1hg",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 11,
-          "title": "ENGSUB【Everlasting God Of Sword】EP11 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=I6STkOvAHoY",
-          "video_id": "I6STkOvAHoY",
+          "title": "MULTISUB【Everlasting God Of Sword】EP11 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=iuuUsvX7zMg",
+          "video_id": "iuuUsvX7zMg",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 12,
-          "title": "ENGSUB【Everlasting God Of Sword】EP12 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=e-ZBMrj4dJU",
-          "video_id": "e-ZBMrj4dJU",
+          "title": "MULTISUB【Everlasting God Of Sword】EP12 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=VEfPwg87g2g",
+          "video_id": "VEfPwg87g2g",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 13,
-          "title": "ENGSUB【Everlasting God Of Sword】EP13 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=S3VhmvvRLcs",
-          "video_id": "S3VhmvvRLcs",
+          "title": "MULTISUB【Everlasting God Of Sword】EP13 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=v-yQGZYO4t4",
+          "video_id": "v-yQGZYO4t4",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 14,
-          "title": "ENGSUB【Everlasting God Of Sword】EP14 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=e79Lzk6JN3I",
-          "video_id": "e79Lzk6JN3I",
+          "title": "MULTISUB【Everlasting God Of Sword】EP14 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=JQbPtSuyU1k",
+          "video_id": "JQbPtSuyU1k",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 15,
-          "title": "ENGSUB【Everlasting God Of Sword】EP15 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=zSgQAfILzss",
-          "video_id": "zSgQAfILzss",
+          "title": "MULTISUB【Everlasting God Of Sword】EP15 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=Sb-x7bZ96cc",
+          "video_id": "Sb-x7bZ96cc",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 16,
-          "title": "ENGSUB【Everlasting God Of Sword】EP16 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=W_DIKKpr508",
-          "video_id": "W_DIKKpr508",
+          "title": "MULTISUB【Everlasting God Of Sword】EP16 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=nvvwBBog8nQ",
+          "video_id": "nvvwBBog8nQ",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 17,
-          "title": "ENGSUB【Everlasting God Of Sword】EP17 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=QtJDnyuePP8",
-          "video_id": "QtJDnyuePP8",
+          "title": "MULTISUB【Everlasting God Of Sword】EP17 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=QhDgbhLbjwE",
+          "video_id": "QhDgbhLbjwE",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 18,
-          "title": "ENGSUB【Everlasting God Of Sword】EP18 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=fZlOT-Hlf0w",
-          "video_id": "fZlOT-Hlf0w",
+          "title": "MULTISUB【Everlasting God Of Sword】EP18 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=UnL76EVzDcM",
+          "video_id": "UnL76EVzDcM",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 19,
-          "title": "ENGSUB【Everlasting God Of Sword】EP19 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=TtcC1kj9Dw0",
-          "video_id": "TtcC1kj9Dw0",
+          "title": "MULTISUB【Everlasting God Of Sword】EP19 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=fYH3jk3-J7g",
+          "video_id": "fYH3jk3-J7g",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 20,
-          "title": "ENGSUB【Everlasting God Of Sword】EP20 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=feSDDKUK94k",
-          "video_id": "feSDDKUK94k",
+          "title": "MULTISUB【Everlasting God Of Sword】EP20 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=Z60_Fn20pag",
+          "video_id": "Z60_Fn20pag",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 21,
-          "title": "ENGSUB【Everlasting God Of Sword】EP21 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=MjA-AmJbvdc",
-          "video_id": "MjA-AmJbvdc",
+          "title": "MULTISUB【Everlasting God Of Sword】EP21 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=tvaqtPwDL7U",
+          "video_id": "tvaqtPwDL7U",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 22,
-          "title": "ENGSUB【Everlasting God Of Sword】EP22 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=E6MJlOfJ33g",
-          "video_id": "E6MJlOfJ33g",
+          "title": "MULTISUB【Everlasting God Of Sword】EP22 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=JXzA4-3On1E",
+          "video_id": "JXzA4-3On1E",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 23,
-          "title": "ENGSUB【Everlasting God Of Sword】EP23 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=nXqRrH9Qr44",
-          "video_id": "nXqRrH9Qr44",
+          "title": "MULTISUB【Everlasting God Of Sword】EP23 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=RxJpHxghM7c",
+          "video_id": "RxJpHxghM7c",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 24,
-          "title": "ENGSUB【Everlasting God Of Sword】EP24 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=To2UNQdK6YY",
-          "video_id": "To2UNQdK6YY",
+          "title": "MULTISUB【Everlasting God Of Sword】EP24 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=0d5wlGUYCDk",
+          "video_id": "0d5wlGUYCDk",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Everlasting God Of Sword",
           "episode": 25,
-          "title": "ENGSUB【Everlasting God Of Sword】EP25 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=6wwBvRX-vYs",
-          "video_id": "6wwBvRX-vYs",
+          "title": "MULTISUB【Everlasting God Of Sword】EP25 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=-mcu6R2we3s",
+          "video_id": "-mcu6R2we3s",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -43065,8 +43166,8 @@
           "animeName": "Everlasting God Of Sword",
           "episode": 26,
           "title": "ENGSUB【Everlasting God Of Sword】EP26 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=jvCOBAGKyDc",
-          "video_id": "jvCOBAGKyDc",
+          "url": "https://www.youtube.com/watch?v=VKDYrtXMSxo",
+          "video_id": "VKDYrtXMSxo",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -43180,9 +43281,9 @@
         }
       ],
       "episode_count": 38,
-      "thumbnail_video_id": "nMBuyea9TCI",
+      "thumbnail_video_id": "8PhWuMkO4mM",
       "min_episode": 1,
-      "marathon_video_id": "nMBuyea9TCI",
+      "marathon_video_id": "8PhWuMkO4mM",
       "marathon_title": "Everlasting God Of Sword",
       "is_donghua": true
     },
@@ -50837,9 +50938,23 @@
           "title": "《GHOST CONCERT: missing Songs》#3 (ID Sub)【Ani-One Indonesia】",
           "url": "https://www.youtube.com/watch?v=hmYVSZnsdjI",
           "video_id": "hmYVSZnsdjI"
+        },
+        {
+          "animeName": "GHOST CONCERT: missing Songs",
+          "episode": 4,
+          "title": "《GHOST CONCERT: missing Songs》#4 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=Yzv7oxE14Ik",
+          "video_id": "Yzv7oxE14Ik"
+        },
+        {
+          "animeName": "GHOST CONCERT: missing Songs",
+          "episode": 5,
+          "title": "《GHOST CONCERT: missing Songs》#5 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=I8Iy-e7p-70",
+          "video_id": "I8Iy-e7p-70"
         }
       ],
-      "episode_count": 3,
+      "episode_count": 5,
       "thumbnail_video_id": "nMFBS-4Uz18",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -52346,9 +52461,27 @@
           "url": "https://www.youtube.com/watch?v=-8xuB5hmijI",
           "video_id": "-8xuB5hmijI",
           "is_marathon": true
+        },
+        {
+          "animeName": "Each disciple is a boss Over Goddess",
+          "episode": 30,
+          "title": "MULTISUB【Each disciple is a boss Over Goddess】EP30 | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=SmlukMzFyAg",
+          "video_id": "SmlukMzFyAg",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Each disciple is a boss Over Goddess",
+          "episode": 31,
+          "title": "MULTISUB【Each disciple is a boss Over Goddess】EP31 | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=EtlLot0p4eU",
+          "video_id": "EtlLot0p4eU",
+          "is_donghua": true,
+          "is_marathon": true
         }
       ],
-      "episode_count": 3,
+      "episode_count": 5,
       "thumbnail_video_id": "BZ7-9p1ezGc",
       "min_episode": 2,
       "marathon_video_id": "BZ7-9p1ezGc",
@@ -53355,36 +53488,36 @@
         {
           "animeName": "Great Journey Of Teenagers 2",
           "episode": 1,
-          "title": "MULTISUB【Great Journey Of Teenagers 2】EP01| Youths in Xueyue | Xianxia Anime | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=Lvd5WjWazKk",
-          "video_id": "Lvd5WjWazKk",
+          "title": "【少年歌行高能版 Great Journey Of Teenagers 2】EP01 | 问剑江湖，少年勇闯登天阁 | 古风励志国漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=B9Mx_KIYM6E",
+          "video_id": "B9Mx_KIYM6E",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Great Journey Of Teenagers 2",
           "episode": 2,
-          "title": "ENGSUB【Great Journey Of Teenagers 2】EP02 | Seeking Answers in Xueyue City| Xianxia Anime|YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=2xBpe1zSf9M",
-          "video_id": "2xBpe1zSf9M",
+          "title": "【少年歌行高能版 Great Journey Of Teenagers 2】EP02 | 挑战雷家长老 | 古风励志国漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=m_6mc9LV2nQ",
+          "video_id": "m_6mc9LV2nQ",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Great Journey Of Teenagers 2",
           "episode": 3,
-          "title": "ENGSUB【Great Journey Of Teenagers 2】EP03 | One strike lasts for eternity | Xianxia Anime|YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=_IOqdD9GMnc",
-          "video_id": "_IOqdD9GMnc",
+          "title": "【少年歌行高能版 Great Journey Of Teenagers 2】EP03 | 吾有三剑，请君试之 | 古风励志国漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=DNhSldPHTtQ",
+          "video_id": "DNhSldPHTtQ",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Great Journey Of Teenagers 2",
           "episode": 4,
-          "title": "ENGSUB【Great Journey Of Teenagers 2】EP04 | First Acquaintance under the Blossom |Xianxia|YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=RjY1R8JK3s8",
-          "video_id": "RjY1R8JK3s8",
+          "title": "【少年歌行高能版 Great Journey Of Teenagers 2】EP04 | 若依剑舞，入凡尘，生情 | 古风励志国漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=P3L6-0byh5Y",
+          "video_id": "P3L6-0byh5Y",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -53642,9 +53775,9 @@
         }
       ],
       "episode_count": 32,
-      "thumbnail_video_id": "Lvd5WjWazKk",
+      "thumbnail_video_id": "B9Mx_KIYM6E",
       "min_episode": 1,
-      "marathon_video_id": "Lvd5WjWazKk",
+      "marathon_video_id": "B9Mx_KIYM6E",
       "marathon_title": "Great Journey Of Teenagers 2",
       "is_donghua": true
     },
@@ -106259,26 +106392,23 @@
         {
           "animeName": "The Classroom of a Black Cat and a Witch",
           "episode": 1,
-          "title": "《The Classroom of a Black Cat and a Witch》#1 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=bFwW728v9wo",
-          "video_id": "bFwW728v9wo",
-          "is_marathon": true
+          "title": "《The Classroom of a Black Cat and a Witch 》#1 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=jTBAQTmlGcc",
+          "video_id": "jTBAQTmlGcc"
         },
         {
           "animeName": "The Classroom of a Black Cat and a Witch",
           "episode": 2,
-          "title": "《The Classroom of a Black Cat and a Witch》#2 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=7d3wsE8GyNc",
-          "video_id": "7d3wsE8GyNc",
-          "is_marathon": true
+          "title": "《The Classroom of a Black Cat and a Witch 》#2 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=HisAar4YNVk",
+          "video_id": "HisAar4YNVk"
         },
         {
           "animeName": "The Classroom of a Black Cat and a Witch",
           "episode": 3,
-          "title": "《The Classroom of a Black Cat and a Witch》#3 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=0b9kRJET42o",
-          "video_id": "0b9kRJET42o",
-          "is_marathon": true
+          "title": "《The Classroom of a Black Cat and a Witch 》#3 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=1ZYwUKpQBVI",
+          "video_id": "1ZYwUKpQBVI"
         },
         {
           "animeName": "The Classroom of a Black Cat and a Witch",
@@ -106290,10 +106420,10 @@
         }
       ],
       "episode_count": 4,
-      "thumbnail_video_id": "bFwW728v9wo",
+      "thumbnail_video_id": "jTBAQTmlGcc",
       "min_episode": 1,
-      "marathon_video_id": "bFwW728v9wo",
-      "marathon_title": "The Classroom of a Black Cat and a Witch",
+      "marathon_video_id": null,
+      "marathon_title": null,
       "is_donghua": false
     },
     {
@@ -120077,8 +120207,8 @@
           "animeName": "The Secrets of Star Divine Arts",
           "episode": 8,
           "title": "MULTISUB【The Secrets of Star Divine Arts】EP08 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=E-OgR8IVOGo",
-          "video_id": "E-OgR8IVOGo",
+          "url": "https://www.youtube.com/watch?v=SU-CLDHzf6k",
+          "video_id": "SU-CLDHzf6k",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -125527,9 +125657,9 @@
         {
           "animeName": "The Young Brewmaster's Adventure",
           "episode": 18,
-          "title": "ENGSUB【少年白马醉春风 The Young Brewmaster's Adventure】EP18暗河杀阵！：应是故人来 | 玄幻古风漫 | 优酷动漫 YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=aJNsIT5N9OM",
-          "video_id": "aJNsIT5N9OM",
+          "title": "ENGSUB【The Young Brewmaster's Adventure】EP18 | New to the Martial Arts World | Wuxia|YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=NG31ODHoSsQ",
+          "video_id": "NG31ODHoSsQ",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -127544,185 +127674,163 @@
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 1,
-          "title": "《To Your Eternity Season 3》#1 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=DrjbHLh9jGY",
-          "video_id": "DrjbHLh9jGY",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#1 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=EZmJfcZbzUo",
+          "video_id": "EZmJfcZbzUo"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 2,
-          "title": "《To Your Eternity Season 3》#2 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=UwQ4xGs0KEg",
-          "video_id": "UwQ4xGs0KEg",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#2 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=XMViqzkL3YM",
+          "video_id": "XMViqzkL3YM"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 3,
-          "title": "《To Your Eternity Season 3》#3 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=sDcD5KGD7xg",
-          "video_id": "sDcD5KGD7xg",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#3 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=7vtNFBavmCE",
+          "video_id": "7vtNFBavmCE"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 4,
-          "title": "《To Your Eternity Season 3》#4 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=HdlxZOEKbj8",
-          "video_id": "HdlxZOEKbj8",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#4 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=kqA7Im5fZSw",
+          "video_id": "kqA7Im5fZSw"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 5,
-          "title": "《To Your Eternity Season 3》#5 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=LSZauK9oaEo",
-          "video_id": "LSZauK9oaEo",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#5 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=WTzV0YoTyh4",
+          "video_id": "WTzV0YoTyh4"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 6,
-          "title": "《To Your Eternity Season 3》#6 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=O4l5EpZ7xH4",
-          "video_id": "O4l5EpZ7xH4",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#6 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=Dc-FF1V5DRM",
+          "video_id": "Dc-FF1V5DRM"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 7,
-          "title": "《To Your Eternity Season 3》#7 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=tdXFmibrqQo",
-          "video_id": "tdXFmibrqQo",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#7 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=Bhmdb84kmws",
+          "video_id": "Bhmdb84kmws"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 8,
-          "title": "《To Your Eternity Season 3》#8 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=aT7ktInuQMI",
-          "video_id": "aT7ktInuQMI",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#8 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=PWSa1C6Dkvs",
+          "video_id": "PWSa1C6Dkvs"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 9,
-          "title": "《To Your Eternity Season 3》#9 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=SKeGKMRjEhc",
-          "video_id": "SKeGKMRjEhc",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#9 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=WOhxovXZcJk",
+          "video_id": "WOhxovXZcJk"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 10,
-          "title": "《To Your Eternity Season 3》#10 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=iQJew0HTV-c",
-          "video_id": "iQJew0HTV-c",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#10 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=kWJilzTSoys",
+          "video_id": "kWJilzTSoys"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 11,
-          "title": "《To Your Eternity Season 3》#11 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=4TF9UhgRS3s",
-          "video_id": "4TF9UhgRS3s",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#11 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=EldWBFJV2l8",
+          "video_id": "EldWBFJV2l8"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 12,
-          "title": "《To Your Eternity Season 3》#12 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=oCLaJf7hiRQ",
-          "video_id": "oCLaJf7hiRQ",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#12 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=MqwcxKxXYq0",
+          "video_id": "MqwcxKxXYq0"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 13,
-          "title": "《To Your Eternity Season 3》#13 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=niAAa-tzTj0",
-          "video_id": "niAAa-tzTj0",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#13 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=KztjM3cfueU",
+          "video_id": "KztjM3cfueU"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 14,
-          "title": "《To Your Eternity Season 3》#14 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=klyYc7ygr6A",
-          "video_id": "klyYc7ygr6A",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#14 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=FEKs2FKj8hU",
+          "video_id": "FEKs2FKj8hU"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 15,
-          "title": "《To Your Eternity Season 3》#15 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=Lk5HO06NXZU",
-          "video_id": "Lk5HO06NXZU",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#15 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=oN7pKTgmXj8",
+          "video_id": "oN7pKTgmXj8"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 16,
-          "title": "《To Your Eternity Season 3》#16 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=8lFqSRYjkd8",
-          "video_id": "8lFqSRYjkd8",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#16 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=it51xiJWXio",
+          "video_id": "it51xiJWXio"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 17,
-          "title": "《To Your Eternity Season 3》#17 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=GtNYYWv83LY",
-          "video_id": "GtNYYWv83LY",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#17 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=ZEKz4KQ9scI",
+          "video_id": "ZEKz4KQ9scI"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 18,
-          "title": "《To Your Eternity Season 3》#18 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=nFdq08ag4pI",
-          "video_id": "nFdq08ag4pI",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#18 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=7Jq930hCo-I",
+          "video_id": "7Jq930hCo-I"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 19,
-          "title": "《To Your Eternity Season 3》#19 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=zW07ynbTcWg",
-          "video_id": "zW07ynbTcWg",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#19 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=w5YMUJ5HSb4",
+          "video_id": "w5YMUJ5HSb4"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 20,
-          "title": "《To Your Eternity Season 3》#20 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=ZwFxZWKrOxQ",
-          "video_id": "ZwFxZWKrOxQ",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#20 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=SfhsO33FCO4",
+          "video_id": "SfhsO33FCO4"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 21,
-          "title": "《To Your Eternity Season 3》#21 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=OBfQoAhVJWs",
-          "video_id": "OBfQoAhVJWs",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#21 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=vVntQUy5Rt4",
+          "video_id": "vVntQUy5Rt4"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 22,
-          "title": "《To Your Eternity Season 3》#22 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=fYs5sPXwork",
-          "video_id": "fYs5sPXwork",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#22 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=FedT1EdKLac",
+          "video_id": "FedT1EdKLac"
         }
       ],
       "episode_count": 22,
-      "thumbnail_video_id": "DrjbHLh9jGY",
+      "thumbnail_video_id": "EZmJfcZbzUo",
       "min_episode": 1,
-      "marathon_video_id": "DrjbHLh9jGY",
-      "marathon_title": "To Your Eternity Season 3",
+      "marathon_video_id": null,
+      "marathon_title": null,
       "is_donghua": false
     },
     {
@@ -135088,6 +135196,6 @@
       "is_donghua": false
     }
   ],
-  "total_series": 832,
+  "total_series": 833,
   "last_updated": "2026-05-02"
 }
