@@ -12002,8 +12002,8 @@
           "animeName": "Apotheosis3",
           "episode": 3,
           "title": "MULTISUB【Apotheosis3】EP03 | Xianxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=3V9p8m6U6f4",
-          "video_id": "3V9p8m6U6f4",
+          "url": "https://www.youtube.com/watch?v=aocoYoEUG9E",
+          "video_id": "aocoYoEUG9E",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -88809,9 +88809,45 @@
           "video_id": "luI8aHGxh80",
           "is_donghua": true,
           "is_marathon": true
+        },
+        {
+          "animeName": "Pheromones Say We're Not Meant to BeOur Pheromones Say No",
+          "episode": 7,
+          "title": "【信息素说我们不可能 Pheromones Say We're Not Meant to BeOur Pheromones Say No】EP07 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=oGlDjH2aE3s",
+          "video_id": "oGlDjH2aE3s",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Pheromones Say We're Not Meant to BeOur Pheromones Say No",
+          "episode": 8,
+          "title": "【信息素说我们不可能 Pheromones Say We're Not Meant to BeOur Pheromones Say No】EP08 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=WGMzTQxR7Po",
+          "video_id": "WGMzTQxR7Po",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Pheromones Say We're Not Meant to BeOur Pheromones Say No",
+          "episode": 9,
+          "title": "【信息素说我们不可能 Pheromones Say We're Not Meant to BeOur Pheromones Say No】EP09 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=2ZeDeTK_R1M",
+          "video_id": "2ZeDeTK_R1M",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Pheromones Say We're Not Meant to BeOur Pheromones Say No",
+          "episode": 10,
+          "title": "【信息素说我们不可能 Pheromones Say We're Not Meant to BeOur Pheromones Say No】EP10 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=Duf8wkoyDOg",
+          "video_id": "Duf8wkoyDOg",
+          "is_donghua": true,
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
+      "episode_count": 9,
       "thumbnail_video_id": "Hs-t5lnTllo",
       "min_episode": 1,
       "marathon_video_id": "Hs-t5lnTllo",
@@ -135197,5 +135233,5 @@
     }
   ],
   "total_series": 833,
-  "last_updated": "2026-05-02"
+  "last_updated": "2026-05-03"
 }
