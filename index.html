@@ -354,7 +354,7 @@
             if (typeof Fuse === 'undefined') return;
             fuseIndex = new Fuse(animeData, {
                 keys: [{ name: 'name', weight: 2 }, { name: 'allTitles', weight: 1 }],
-                threshold: 0.35, ignoreLocation: true, minMatchCharLength: 2, includeScore: true, useTokenSearch: !!window._fuseHasTokenSearch
+                threshold: 0.35, ignoreLocation: true, minMatchCharLength: 2, includeScore: true, useTokenSearch: false
             });
         }
 
