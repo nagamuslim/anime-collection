@@ -279,6 +279,7 @@
       catch(e) { ({ default: F } = await import('https://cdn.jsdelivr.net/npm/fuse.js@latest/dist/fuse.mjs')); }
       window.Fuse = F;
       window._fuseHasTokenSearch = true;
+      window.dispatchEvent(new CustomEvent('fuse-ready'));
     </script>
     <!-- LEGACY browsers (pre-2017): local fuse.js (UMD v7.2.0) → CDN UMD → token search OFF -->
     <script nomodule src="fuse.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js';"></script>
@@ -358,6 +359,9 @@
                 threshold: 0.35, ignoreLocation: true, minMatchCharLength: 2, includeScore: true, useTokenSearch: !!window._fuseHasTokenSearch
             });
         }
+        window.addEventListener('fuse-ready', () => {
+            if (animeData.length) { buildFuseIndex(); applyFilterAndSort(); }
+        });
 
         // ── Floating genre panel ──────────────────────────────────────────────
         const filterBtn     = document.getElementById('filterBtn');
