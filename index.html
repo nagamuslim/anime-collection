@@ -272,8 +272,16 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" onerror="void 0"></script>
-    <script src="fuse.js" onerror="this.onerror=null; this.src='https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js';"></script>
-    <script src="metadata.js"    onerror="void 0"></script>
+    <!-- MODULE browsers (2017+): try local fuse.mjs → CDN fuse.min.mjs → token search ON -->
+    <script type="module">
+      let F;
+      try { ({ default: F } = await import('./fuse.mjs')); }
+      catch(e) { ({ default: F } = await import('https://cdn.jsdelivr.net/npm/fuse.js@latest/dist/fuse.mjs')); }
+      window.Fuse = F;
+      window._fuseHasTokenSearch = true;
+    </script>
+    <!-- LEGACY browsers (pre-2017): local fuse.js (UMD v7.2.0) → CDN UMD → token search OFF -->
+    <script nomodule src="fuse.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js';"></script>
     <script src="update_data.js" onerror="void 0"></script>
     <script src="bookmark.js" defer onerror="void 0"></script>
     <script>
@@ -346,7 +354,7 @@
             if (typeof Fuse === 'undefined') return;
             fuseIndex = new Fuse(animeData, {
                 keys: [{ name: 'name', weight: 2 }, { name: 'allTitles', weight: 1 }],
-                threshold: 0.35, ignoreLocation: true, minMatchCharLength: 2, includeScore: true
+                threshold: 0.35, ignoreLocation: true, minMatchCharLength: 2, includeScore: true, useTokenSearch: !!window._fuseHasTokenSearch
             });
         }
 

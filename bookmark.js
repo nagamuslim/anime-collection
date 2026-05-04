@@ -294,22 +294,18 @@ var MALSync = (function(){
     // ── Jikan fetch by malId ──────────────────────────────────────────
     // AnimeMetadata.fetchJikanForAnime(name) exists but only works by anime name.
     // For the sequel chain we have malIds, so we call Jikan directly.
-    // fetchWithRetry is private in metadata.js so we implement a minimal version.
+    // NEW — 8 lines, delegates to metadata.js
     var _jikanCache = {};
     async function jikanByMalId(malId){
-        var id=String(malId);
-        if(_jikanCache[id]) return _jikanCache[id];
-        for(var i=0;i<3;i++){
-            try{
-                var r=await fetch('https://api.jikan.moe/v4/anime/'+id+'/full');
-                if(r.status===429){ await new Promise(function(res){setTimeout(res,1500*(i+1));}); continue; }
-                if(r.status===404) return null;
-                if(!r.ok) throw new Error('HTTP '+r.status);
-                var d=(await r.json()).data;
-                _jikanCache[id]=d; return d;
-            }catch(e){ if(i===2) return null; await new Promise(function(res){setTimeout(res,1000);}); }
-        }
-        return null;
+        var id = String(malId);
+        if (_jikanCache[id]) return _jikanCache[id];
+        var result = (typeof window.AnimeMetadata !== 'undefined')
+            ? await window.AnimeMetadata.fetchJikan(id)
+            : null;
+        // fetchJikan returns { tags, synopsis, demographics, fullData } or null
+        var d = result ? result.fullData : null;
+        if (d) _jikanCache[id] = d;
+        return d;  // callers expect raw data object (same as before)
     }
 
     // ── MAL user profile (via GAS → /users/@me) ───────────────────────
