@@ -197,11 +197,12 @@ jobs:
           for CHANNEL in "${CHANNELS[@]}"; do
             echo "Grabbing playlists for $CHANNEL ..."
             for run in 1 2; do
-              docker run --rm \
+              COUNT=$(docker run --rm \
                 -v ${{ github.workspace }}:/workspace \
                 media-scraper \
                 yt-dlp --flat-playlist --print "%(url)s" "$CHANNEL" 2>/dev/null \
-                | awk 'NF && /youtube\.com/' >> all_playlists.txt
+                | awk 'NF && /youtube\.com/' | tee -a all_playlists.txt | wc -l)
+              echo "  → $COUNT playlists found (Run $run)"
             done
           done
           sort -u all_playlists.txt -o all_playlists.txt
