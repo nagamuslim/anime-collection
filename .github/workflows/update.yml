@@ -249,6 +249,11 @@ jobs:
 
           FAIL_COUNT=$(wc -l < failed_playlists.txt)
           echo "=== failed_playlists.txt: $FAIL_COUNT playlists ==="
+          
+          if [ "$FAIL_COUNT" -ge 400 ]; then
+            echo "::error::Fallback queue is too large ($FAIL_COUNT >= 400). Aborting to prevent runaway execution limits!"
+            exit 1
+          fi
 
           if [ "$FAIL_COUNT" -eq 0 ]; then
             echo "No failed playlists — skipping yt-dlp fallback"
