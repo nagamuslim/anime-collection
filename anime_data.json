@@ -1439,9 +1439,16 @@
           "title": "(Tensura) Bereinkarnasi Malah Menjadi Slime - Episode 75",
           "url": "https://www.youtube.com/watch?v=QhrjKYYkKCQ",
           "video_id": "QhrjKYYkKCQ"
+        },
+        {
+          "animeName": "(Tensura) Bereinkarnasi Malah Menjadi Slime",
+          "episode": 76,
+          "title": "(Tensura) Bereinkarnasi Malah Menjadi Slime - Episode 76",
+          "url": "https://www.youtube.com/watch?v=iaQNyMecVm4",
+          "video_id": "iaQNyMecVm4"
         }
       ],
-      "episode_count": 75,
+      "episode_count": 76,
       "thumbnail_video_id": "Lys5vkiv0RA",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -4613,16 +4620,17 @@
         {
           "animeName": "A Hundred Scenes of AWAJIMA",
           "episode": 5,
-          "title": "《A Hundred Scenes of AWAJIMA》#5 (ID sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=zImupu9QgGY",
-          "video_id": "zImupu9QgGY"
+          "title": "《A Hundred Scenes of AWAJIMA》#5 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=iWaH-a0ZO_Y",
+          "video_id": "iWaH-a0ZO_Y",
+          "is_marathon": true
         }
       ],
       "episode_count": 5,
       "thumbnail_video_id": "2H9BzzO3Qw0",
       "min_episode": 1,
-      "marathon_video_id": null,
-      "marathon_title": null,
+      "marathon_video_id": "2H9BzzO3Qw0",
+      "marathon_title": "A Hundred Scenes of AWAJIMA",
       "is_donghua": false
     },
     {
@@ -7426,9 +7434,17 @@
           "url": "https://www.youtube.com/watch?v=z02bZvCd8_U",
           "video_id": "z02bZvCd8_U",
           "is_marathon": true
+        },
+        {
+          "animeName": "Akane-banashi",
+          "episode": 6,
+          "title": "《Akane-banashi》#6 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=mpf48Sagxcs",
+          "video_id": "mpf48Sagxcs",
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "5cdar30vVYU",
       "min_episode": 1,
       "marathon_video_id": "5cdar30vVYU",
@@ -9143,9 +9159,9 @@
         {
           "animeName": "Alya Sometimes Hides Her Feelings in Russian",
           "episode": 7,
-          "title": "😳【 Shouldn't say it to just anyone.】《Alya Sometimes Hides Her Feelings in Russian》#7｜【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=Qn6gJUQZU4g",
-          "video_id": "Qn6gJUQZU4g",
+          "title": "《Alya Sometimes Hides Her Feelings in Russian》#7 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=Zf5eyZ80ZAE",
+          "video_id": "Zf5eyZ80ZAE",
           "is_marathon": true
         },
         {
@@ -22808,6 +22824,13 @@
       "name": "BIRDIE WING -Golf Girls’ Story- Season 2",
       "videos": [
         {
+          "animeName": "The Drops of God",
+          "episode": 1,
+          "title": "The Drops of God - Episode 1",
+          "url": "https://www.youtube.com/watch?v=0DaULKSAUhc",
+          "video_id": "0DaULKSAUhc"
+        },
+        {
           "animeName": "GO",
           "episode": 2,
           "title": "【一起来看条漫吧】《少年之名》官方衍生漫画《少年GO》第2话 一转攻势 | Animation-YOUKU | 優酷動漫",
@@ -22938,9 +22961,9 @@
           "is_marathon": true
         }
       ],
-      "episode_count": 16,
-      "thumbnail_video_id": "BZ7-9p1ezGc",
-      "min_episode": 2,
+      "episode_count": 17,
+      "thumbnail_video_id": "0DaULKSAUhc",
+      "min_episode": 1,
       "marathon_video_id": null,
       "marathon_title": null,
       "is_donghua": true
@@ -23590,8 +23613,8 @@
           "animeName": "BLEACH",
           "episode": 19,
           "title": "【Limited-Time Free to Watch】《BLEACH》#19 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=BbzF1YcGQGs",
-          "video_id": "BbzF1YcGQGs",
+          "url": "https://www.youtube.com/watch?v=dMouXvubWPg",
+          "video_id": "dMouXvubWPg",
           "is_marathon": true
         },
         {
@@ -24924,8 +24947,8 @@
           "animeName": "BLEACH",
           "episode": 186,
           "title": "【Limited-Time Free to Watch】《BLEACH》#186 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=0DO3cZ4McSc",
-          "video_id": "0DO3cZ4McSc",
+          "url": "https://www.youtube.com/watch?v=pUGozNyt9_U",
+          "video_id": "pUGozNyt9_U",
           "is_marathon": true
         },
         {
@@ -25251,8 +25274,8 @@
           "animeName": "BLEACH",
           "episode": 227,
           "title": "【Limited-Time Free to Watch】《BLEACH》#227 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=9dgfDZjTWP0",
-          "video_id": "9dgfDZjTWP0",
+          "url": "https://www.youtube.com/watch?v=-jCUJSFHqRo",
+          "video_id": "-jCUJSFHqRo",
           "is_marathon": true
         },
         {
@@ -25387,8 +25410,8 @@
           "animeName": "BLEACH",
           "episode": 244,
           "title": "【Limited-Time Free to Watch】《BLEACH》#244 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=YoVTR7H62KY",
-          "video_id": "YoVTR7H62KY",
+          "url": "https://www.youtube.com/watch?v=EIeqrH6iJLw",
+          "video_id": "EIeqrH6iJLw",
           "is_marathon": true
         },
         {
@@ -25655,8 +25678,8 @@
           "animeName": "BLEACH",
           "episode": 278,
           "title": "【Limited-Time Free to Watch】《BLEACH》#278 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=UkHwfWOXTkM",
-          "video_id": "UkHwfWOXTkM",
+          "url": "https://www.youtube.com/watch?v=P6YewrUwNK4",
+          "video_id": "P6YewrUwNK4",
           "is_marathon": true
         },
         {
@@ -25838,8 +25861,8 @@
           "animeName": "BLEACH",
           "episode": 301,
           "title": "【Limited-Time Free to Watch】《BLEACH》#301 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=10RJR3HLico",
-          "video_id": "10RJR3HLico",
+          "url": "https://www.youtube.com/watch?v=TwPFgb6A_bY",
+          "video_id": "TwPFgb6A_bY",
           "is_marathon": true
         },
         {
@@ -26013,8 +26036,8 @@
           "animeName": "BLEACH",
           "episode": 323,
           "title": "【Limited-Time Free to Watch】《BLEACH》#323 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=L4YNMskBPjw",
-          "video_id": "L4YNMskBPjw",
+          "url": "https://www.youtube.com/watch?v=gRsNNC-hBps",
+          "video_id": "gRsNNC-hBps",
           "is_marathon": true
         },
         {
@@ -26124,8 +26147,8 @@
           "animeName": "BLEACH",
           "episode": 337,
           "title": "【Limited-Time Free to Watch】《BLEACH》#337 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=rtJZzj1_fNM",
-          "video_id": "rtJZzj1_fNM",
+          "url": "https://www.youtube.com/watch?v=oFjdmND9oS8",
+          "video_id": "oFjdmND9oS8",
           "is_marathon": true
         },
         {
@@ -40210,11 +40233,11 @@
           "is_marathon": true
         },
         {
-          "animeName": "⚽️【Required skill for a detective: Soccer(?)】🕵 Detectives These Days Are Crazy!",
+          "animeName": "Detectives These Days Are Crazy!",
           "episode": 2,
-          "title": "⚽️【Required skill for a detective: Soccer(?)】🕵 Detectives These Days Are Crazy!  #2【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=-vLDFp3vjco",
-          "video_id": "-vLDFp3vjco",
+          "title": "《Detectives These Days Are Crazy!》#2 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=lykJAaGo5dI",
+          "video_id": "lykJAaGo5dI",
           "is_marathon": true
         },
         {
@@ -42299,202 +42322,226 @@
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 1,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#1 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=43D_jvNaI64",
-          "video_id": "43D_jvNaI64",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #1 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=TAY9vpoliIU",
+          "video_id": "TAY9vpoliIU",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 2,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#2 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=YtnR8HIgHjA",
-          "video_id": "YtnR8HIgHjA",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #2 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=VIqzU9Pt9-w",
+          "video_id": "VIqzU9Pt9-w",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 3,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#3 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=49QgGvbYvgI",
-          "video_id": "49QgGvbYvgI",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #3 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=Yx4-udVAL00",
+          "video_id": "Yx4-udVAL00",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 4,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#4 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=twBEDCGaw1Q",
-          "video_id": "twBEDCGaw1Q",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #4 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=UY6XKjy5MSA",
+          "video_id": "UY6XKjy5MSA",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 5,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#5 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=ir1tp4tt7U8",
-          "video_id": "ir1tp4tt7U8",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #5 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=07rLH5gnzqg",
+          "video_id": "07rLH5gnzqg",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 6,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#6 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=q8VRNpcIs_w",
-          "video_id": "q8VRNpcIs_w",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #6 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=NSQLolugOAE",
+          "video_id": "NSQLolugOAE",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 7,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#7 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=7Z46ugYZaF8",
-          "video_id": "7Z46ugYZaF8",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #7 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=I1XiAxnIyzM",
+          "video_id": "I1XiAxnIyzM",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 8,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#8 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=P3o-U_tv9T0",
-          "video_id": "P3o-U_tv9T0",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #8 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=RhILCcSxZGo",
+          "video_id": "RhILCcSxZGo",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 9,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#9 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=Z5h-vWon85o",
-          "video_id": "Z5h-vWon85o",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #9 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=yYbP3kIPQ7k",
+          "video_id": "yYbP3kIPQ7k",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 10,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#10 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=Y448tgEuOCQ",
-          "video_id": "Y448tgEuOCQ",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #10 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=6uWK0NHMrtY",
+          "video_id": "6uWK0NHMrtY",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 11,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#11 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=Y8ztBAqveuw",
-          "video_id": "Y8ztBAqveuw",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #11 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=1kvlgjMe38Q",
+          "video_id": "1kvlgjMe38Q",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 12,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#12 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=FNin_dFf1tM",
-          "video_id": "FNin_dFf1tM",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #12 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=a5o8dpc5-Jo",
+          "video_id": "a5o8dpc5-Jo",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 13,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#13 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=iQ1v-tx1rVg",
-          "video_id": "iQ1v-tx1rVg",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #13 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=o-rqRVRZ-yI",
+          "video_id": "o-rqRVRZ-yI",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 14,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#14 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=4JtkYUHPr2c",
-          "video_id": "4JtkYUHPr2c",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #14 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=ShWs62XM-Sk",
+          "video_id": "ShWs62XM-Sk",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 15,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#15 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=NDlJKnxmtgs",
-          "video_id": "NDlJKnxmtgs",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #15 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=puJ5mjku90k",
+          "video_id": "puJ5mjku90k",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 16,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#16 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=MJIl9oYTnwI",
-          "video_id": "MJIl9oYTnwI",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #16 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=Gzw0bqv6oZU",
+          "video_id": "Gzw0bqv6oZU",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 17,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#17 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=sTNQp5RAkiY",
-          "video_id": "sTNQp5RAkiY",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #17 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=wC2athGL4h4",
+          "video_id": "wC2athGL4h4",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 18,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#18 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=CvnA3ZZrruE",
-          "video_id": "CvnA3ZZrruE",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #18 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=PsI2aEWV9IA",
+          "video_id": "PsI2aEWV9IA",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 19,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#19 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=hl7fZ6fK4uA",
-          "video_id": "hl7fZ6fK4uA",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #19 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=cbOoVhGuYbY",
+          "video_id": "cbOoVhGuYbY",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 20,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#20 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=-iakSdtEkbY",
-          "video_id": "-iakSdtEkbY",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #20 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=kw5gmiomAkU",
+          "video_id": "kw5gmiomAkU",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 21,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#21 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=0B8n43AfuMk",
-          "video_id": "0B8n43AfuMk",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #21 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=nR7NntQ4Yt4",
+          "video_id": "nR7NntQ4Yt4",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 22,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#22 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=Xrxl-shE82c",
-          "video_id": "Xrxl-shE82c",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #22 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=rjQW6ukKvfs",
+          "video_id": "rjQW6ukKvfs",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 23,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#23 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=4uVGLDzLpbM",
-          "video_id": "4uVGLDzLpbM",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #23 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=Nz99LWTT8e8",
+          "video_id": "Nz99LWTT8e8",
+          "is_marathon": true,
+          "is_donghua": true
         },
         {
           "animeName": "Dragon Raja II -The Mourner's Eyes",
           "episode": 24,
-          "title": "《Dragon Raja II -The Mourner's Eyes-》#24 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=Zsf2M-YKtdc",
-          "video_id": "Zsf2M-YKtdc",
-          "is_marathon": true
+          "title": "Dragon Raja II -The Mourner's Eyes- #24 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=znBatC2TJ6Q",
+          "video_id": "znBatC2TJ6Q",
+          "is_marathon": true,
+          "is_donghua": true
         }
       ],
       "episode_count": 24,
-      "thumbnail_video_id": "43D_jvNaI64",
+      "thumbnail_video_id": "TAY9vpoliIU",
       "min_episode": 1,
-      "marathon_video_id": "43D_jvNaI64",
+      "marathon_video_id": "TAY9vpoliIU",
       "marathon_title": "Dragon Raja II -The Mourner's Eyes",
-      "is_donghua": false
+      "is_donghua": true
     },
     {
       "name": "Dragon's Triumph in the Celestial Realm",
@@ -51562,9 +51609,17 @@
           "url": "https://www.youtube.com/watch?v=VAhbwY4-iQ0",
           "video_id": "VAhbwY4-iQ0",
           "is_marathon": true
+        },
+        {
+          "animeName": "GHOST CONCERT : missing Songs",
+          "episode": 6,
+          "title": "《GHOST CONCERT : missing Songs》#6 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=N0M2DPjq7dg",
+          "video_id": "N0M2DPjq7dg",
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "Caj2oX2YWsc",
       "min_episode": 1,
       "marathon_video_id": "Caj2oX2YWsc",
@@ -51608,9 +51663,16 @@
           "title": "《GHOST CONCERT: missing Songs》#5 (ID Sub)【Ani-One Indonesia】",
           "url": "https://www.youtube.com/watch?v=I8Iy-e7p-70",
           "video_id": "I8Iy-e7p-70"
+        },
+        {
+          "animeName": "GHOST CONCERT: missing Songs",
+          "episode": 6,
+          "title": "《GHOST CONCERT: missing Songs》#6 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=hdv17uT0NPk",
+          "video_id": "hdv17uT0NPk"
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "nMFBS-4Uz18",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -53824,9 +53886,27 @@
           "video_id": "KxssJD_7TFM",
           "is_marathon": true,
           "is_donghua": true
+        },
+        {
+          "animeName": "God Troubles Me Season 4",
+          "episode": 5,
+          "title": "God Troubles Me Season 4 #5 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=fr9sZ4Mo08E",
+          "video_id": "fr9sZ4Mo08E",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "God Troubles Me Season 4",
+          "episode": 6,
+          "title": "God Troubles Me Season 4 #6 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=urr868hpQec",
+          "video_id": "urr868hpQec",
+          "is_marathon": true,
+          "is_donghua": true
         }
       ],
-      "episode_count": 4,
+      "episode_count": 6,
       "thumbnail_video_id": "eOu0eYYD-T8",
       "min_episode": 1,
       "marathon_video_id": "eOu0eYYD-T8",
@@ -55948,6 +56028,53 @@
       "marathon_video_id": null,
       "marathon_title": null,
       "is_donghua": false
+    },
+    {
+      "name": "Heaven's Game",
+      "videos": [
+        {
+          "animeName": "Heaven's Game",
+          "episode": 1,
+          "title": "【Heaven's Game】EP01 | MULTISUB | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=4er8kRDlm4g",
+          "video_id": "4er8kRDlm4g",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Heaven's Game",
+          "episode": 2,
+          "title": "【Heaven's Game】EP02 | MULTISUB |  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=YPlmwU_wIek",
+          "video_id": "YPlmwU_wIek",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Heaven's Game",
+          "episode": 3,
+          "title": "【Heaven's Game】EP03 | MULTISUB |  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=TEpZ6ty5Z4c",
+          "video_id": "TEpZ6ty5Z4c",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Heaven's Game",
+          "episode": 4,
+          "title": "【Heaven's Game】EP04 | MULTISUB | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=vf76gGjrmTQ",
+          "video_id": "vf76gGjrmTQ",
+          "is_donghua": true,
+          "is_marathon": true
+        }
+      ],
+      "episode_count": 4,
+      "thumbnail_video_id": "4er8kRDlm4g",
+      "min_episode": 1,
+      "marathon_video_id": "4er8kRDlm4g",
+      "marathon_title": "Heaven's Game",
+      "is_donghua": true
     },
     {
       "name": "Hero Without a Class: Who Even Needs Skills?!",
@@ -67099,6 +67226,94 @@
       "is_donghua": false
     },
     {
+      "name": "Kaiju No. 8 (Season 2)",
+      "videos": [
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 13,
+          "title": "《Kaiju No. 8 (Season 2)》#13 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=gvHeKAkcavI",
+          "video_id": "gvHeKAkcavI"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 14,
+          "title": "《Kaiju No. 8 (Season 2)》#14 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=veNkvLsaeIY",
+          "video_id": "veNkvLsaeIY"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 15,
+          "title": "《Kaiju No. 8 (Season 2)》#15 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=bdY2Zm446aA",
+          "video_id": "bdY2Zm446aA"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 16,
+          "title": "《Kaiju No. 8 (Season 2)》#16 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=4wdpDewAOPw",
+          "video_id": "4wdpDewAOPw"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 17,
+          "title": "《Kaiju No. 8 (Season 2)》#17 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=Mvh5S19nSDA",
+          "video_id": "Mvh5S19nSDA"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 18,
+          "title": "《Kaiju No. 8 (Season 2)》#18 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=ZijqHEW5l_g",
+          "video_id": "ZijqHEW5l_g"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 19,
+          "title": "《Kaiju No. 8 (Season 2)》#19 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=sfn6aeSuxCs",
+          "video_id": "sfn6aeSuxCs"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 20,
+          "title": "《Kaiju No. 8 (Season 2)》#20 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=iXbdoO8DNPc",
+          "video_id": "iXbdoO8DNPc"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 21,
+          "title": "《Kaiju No. 8 (Season 2)》#21 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=44g8k61fl2Q",
+          "video_id": "44g8k61fl2Q"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 22,
+          "title": "《Kaiju No. 8 (Season 2)》#22 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=GU3ftfS8By0",
+          "video_id": "GU3ftfS8By0"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 23,
+          "title": "《Kaiju No. 8 (Season 2)》#23 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=bBOFfpDE5ro",
+          "video_id": "bBOFfpDE5ro"
+        }
+      ],
+      "episode_count": 11,
+      "thumbnail_video_id": "gvHeKAkcavI",
+      "min_episode": 13,
+      "marathon_video_id": null,
+      "marathon_title": null,
+      "is_donghua": false
+    },
+    {
       "name": "Kaina of the Great Snow Sea",
       "videos": [
         {
@@ -67336,9 +67551,30 @@
           "title": "【Dub Indonesia】《Kakuriyo -Penginapan & Santapan untuk Roh- 2》｜Episode 06｜TROPICS ENTERTAINMENT",
           "url": "https://www.youtube.com/watch?v=5LrOgnrAKFU",
           "video_id": "5LrOgnrAKFU"
+        },
+        {
+          "animeName": "Kakuriyo -Penginapan & Santapan untuk Roh- 2 (Dub Indo)",
+          "episode": 7,
+          "title": "【Dub Indonesia】《Kakuriyo -Penginapan & Santapan untuk Roh- 2》｜Episode 07｜TROPICS ENTERTAINMENT",
+          "url": "https://www.youtube.com/watch?v=wzTEHpZQFBk",
+          "video_id": "wzTEHpZQFBk"
+        },
+        {
+          "animeName": "Kakuriyo -Penginapan & Santapan untuk Roh- 2 (Dub Indo)",
+          "episode": 8,
+          "title": "【Dub Indonesia】《Kakuriyo -Penginapan & Santapan untuk Roh- 2》｜Episode 08｜TROPICS ENTERTAINMENT",
+          "url": "https://www.youtube.com/watch?v=GvUSeSzGMT4",
+          "video_id": "GvUSeSzGMT4"
+        },
+        {
+          "animeName": "Kakuriyo -Penginapan & Santapan untuk Roh- 2 (Dub Indo)",
+          "episode": 9,
+          "title": "【Dub Indonesia】《Kakuriyo -Penginapan & Santapan untuk Roh- 2》｜Episode 09｜TROPICS ENTERTAINMENT",
+          "url": "https://www.youtube.com/watch?v=IeCaR59NF2s",
+          "video_id": "IeCaR59NF2s"
         }
       ],
-      "episode_count": 6,
+      "episode_count": 9,
       "thumbnail_video_id": "OwscsQXKY5c",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -68942,9 +69178,17 @@
           "url": "https://www.youtube.com/watch?v=nlGPbrBgOvo",
           "video_id": "nlGPbrBgOvo",
           "is_marathon": true
+        },
+        {
+          "animeName": "Kirio Fan Club",
+          "episode": 6,
+          "title": "《Kirio Fan Club》#6 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=LhlHdRhEKro",
+          "video_id": "LhlHdRhEKro",
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "51_GOGstF78",
       "min_episode": 1,
       "marathon_video_id": "51_GOGstF78",
@@ -69840,16 +70084,17 @@
         {
           "animeName": "Koala's Diary",
           "episode": 31,
-          "title": "《Koala's Diary》#31 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=iNmS4o_LaN0",
-          "video_id": "iNmS4o_LaN0"
+          "title": "《Koala's Diary》#31 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=VRbZ-vdHuEA",
+          "video_id": "VRbZ-vdHuEA",
+          "is_marathon": true
         }
       ],
       "episode_count": 31,
       "thumbnail_video_id": "CTK-GSWCBak",
       "min_episode": 1,
-      "marathon_video_id": null,
-      "marathon_title": null,
+      "marathon_video_id": "CTK-GSWCBak",
+      "marathon_title": "Koala's Diary",
       "is_donghua": false
     },
     {
@@ -70930,9 +71175,17 @@
           "url": "https://www.youtube.com/watch?v=MQ9iM9WiIq8",
           "video_id": "MQ9iM9WiIq8",
           "is_marathon": true
+        },
+        {
+          "animeName": "Kujima: Why Sing, When You Can Warble",
+          "episode": 5,
+          "title": "《Kujima: Why Sing, When You Can Warble》#5 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=1xIjj7dC33o",
+          "video_id": "1xIjj7dC33o",
+          "is_marathon": true
         }
       ],
-      "episode_count": 4,
+      "episode_count": 5,
       "thumbnail_video_id": "1ZBBdgYXW7g",
       "min_episode": 1,
       "marathon_video_id": "1ZBBdgYXW7g",
@@ -71361,9 +71614,17 @@
           "url": "https://www.youtube.com/watch?v=tT4dqyzA8lM",
           "video_id": "tT4dqyzA8lM",
           "is_marathon": true
+        },
+        {
+          "animeName": "Kusunoki's Garden of Gods",
+          "episode": 6,
+          "title": "《Kusunoki's Garden of Gods》#6 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=y8YJFJMED9o",
+          "video_id": "y8YJFJMED9o",
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "BxSsUmxgylI",
       "min_episode": 1,
       "marathon_video_id": "BxSsUmxgylI",
@@ -76297,9 +76558,17 @@
           "url": "https://www.youtube.com/watch?v=oBjAzLoTYa4",
           "video_id": "oBjAzLoTYa4",
           "is_marathon": true
+        },
+        {
+          "animeName": "MAO",
+          "episode": 6,
+          "title": "《MAO》#6 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=xXMHL5Ypr4c",
+          "video_id": "xXMHL5Ypr4c",
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "Uh5S9Po06Js",
       "min_episode": 1,
       "marathon_video_id": "Uh5S9Po06Js",
@@ -77955,10 +78224,9 @@
         {
           "animeName": "MASHIN CREATOR WATARU",
           "episode": 13,
-          "title": "《MASHIN CREATOR WATARU》#13 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=DehB_ZUlK_A",
-          "video_id": "DehB_ZUlK_A",
-          "is_marathon": true
+          "title": "《MASHIN CREATOR WATARU》#13 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=PrBPM0dgKLI",
+          "video_id": "PrBPM0dgKLI"
         },
         {
           "animeName": "MASHIN CREATOR WATARU",
@@ -78052,8 +78320,8 @@
       "episode_count": 24,
       "thumbnail_video_id": "dfuVCIpEhFY",
       "min_episode": 1,
-      "marathon_video_id": "dfuVCIpEhFY",
-      "marathon_title": "MASHIN CREATOR WATARU",
+      "marathon_video_id": null,
+      "marathon_title": null,
       "is_donghua": false
     },
     {
@@ -80259,9 +80527,17 @@
           "url": "https://www.youtube.com/watch?v=CUZ4k3et51g",
           "video_id": "CUZ4k3et51g",
           "is_marathon": true
+        },
+        {
+          "animeName": "Mistress Kanan Is Devilishly Easy",
+          "episode": 6,
+          "title": "《Mistress Kanan Is Devilishly Easy》#6 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=OrJs5J9RUzs",
+          "video_id": "OrJs5J9RUzs",
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "fi9ro3yZcEY",
       "min_episode": 1,
       "marathon_video_id": "fi9ro3yZcEY",
@@ -81214,9 +81490,17 @@
           "url": "https://www.youtube.com/watch?v=dNQSa5ou4EE",
           "video_id": "dNQSa5ou4EE",
           "is_marathon": true
+        },
+        {
+          "animeName": "Monster Eater",
+          "episode": 6,
+          "title": "《Monster Eater》#6 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=BlePRDzJG9o",
+          "video_id": "BlePRDzJG9o",
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "1q6dedaKSdI",
       "min_episode": 1,
       "marathon_video_id": "1q6dedaKSdI",
@@ -88828,9 +89112,16 @@
           "title": "Pahlawan Sampah - Episode 16",
           "url": "https://www.youtube.com/watch?v=eRo5zXDVdnA",
           "video_id": "eRo5zXDVdnA"
+        },
+        {
+          "animeName": "Pahlawan Sampah",
+          "episode": 17,
+          "title": "Pahlawan Sampah - Episode 17",
+          "url": "https://www.youtube.com/watch?v=YDTxgnhofNQ",
+          "video_id": "YDTxgnhofNQ"
         }
       ],
-      "episode_count": 16,
+      "episode_count": 17,
       "thumbnail_video_id": "DlwmOUnNXB8",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -90277,9 +90568,63 @@
           "video_id": "re_Uw3pIofw",
           "is_donghua": true,
           "is_marathon": true
+        },
+        {
+          "animeName": "Pheromones Say We're Not Meant to BeOur Pheromones Say No",
+          "episode": 19,
+          "title": "【Pheromones Say We're Not Meant to BeOur Pheromones Say No】EP19 |  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=NhLmfWF9iEE",
+          "video_id": "NhLmfWF9iEE",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Pheromones Say We're Not Meant to BeOur Pheromones Say No",
+          "episode": 20,
+          "title": "【Pheromones Say We're Not Meant to BeOur Pheromones Say No】EP20 |  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=43PELnUDg-4",
+          "video_id": "43PELnUDg-4",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Pheromones Say We're Not Meant to BeOur Pheromones Say No",
+          "episode": 21,
+          "title": "【Pheromones Say We're Not Meant to BeOur Pheromones Say No】EP21 | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=cgxXqPjqsE4",
+          "video_id": "cgxXqPjqsE4",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Pheromones Say We're Not Meant to BeOur Pheromones Say No",
+          "episode": 22,
+          "title": "【Pheromones Say We're Not Meant to BeOur Pheromones Say No】EP22 | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=87GvHS1H5YI",
+          "video_id": "87GvHS1H5YI",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Pheromones Say We're Not Meant to BeOur Pheromones Say No",
+          "episode": 23,
+          "title": "【Pheromones Say We're Not Meant to BeOur Pheromones Say No】EP23 | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=4X0kEI5xR1o",
+          "video_id": "4X0kEI5xR1o",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Pheromones Say We're Not Meant to BeOur Pheromones Say No",
+          "episode": 24,
+          "title": "【信息素说我们不可能 Pheromones Say We're Not Meant to BeOur Pheromones Say No】EP24 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=uKK_WR-c1hE",
+          "video_id": "uKK_WR-c1hE",
+          "is_donghua": true,
+          "is_marathon": true
         }
       ],
-      "episode_count": 17,
+      "episode_count": 23,
       "thumbnail_video_id": "Hs-t5lnTllo",
       "min_episode": 1,
       "marathon_video_id": "Hs-t5lnTllo",
@@ -91507,95 +91852,95 @@
       "name": "Raja Iblis Nyambi!!",
       "videos": [
         {
-          "animeName": "Raja Iblis Nyambi!",
+          "animeName": "Raja Iblis Nyambi!!",
           "episode": 1,
-          "title": "Raja Iblis Nyambi! - Episode 1",
-          "url": "https://www.youtube.com/watch?v=Zo0ctaKApNg",
-          "video_id": "Zo0ctaKApNg"
+          "title": "Raja Iblis Nyambi!! - Episode 1",
+          "url": "https://www.youtube.com/watch?v=RpJZoSQNu4w",
+          "video_id": "RpJZoSQNu4w"
         },
         {
-          "animeName": "Raja Iblis Nyambi!",
+          "animeName": "Raja Iblis Nyambi!!",
           "episode": 2,
-          "title": "Raja Iblis Nyambi! - Episode 2",
-          "url": "https://www.youtube.com/watch?v=kygZNsLhvZw",
-          "video_id": "kygZNsLhvZw"
+          "title": "Raja Iblis Nyambi!! - Episode 2",
+          "url": "https://www.youtube.com/watch?v=g_eJEZEGN-8",
+          "video_id": "g_eJEZEGN-8"
         },
         {
-          "animeName": "Raja Iblis Nyambi!",
+          "animeName": "Raja Iblis Nyambi!!",
           "episode": 3,
-          "title": "Raja Iblis Nyambi! - Episode 3",
-          "url": "https://www.youtube.com/watch?v=DA6l1lXRixE",
-          "video_id": "DA6l1lXRixE"
+          "title": "Raja Iblis Nyambi!! - Episode 3",
+          "url": "https://www.youtube.com/watch?v=vGGcIIhjzlo",
+          "video_id": "vGGcIIhjzlo"
         },
         {
-          "animeName": "Raja Iblis Nyambi!",
+          "animeName": "Raja Iblis Nyambi!!",
           "episode": 4,
-          "title": "Raja Iblis Nyambi! - Episode 4",
-          "url": "https://www.youtube.com/watch?v=rerqMApTtto",
-          "video_id": "rerqMApTtto"
+          "title": "Raja Iblis Nyambi!! - Episode 4",
+          "url": "https://www.youtube.com/watch?v=lXEfIuBrBpk",
+          "video_id": "lXEfIuBrBpk"
         },
         {
-          "animeName": "Raja Iblis Nyambi!",
+          "animeName": "Raja Iblis Nyambi!!",
           "episode": 5,
-          "title": "Raja Iblis Nyambi! - Episode 5",
-          "url": "https://www.youtube.com/watch?v=p0I0fU4C9ao",
-          "video_id": "p0I0fU4C9ao"
+          "title": "Raja Iblis Nyambi!! - Episode 5",
+          "url": "https://www.youtube.com/watch?v=kleh2mhlEZc",
+          "video_id": "kleh2mhlEZc"
         },
         {
-          "animeName": "Raja Iblis Nyambi!",
+          "animeName": "Raja Iblis Nyambi!!",
           "episode": 6,
-          "title": "Raja Iblis Nyambi! - Episode 6",
-          "url": "https://www.youtube.com/watch?v=nPXK5g17zj8",
-          "video_id": "nPXK5g17zj8"
+          "title": "Raja Iblis Nyambi!! - Episode 6",
+          "url": "https://www.youtube.com/watch?v=2snnmsnzTlE",
+          "video_id": "2snnmsnzTlE"
         },
         {
-          "animeName": "Raja Iblis Nyambi!",
+          "animeName": "Raja Iblis Nyambi!!",
           "episode": 7,
-          "title": "Raja Iblis Nyambi! - Episode 7",
-          "url": "https://www.youtube.com/watch?v=AVmNYNAq6xw",
-          "video_id": "AVmNYNAq6xw"
+          "title": "Raja Iblis Nyambi!! - Episode 7",
+          "url": "https://www.youtube.com/watch?v=q-Rya5AD8x0",
+          "video_id": "q-Rya5AD8x0"
         },
         {
-          "animeName": "Raja Iblis Nyambi!",
+          "animeName": "Raja Iblis Nyambi!!",
           "episode": 8,
-          "title": "Raja Iblis Nyambi! - Episode 8",
-          "url": "https://www.youtube.com/watch?v=uR7_grK-Vsk",
-          "video_id": "uR7_grK-Vsk"
+          "title": "Raja Iblis Nyambi!! - Episode 8",
+          "url": "https://www.youtube.com/watch?v=HGGXwo5QzWA",
+          "video_id": "HGGXwo5QzWA"
         },
         {
-          "animeName": "Raja Iblis Nyambi!",
+          "animeName": "Raja Iblis Nyambi!!",
           "episode": 9,
-          "title": "Raja Iblis Nyambi! - Episode 9",
-          "url": "https://www.youtube.com/watch?v=5Uu-65turjk",
-          "video_id": "5Uu-65turjk"
+          "title": "Raja Iblis Nyambi!! - Episode 9",
+          "url": "https://www.youtube.com/watch?v=-Ken7-UcLRc",
+          "video_id": "-Ken7-UcLRc"
         },
         {
-          "animeName": "Raja Iblis Nyambi!",
+          "animeName": "Raja Iblis Nyambi!!",
           "episode": 10,
-          "title": "Raja Iblis Nyambi! - Episode 10",
-          "url": "https://www.youtube.com/watch?v=pZOQqUTo76M",
-          "video_id": "pZOQqUTo76M"
+          "title": "Raja Iblis Nyambi!! - Episode 10",
+          "url": "https://www.youtube.com/watch?v=Dglqx0Emn4M",
+          "video_id": "Dglqx0Emn4M"
         },
         {
-          "animeName": "Raja Iblis Nyambi!",
+          "animeName": "Raja Iblis Nyambi!!",
           "episode": 11,
-          "title": "Raja Iblis Nyambi! - Episode 11",
-          "url": "https://www.youtube.com/watch?v=cCwopqxDfvU",
-          "video_id": "cCwopqxDfvU"
+          "title": "Raja Iblis Nyambi!! - Episode 11",
+          "url": "https://www.youtube.com/watch?v=ca1CqF36AXA",
+          "video_id": "ca1CqF36AXA"
         },
         {
-          "animeName": "Raja Iblis Nyambi!",
+          "animeName": "Raja Iblis Nyambi!!",
           "episode": 12,
-          "title": "Raja Iblis Nyambi! - Episode 12",
-          "url": "https://www.youtube.com/watch?v=Omk4ydvtqEs",
-          "video_id": "Omk4ydvtqEs"
+          "title": "Raja Iblis Nyambi!! - Episode 12",
+          "url": "https://www.youtube.com/watch?v=QvgnJ9mabfw",
+          "video_id": "QvgnJ9mabfw"
         },
         {
-          "animeName": "Raja Iblis Nyambi!",
+          "animeName": "Raja Iblis Nyambi!!",
           "episode": 13,
-          "title": "Raja Iblis Nyambi! - Episode 13",
-          "url": "https://www.youtube.com/watch?v=5X2VpGtFIxE",
-          "video_id": "5X2VpGtFIxE"
+          "title": "Raja Iblis Nyambi!! - Episode 13",
+          "url": "https://www.youtube.com/watch?v=ZwYL1_4ac74",
+          "video_id": "ZwYL1_4ac74"
         },
         {
           "animeName": "Raja Iblis Nyambi!!",
@@ -91676,7 +92021,7 @@
         }
       ],
       "episode_count": 24,
-      "thumbnail_video_id": "Zo0ctaKApNg",
+      "thumbnail_video_id": "RpJZoSQNu4w",
       "min_episode": 1,
       "marathon_video_id": null,
       "marathon_title": null,
@@ -93648,9 +93993,16 @@
           "title": "Rilakkuma - Episode 5",
           "url": "https://www.youtube.com/watch?v=_SE06QMOaaA",
           "video_id": "_SE06QMOaaA"
+        },
+        {
+          "animeName": "Rilakkuma",
+          "episode": 6,
+          "title": "Rilakkuma - Episode 6",
+          "url": "https://www.youtube.com/watch?v=l-TnfbL70EM",
+          "video_id": "l-TnfbL70EM"
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "LZZzYVfNw78",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -94703,16 +95055,17 @@
         {
           "animeName": "Rooster Fighter",
           "episode": 4,
-          "title": "《Rooster Fighter》#4 (ID sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=FuODCJjOu6s",
-          "video_id": "FuODCJjOu6s"
+          "title": "《Rooster Fighter》#4 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=MVQfA5IJMAA",
+          "video_id": "MVQfA5IJMAA",
+          "is_marathon": true
         }
       ],
       "episode_count": 4,
       "thumbnail_video_id": "LthcDIraW2s",
       "min_episode": 1,
-      "marathon_video_id": null,
-      "marathon_title": null,
+      "marathon_video_id": "LthcDIraW2s",
+      "marathon_title": "Rooster Fighter",
       "is_donghua": false
     },
     {
@@ -96955,56 +97308,56 @@
         {
           "animeName": "See You Tomorrow at the Food Court",
           "episode": 1,
-          "title": "《See You Tomorrow at the Food Court》#1 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=IUFPYJdSwlM",
-          "video_id": "IUFPYJdSwlM",
+          "title": "《See You Tomorrow at the Food Court》#1 (ENCORE)  (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=EhKXmGLzqBo",
+          "video_id": "EhKXmGLzqBo",
           "is_marathon": true
         },
         {
           "animeName": "See You Tomorrow at the Food Court",
           "episode": 2,
-          "title": "《See You Tomorrow at the Food Court》#2 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=jyKnrXp-Rg4",
-          "video_id": "jyKnrXp-Rg4",
+          "title": "《See You Tomorrow at the Food Court》#2 (ENCORE)  (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=iuL5jr87D4U",
+          "video_id": "iuL5jr87D4U",
           "is_marathon": true
         },
         {
           "animeName": "See You Tomorrow at the Food Court",
           "episode": 3,
-          "title": "《See You Tomorrow at the Food Court》#3 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=QKC-mYc2iho",
-          "video_id": "QKC-mYc2iho",
+          "title": "《See You Tomorrow at the Food Court》#3 (ENCORE)  (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=RWAO1fa_yxo",
+          "video_id": "RWAO1fa_yxo",
           "is_marathon": true
         },
         {
           "animeName": "See You Tomorrow at the Food Court",
           "episode": 4,
-          "title": "《See You Tomorrow at the Food Court》#4 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=WR4kRBk0izc",
-          "video_id": "WR4kRBk0izc",
+          "title": "《See You Tomorrow at the Food Court》#4 (ENCORE)  (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=DTfGkURz9hI",
+          "video_id": "DTfGkURz9hI",
           "is_marathon": true
         },
         {
           "animeName": "See You Tomorrow at the Food Court",
           "episode": 5,
-          "title": "《See You Tomorrow at the Food Court》#5 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=fNl7Q1mwJVs",
-          "video_id": "fNl7Q1mwJVs",
+          "title": "《See You Tomorrow at the Food Court》#5 (ENCORE)  (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=ynl5mhehMRo",
+          "video_id": "ynl5mhehMRo",
           "is_marathon": true
         },
         {
           "animeName": "See You Tomorrow at the Food Court",
           "episode": 6,
           "title": "《See You Tomorrow at the Food Court》#6 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=BS2gS3n08AY",
-          "video_id": "BS2gS3n08AY",
+          "url": "https://www.youtube.com/watch?v=_nzqEtjrFeE",
+          "video_id": "_nzqEtjrFeE",
           "is_marathon": true
         }
       ],
       "episode_count": 6,
-      "thumbnail_video_id": "IUFPYJdSwlM",
+      "thumbnail_video_id": "EhKXmGLzqBo",
       "min_episode": 1,
-      "marathon_video_id": "IUFPYJdSwlM",
+      "marathon_video_id": "EhKXmGLzqBo",
       "marathon_title": "See You Tomorrow at the Food Court",
       "is_donghua": false
     },
@@ -97453,9 +97806,9 @@
         {
           "animeName": "Sengoku Youko: The Thousandfold Chaos Arc",
           "episode": 21,
-          "title": "😏【Do not be distracted during a duel!】《Sengoku Youko: The Thousandfold Chaos Arc》#21【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=-8xuB5hmijI",
-          "video_id": "-8xuB5hmijI",
+          "title": "《Sengoku Youko: The Thousandfold Chaos Arc》#21 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=cOn6JK84lfs",
+          "video_id": "cOn6JK84lfs",
           "is_marathon": true
         },
         {
@@ -99860,9 +100213,16 @@
           "title": "Snowball Earth - Episode 5",
           "url": "https://www.youtube.com/watch?v=_MY4i7LTHR4",
           "video_id": "_MY4i7LTHR4"
+        },
+        {
+          "animeName": "Snowball Earth",
+          "episode": 6,
+          "title": "Snowball Earth - Episode 6",
+          "url": "https://www.youtube.com/watch?v=PVxjAxGp_Pg",
+          "video_id": "PVxjAxGp_Pg"
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "kG2WNURpedA",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -105984,9 +106344,9 @@
         {
           "animeName": "Taming My Fluffy Shizun",
           "episode": 2,
-          "title": "【Taming My Fluffy Shizun】EP02 | MULTISUB | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=rwMQLLXAK9I",
-          "video_id": "rwMQLLXAK9I",
+          "title": "【Taming My Fluffy Shizun】EP02 | MULTISUB |  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=k3Of5nJXfMw",
+          "video_id": "k3Of5nJXfMw",
           "is_donghua": true,
           "is_marathon": true
         }
@@ -108290,9 +108650,17 @@
           "url": "https://www.youtube.com/watch?v=Fym47DZiPnk",
           "video_id": "Fym47DZiPnk",
           "is_marathon": true
+        },
+        {
+          "animeName": "The Classroom of a Black Cat and a Witch",
+          "episode": 5,
+          "title": "《The Classroom of a Black Cat and a Witch》#5 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=axGA8qgsrXY",
+          "video_id": "axGA8qgsrXY",
+          "is_marathon": true
         }
       ],
-      "episode_count": 4,
+      "episode_count": 5,
       "thumbnail_video_id": "bFwW728v9wo",
       "min_episode": 1,
       "marathon_video_id": "bFwW728v9wo",
@@ -112288,9 +112656,17 @@
           "url": "https://www.youtube.com/watch?v=JQ6yTKL9Aa8",
           "video_id": "JQ6yTKL9Aa8",
           "is_marathon": true
+        },
+        {
+          "animeName": "The Great Sage Ryddel and the Hands of Time",
+          "episode": 6,
+          "title": "《The Great Sage Ryddel and the Hands of Time》#6 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=de21QOgfWfw",
+          "video_id": "de21QOgfWfw",
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "aOOjA9cSrCU",
       "min_episode": 1,
       "marathon_video_id": "aOOjA9cSrCU",
@@ -117445,8 +117821,8 @@
           "animeName": "The Magic Chef of Ice and Fire",
           "episode": 148,
           "title": "MULTISUB【The Magic Chef of Ice and Fire】EP148 | Fantasy Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=C4GGwI2lMSc",
-          "video_id": "C4GGwI2lMSc",
+          "url": "https://www.youtube.com/watch?v=e5lBiMuZHwk",
+          "video_id": "e5lBiMuZHwk",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -117454,8 +117830,8 @@
           "animeName": "The Magic Chef of Ice and Fire",
           "episode": 149,
           "title": "MULTISUB【The Magic Chef of Ice and Fire】EP149 | Fantasy Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=3UNn2IYzw_0",
-          "video_id": "3UNn2IYzw_0",
+          "url": "https://www.youtube.com/watch?v=QcmQJ34CVME",
+          "video_id": "QcmQJ34CVME",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -117463,62 +117839,62 @@
           "animeName": "The Magic Chef of Ice and Fire",
           "episode": 150,
           "title": "MULTISUB【The Magic Chef of Ice and Fire】EP150 | Fantasy Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=jsCWXwSxRH8",
-          "video_id": "jsCWXwSxRH8",
+          "url": "https://www.youtube.com/watch?v=9XgOe5Zdvu4",
+          "video_id": "9XgOe5Zdvu4",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "The Magic Chef of Ice and Fire",
           "episode": 151,
-          "title": "ENGSUB【The Magic Chef of Ice and Fire】EP151  | Fantasy fighting manga | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=F-LE3cMR5QA",
-          "video_id": "F-LE3cMR5QA",
+          "title": "MULTISUB【The Magic Chef of Ice and Fire】EP151 | Fantasy Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=uf87VRixi2M",
+          "video_id": "uf87VRixi2M",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "The Magic Chef of Ice and Fire",
           "episode": 152,
-          "title": "ENGSUB【The Magic Chef of Ice and Fire】EP152 |  Fantasy Fighting Manga | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=4apntOZshhM",
-          "video_id": "4apntOZshhM",
+          "title": "MULTISUB【The Magic Chef of Ice and Fire】EP152 | Fantasy Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=o48QUOh4vAs",
+          "video_id": "o48QUOh4vAs",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "The Magic Chef of Ice and Fire",
           "episode": 153,
-          "title": "ENGSUB【The Magic Chef of Ice and Fire】EP153 | Fantasy fighting manga | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=Qq0WH9j30Ew",
-          "video_id": "Qq0WH9j30Ew",
+          "title": "MULTISUB【The Magic Chef of Ice and Fire】EP153 | Fantasy Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=W3EUaKCGsNo",
+          "video_id": "W3EUaKCGsNo",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "The Magic Chef of Ice and Fire",
           "episode": 154,
-          "title": "ENGSUB【The Magic Chef of Ice and Fire】EP154 | Fantasy fighting manga | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=33B8u677l6E",
-          "video_id": "33B8u677l6E",
+          "title": "MULTISUB【The Magic Chef of Ice and Fire】EP154 | Fantasy Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=z1vC7xVBDnY",
+          "video_id": "z1vC7xVBDnY",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "The Magic Chef of Ice and Fire",
           "episode": 155,
-          "title": "ENGSUB 【The Magic Chef of Ice and Fire】 EP155  | Fantasy Fighting Manga | Youku Animation",
-          "url": "https://www.youtube.com/watch?v=-OgI7m5NN0g",
-          "video_id": "-OgI7m5NN0g",
+          "title": "MULTISUB【The Magic Chef of Ice and Fire】EP155 | Fantasy Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=L_ze8CIxxvs",
+          "video_id": "L_ze8CIxxvs",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "The Magic Chef of Ice and Fire",
           "episode": 156,
-          "title": "ENGSUB【The Magic Chef of Ice and Fire】 EP156 | Fantasy Fighting Manga | Youku Animation",
-          "url": "https://www.youtube.com/watch?v=vHHkX2KZ7x4",
-          "video_id": "vHHkX2KZ7x4",
+          "title": "MULTISUB【The Magic Chef of Ice and Fire】EP156 | Fantasy Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=GuAA-QoGKtc",
+          "video_id": "GuAA-QoGKtc",
           "is_donghua": true,
           "is_marathon": true
         }
@@ -120484,17 +120860,17 @@
           "animeName": "The Peak of True Martial Arts3",
           "episode": 107,
           "title": "MULTISUB【The Peak of True Martial Arts3】 EP107 | Wuxia Animation | YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=GncPh5QL2pw",
-          "video_id": "GncPh5QL2pw",
+          "url": "https://www.youtube.com/watch?v=HSU_fDRoX9s",
+          "video_id": "HSU_fDRoX9s",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "The Peak of True Martial Arts3",
           "episode": 108,
-          "title": "MULTISUB【The Peak of True Martial Arts3】 EP108 | Wuxia Animation | YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=zXwH4aKy1MA",
-          "video_id": "zXwH4aKy1MA",
+          "title": "ENGSUB【The Peak of True Martial Arts3】EP108  | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=NvIhhvgpnUE",
+          "video_id": "NvIhhvgpnUE",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -120502,8 +120878,8 @@
           "animeName": "The Peak of True Martial Arts3",
           "episode": 109,
           "title": "MULTISUB【The Peak of True Martial Arts3】 EP109 | Wuxia Animation | YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=PCWOXHYHgqc",
-          "video_id": "PCWOXHYHgqc",
+          "url": "https://www.youtube.com/watch?v=TkVsyw3rF9c",
+          "video_id": "TkVsyw3rF9c",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -120582,9 +120958,9 @@
         {
           "animeName": "The Peak of True Martial Arts3",
           "episode": 118,
-          "title": "MULTISUB【The Peak of True Martial Arts3】 EP118 | Wuxia Animation | YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=jpPa9ej1QAI",
-          "video_id": "jpPa9ej1QAI",
+          "title": "ENGSUB【真武巅峰3 The Peak of True Martial Arts3】EP118 | 富贵险中求 | 热血格斗漫 | 优酷动漫YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=rM7XqEPbcys",
+          "video_id": "rM7XqEPbcys",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -122080,8 +122456,8 @@
           "animeName": "The Secrets of Star Divine Arts",
           "episode": 8,
           "title": "MULTISUB【The Secrets of Star Divine Arts】EP08 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=E-OgR8IVOGo",
-          "video_id": "E-OgR8IVOGo",
+          "url": "https://www.youtube.com/watch?v=SU-CLDHzf6k",
+          "video_id": "SU-CLDHzf6k",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -130530,9 +130906,16 @@
           "title": "Tongkat Sihir dan Pedang Wistoria - Episode 14",
           "url": "https://www.youtube.com/watch?v=24IFN8r38tQ",
           "video_id": "24IFN8r38tQ"
+        },
+        {
+          "animeName": "Tongkat Sihir dan Pedang Wistoria",
+          "episode": 15,
+          "title": "Tongkat Sihir dan Pedang Wistoria - Episode 15",
+          "url": "https://www.youtube.com/watch?v=XqVYfoqFyGs",
+          "video_id": "XqVYfoqFyGs"
         }
       ],
-      "episode_count": 14,
+      "episode_count": 15,
       "thumbnail_video_id": "6XwEyFvkDos",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -134574,9 +134957,16 @@
           "title": "Welcome to Demon School! Iruma-kun S4 - Episode 5",
           "url": "https://www.youtube.com/watch?v=zYQzEYC_M3I",
           "video_id": "zYQzEYC_M3I"
+        },
+        {
+          "animeName": "Welcome to Demon School! Iruma-kun S4",
+          "episode": 6,
+          "title": "Welcome to Demon School! Iruma-kun S4 - Episode 6",
+          "url": "https://www.youtube.com/watch?v=D9LAxzXnQLY",
+          "video_id": "D9LAxzXnQLY"
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "w6nMD7UMzxw",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -136362,9 +136752,17 @@
           "url": "https://www.youtube.com/watch?v=CzmFMvvkcMg",
           "video_id": "CzmFMvvkcMg",
           "is_marathon": true
+        },
+        {
+          "animeName": "Yowayowa Sensei",
+          "episode": 5,
+          "title": "《Yowayowa Sensei》#5 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=smjZ8HQ0Z4k",
+          "video_id": "smjZ8HQ0Z4k",
+          "is_marathon": true
         }
       ],
-      "episode_count": 4,
+      "episode_count": 5,
       "thumbnail_video_id": "fGeOQMI8KWs",
       "min_episode": 1,
       "marathon_video_id": "fGeOQMI8KWs",
@@ -137098,6 +137496,6 @@
       "is_donghua": false
     }
   ],
-  "total_series": 846,
-  "last_updated": "2026-05-07"
+  "total_series": 848,
+  "last_updated": "2026-05-10"
 }
