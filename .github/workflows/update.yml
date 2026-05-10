@@ -409,6 +409,12 @@ jobs:
           print('\n[STEP 1] Removing invalid entries...')
           remove_entry('Cuplikan episode Classroom of the Elite S2')
           remove_entry('Ani-One x Dr. STONE Science Class')
+          remove_entry('【Compilation】 LINK CLICK')
+          remove_entry('【Compilation】 LINK CLICK Bridon Arc')
+          remove_entry('【Compilation】 LINK CLICK Season 2')
+          remove_entry('【Compilation】 The Daily Life of the Immortal King')
+          remove_entry('[Tayang Terbatas] Fullmetal Alchemist')
+          remove_entry('⚽️【Required skill for a detective: Soccer(?)】🕵 Detectives These Days Are Crazy!')
           
           # ─────────────────────────────────────────────────────────────
           # STEP 2 — Patch verified MAL IDs
