@@ -310,98 +310,117 @@ jobs:
             || echo "No errors in log"
             
       # the scraped files. parseItsAnime handles the Title/URL/Chapters format.
-      - name: Phase 4a 
+      - name: Phase 4a: Create Patch Script
         run: |
-          cat <<"PATCH" > patch_metadata.py
-                    #!/usr/bin/env python3
-          '''
-          patch_metadata.py  —  Verified MAL-ID injector for anime-collection metadata.json
-          
-          USAGE (pipe from GitHub):
-              curl -sL https://github.com/manami-project/anime-offline-database/releases/latest/download/anime-offline-database-minified.json \
-                | python3 patch_metadata.py
-          
-          USAGE (local offline DB):
-              python3 patch_metadata.py anime-offline-database-minified.json
-          
-          metadata.json must exist in the current directory (run metadata.js --phase1 first).
-          '''
-          
-          import json, sys, os
-          
-          # ── Load offline DB ───────────────────────────────────────────
+          cat <<'PATCH' > patch_metadata.py
+          import json
+          import os
+          import sys
+
+          PREFIX = "meta_"
+          META_FILE = "metadata.json"
+          MAIN_DB_FILE = "anime_data.json"
+
+          # Load offline DB
           if len(sys.argv) >= 2 and os.path.isfile(sys.argv[1]):
-              print(f'[INFO] Reading offline DB from file: {sys.argv[1]}')
-              with open(sys.argv[1], 'r', encoding='utf-8') as f:
+              print(f"[INFO] Reading offline DB from file: {sys.argv[1]}")
+              with open(sys.argv[1], "r", encoding="utf-8") as f:
                   db = json.load(f)
           else:
-              print('[INFO] Reading offline DB from stdin (Manami Project)...')
+              print("[INFO] Reading offline DB from stdin (Manami Project)...")
               db = json.load(sys.stdin)
-          
-          data = db['data']
-          
-          # ── Build MAL ID lookup ───────────────────────────────────────
-          print('[INFO] Building MAL index...')
+
+          data = db["data"]
+
+          # Build MAL ID lookup
+          print("[INFO] Building MAL index...")
           mal_lookup = {}
           for anime in data:
-              mal_src = next((s for s in anime.get('sources', [])
-                              if 'myanimelist.net/anime/' in s), None)
+              mal_src = next(
+                  (s for s in anime.get("sources", []) if "myanimelist.net/anime/" in s),
+                  None,
+              )
               if not mal_src:
                   continue
-              mal_id = mal_src.split('anime/')[1].split('/')[0]
+
+              mal_id = mal_src.split("anime/")[1].split("/")[0]
               mal_lookup[mal_id] = {
-                  'malId':        mal_id,
-                  'matchedTitle': anime['title'],
-                  'tags':         anime.get('tags', []),
-                  'allTitles':    [anime['title']] + list(anime.get('synonyms', [])),
-                  'score':        anime.get('score', {}).get('arithmeticMean', None),
+                  "malId": mal_id,
+                  "matchedTitle": anime["title"],
+                  "tags": anime.get("tags", []),
+                  "allTitles": [anime["title"]] + list(anime.get("synonyms", [])),
+                  "score": anime.get("score", {}).get("arithmeticMean", None),
               }
-          print(f'[INFO] DB loaded: {len(mal_lookup):,} MAL entries')
-          
-          # ── Load metadata.json ────────────────────────────────────────
-          META_FILE = 'metadata.json'
+
+          print(f"[INFO] DB loaded: {len(mal_lookup):,} MAL entries")
+
+          # Load metadata.json
           if not os.path.isfile(META_FILE):
-              print(f'[ERROR] {META_FILE} not found. Run: node metadata.js --phase1')
+              print(f"[ERROR] {META_FILE} not found. Run: node metadata.js --phase1")
               sys.exit(1)
-          
-          with open(META_FILE, 'r', encoding='utf-8') as f:
+
+          with open(META_FILE, "r", encoding="utf-8") as f:
               meta = json.load(f)
-          
-          PREFIX = 'meta_'
-          before_found = sum(1 for k, v in meta.items() if k.startswith(PREFIX) and not v.get('not_found'))
-          before_nf    = sum(1 for k, v in meta.items() if k.startswith(PREFIX) and v.get('not_found'))
-          print(f'[INFO] metadata.json before: {before_found} matched | {before_nf} not_found')
-          
-          # ── Helpers ───────────────────────────────────────────────────
+
+          # Load anime_data.json
+          if not os.path.isfile(MAIN_DB_FILE):
+              print(f"[ERROR] {MAIN_DB_FILE} not found.")
+              sys.exit(1)
+
+          with open(MAIN_DB_FILE, "r", encoding="utf-8") as f:
+              main_db = json.load(f)
+
+          if "anime_list" not in main_db or not isinstance(main_db["anime_list"], list):
+              print("[ERROR] anime_data.json does not contain a valid 'anime_list' array.")
+              sys.exit(1)
+
+          before_found = sum(
+              1 for k, v in meta.items() if k.startswith(PREFIX) and not v.get("not_found")
+          )
+          before_nf = sum(
+              1 for k, v in meta.items() if k.startswith(PREFIX) and v.get("not_found")
+          )
+
+          print(f"[INFO] metadata.json before: {before_found} matched | {before_nf} not_found")
+
+          # Helpers
           patched = 0
-          warned  = 0
-          
+          warned = 0
+
           def patch(anime_name, mal_id):
-              '''Inject a verified MAL record.'''
               global patched, warned
               key = PREFIX + anime_name
               rec = mal_lookup.get(str(mal_id))
               if rec:
                   meta[key] = rec
-                  print(f'  [PATCH] {anime_name[:60]:<60} MAL:{mal_id:<6} {rec['matchedTitle'][:45]}')
+                  print(
+                      f"  [PATCH] {anime_name[:60]:<60} MAL:{mal_id:<6} {rec['matchedTitle'][:45]}"
+                  )
                   patched += 1
               else:
-                  print(f'  [WARN]  MAL:{mal_id} not in offline DB — setting not_found for: {anime_name}')
-                  meta[key] = {'not_found': True}
+                  print(
+                      f"  [WARN]  MAL:{mal_id} not in offline DB — setting not_found for: {anime_name}"
+                  )
+                  meta[key] = {"not_found": True}
                   warned += 1
-          
+
           def mark_not_found(anime_name):
-              '''Mark as genuinely absent from offline DB.'''
               key = PREFIX + anime_name
-              if key not in meta or meta[key].get('not_found'):
-                  meta[key] = {'not_found': True}
-          
+              if key not in meta or meta[key].get("not_found"):
+                  meta[key] = {"not_found": True}
+
           def remove_entry(anime_name):
-              '''Remove entries for content that shouldn't be indexed.'''
               key = PREFIX + anime_name
               if key in meta:
                   del meta[key]
-                  print(f'  [DEL]   {anime_name}')
+                  print(f"  [DEL]   {anime_name} from metadata")
+
+              before_len = len(main_db["anime_list"])
+              main_db["anime_list"] = [
+                  a for a in main_db["anime_list"] if a.get("name") != anime_name
+              ]
+              if len(main_db["anime_list"]) < before_len:
+                  print(f"  [DEL]   {anime_name} from anime_data.json")
           
           # ─────────────────────────────────────────────────────────────
           # STEP 1 — Remove invalid entries
@@ -506,23 +525,32 @@ jobs:
           
           for name in MISSING_NO_MAL:
               mark_not_found(name)
-              print(f'  [FLAG]  {name} marked as not_found (Motion Comic/No MAL ID)')
-          
-          # ── Save ──────────────────────────────────────────────────────
-          with open(META_FILE, 'w', encoding='utf-8') as f:
+              print(f"  [FLAG]  {name} marked as not_found (Motion Comic/No MAL ID)")
+
+          # Save both files
+          with open(META_FILE, "w", encoding="utf-8") as f:
               json.dump(meta, f, indent=2, ensure_ascii=False)
-          
-          after_found = sum(1 for k, v in meta.items() if k.startswith(PREFIX) and not v.get('not_found'))
-          after_nf    = sum(1 for k, v in meta.items() if k.startswith(PREFIX) and v.get('not_found'))
-          total       = after_found + after_nf
-          gained      = after_found - before_found
-          
-          print(f'''
-          [SUCCESS] metadata.json patched and saved.
+
+          with open(MAIN_DB_FILE, "w", encoding="utf-8") as f:
+              json.dump(main_db, f, indent=2, ensure_ascii=False)
+
+          after_found = sum(
+              1 for k, v in meta.items() if k.startswith(PREFIX) and not v.get("not_found")
+          )
+          after_nf = sum(
+              1 for k, v in meta.items() if k.startswith(PREFIX) and v.get("not_found")
+          )
+          total = after_found + after_nf
+          gained = after_found - before_found
+
+          print(
+              f"""
+          [SUCCESS] metadata.json and anime_data.json patched and saved.
             Before : {before_found} matched | {before_nf} not_found
             After  : {after_found} matched | {after_nf} not_found | total {total}
             Gained : +{gained} new verified entries
-          ''')
+          """
+          )
           PATCH
     
       - name: Phase 4b — Inject static It's Anime marathon files
