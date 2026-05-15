@@ -501,6 +501,9 @@ jobs:
           patch('Waelth and Wonder',                                                61609)
           patch('联盒圀',                                                             52909)
           patch('魔動王',                                                             2818)
+          patch_entry('Ikan yang Lepas Dari Pancingku', 62893)
+          patch_entry('Reinkarnasiku Ingin Jadi Tulang Rusuk Pahlawan!', 63376)
+
           
           # ─────────────────────────────────────────────────────────────
           # STEP 3 — Mark genuinely absent entries (not in Manami DB)
