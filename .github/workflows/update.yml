@@ -10,7 +10,7 @@ jobs:
       contents: write     
     steps:
       - name: Checkout Main Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Prepare Tor Dockerfile
         run: |
@@ -902,7 +902,7 @@ jobs:
       # (e.g. metadata.json won't exist if Phase 5d fails).
       - name: Upload Artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: scrape-results-${{ github.run_number }}
           retention-days: 5

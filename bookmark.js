@@ -35,7 +35,7 @@ var BookmarkManager = (function () {
             var data = getData();
             if (!data[animeName]) data[animeName] = { visitCount: 0 };
 
-            var isNewEpisode = (data[animeName].lastWatchedVideoId !== videoId);
+            var isNewEpisode = (data[animeName].lastWatchedVideoId !== videoId || data[animeName].lastWatchedEpisodeNumber !== epNumber);
             if (isNewEpisode) data[animeName].visitCount = (data[animeName].visitCount || 0) + 1;
 
             data[animeName].lastWatchedVideoId       = videoId;
@@ -250,6 +250,77 @@ var MALSync = (function(){
 
     var DEFAULT_GAS = 'https://script.google.com/macros/s/AKfycbyFxnexHxeO9l34KeFJG8LvasAZk0x-RHFSox-hYliU3EGFKF6KBEZW_2GOIwrBGI0s/exec';
 
+    // ── Season extraction helpers ──────────────────────────────────────
+    var _ROMAN = {II:2,III:3,IV:4,V:5,VI:6,VII:7,VIII:8,IX:9,X:10};
+
+    function _extractSeason(title) {
+        if (!title) return { base: '', season: 1, part: null };
+        var t = title.trim();
+        var part = null, season = 1;
+
+        // Extract Cour (e.g., "Cour 2")
+        var mCour = t.match(/\s+Cour\s+(\d+)/i);
+        if (mCour) { part = parseInt(mCour[1]); t = t.replace(mCour[0], '').trim(); }
+
+        // Extract Part (e.g., "Part 2")
+        var mPart = t.match(/\s+Part\s+(\d+)/i);
+        if (mPart) { part = parseInt(mPart[1]); t = t.replace(mPart[0], '').trim(); }
+
+        // Extract Season (e.g., "Season 2", "2nd Season", " II", " S2")
+        var mS1 = t.match(/\s+Season\s+(\d+)/i);
+        if (mS1) { season = parseInt(mS1[1]); t = t.replace(mS1[0], '').trim(); }
+        else {
+            var mS2 = t.match(/(\d+)(?:st|nd|rd|th)\s+Season/i);
+            if (mS2) { season = parseInt(mS2[1]); t = t.replace(mS2[0], '').trim(); }
+            else {
+                var mS3 = t.match(/\s+([IVXLCDM]+)\s*$/i);
+                if (mS3 && _ROMAN[mS3[1].toUpperCase()]) {
+                    season = _ROMAN[mS3[1].toUpperCase()];
+                    t = t.replace(mS3[0], '').trim();
+                }
+                else {
+                    var mS4 = t.match(/\s+S(\d+)(?:\s|$)/i);
+                    if (mS4) { season = parseInt(mS4[1]); t = t.replace(mS4[0], '').trim(); }
+                }
+            }
+        }
+        // Strip leftover subtitle
+        t = t.replace(/\s*[:]\s*.+$/, '').trim();
+        
+        return { base: t, season: season, part: part };
+    }
+
+    function _normBase(s) {
+        return s.toLowerCase().replace(/[^a-z0-9]/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+
+    function _tokenOverlap(s1, s2) {
+        var t1 = _normBase(s1).split(' '), t2 = _normBase(s2).split(' ');
+        var set1 = new Set(t1), set2 = new Set(t2);
+        var intersect = t1.filter(function(t) { return set2.has(t); }).length;
+        return intersect / Math.max(set1.size, set2.size);
+    }
+
+    function findLocalByEnTitle(enTitle, allAnimeNames) {
+        var target = _extractSeason(enTitle);
+        var normTarget = _normBase(target.base);
+        var results = [];
+
+        allAnimeNames.forEach(function(name) {
+            // Skip Dub Indo entries for direct match, they'll be added by resolveLocalNames
+            if (name.indexOf('(Dub Indo)') !== -1) return;
+
+            var loc = _extractSeason(name);
+            if (loc.season !== target.season) return;
+            if (target.part && loc.part && target.part !== loc.part) return;
+
+            var sim = _tokenOverlap(normTarget, _normBase(loc.base));
+            if (sim > 0.85) results.push({ name: name, sim: sim });
+        });
+
+        return results.sort(function(a, b) { return b.sim - a.sim; });
+    }
+
     // ── Cookie helpers ────────────────────────────────────────────────
     function setCk(n,v,days){ var d=new Date(); d.setTime(d.getTime()+days*86400000); document.cookie=n+'='+encodeURIComponent(v||'')+';expires='+d.toUTCString()+';path=/;SameSite=Strict'; }
     function getCk(n){ var m=document.cookie.match('(?:^|; )'+n.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'=([^;]*)'); return m?decodeURIComponent(m[1]):''; }
@@ -356,10 +427,23 @@ var MALSync = (function(){
         // 1. Check cached segment chain — only return if it covers the requested episode
         var tk=getTK();
         var cached = tk[animeName] && tk[animeName].malSegments;
+        
+        // Detect explicit season (e.g. "Iruma S4" -> 4)
+        var targetSeason = _extractSeason(animeName).season;
+
         if(cached && cached.length){
             var last = cached[cached.length - 1];
-            if (localEp <= last.offset + last.epCount) {
-                return walk(cached, localEp);
+            // Stricter check for season entries: 
+            // If it's a 1-segment cache but targetSeason > 1, we only trust it 
+            // if we are certain it's NOT a leftover from a failed S1-greedy match.
+            // Heuristic: if targetSeason > 1 and it's a 1-segment cache, bypass and re-verify.
+            var isSeasonEntry = (targetSeason > 1);
+            var isMergedSeries = (targetSeason === 1);
+            
+            if (isMergedSeries || (cached.length > 1)) {
+                if (localEp <= last.offset + last.epCount) {
+                    return walk(cached, localEp);
+                }
             }
         }
 
@@ -373,28 +457,53 @@ var MALSync = (function(){
         if(!startId){ try{ var mr=lsGet('meta_'+animeName); if(mr) startId=JSON.parse(mr).malId||null; }catch(e){} }
         if(!startId) return null;
 
-        // 3. Initial offset = min_episode - 1
-        var baseOffset=(getMinEpMap()[animeName]||1)-1;
+        // 3. Initial offset
+        // For merged series (targetSeason=1), use min_episode.
+        // For separate season entries (targetSeason>1), offset starts at 0 for THAT season.
+        var baseOffset = (targetSeason === 1) ? (getMinEpMap()[animeName]||1)-1 : 0;
 
         // 4. Build segment chain
         var segments=[], curId=String(startId), cumOffset=baseOffset, limit=12;
+        var currentSeasonIndex = 1;
 
         while(curId&&limit-->0){
-            // For PRIMARY (first iteration): try AnimeMetadata.fetchJikanForAnime first
             var jd=null;
-            if(segments.length===0&&typeof window.AnimeMetadata!=='undefined'){
+            // For PRIMARY (first iteration): try AnimeMetadata.fetchJikanForAnime first
+            if(segments.length===0 && targetSeason === 1 && typeof window.AnimeMetadata!=='undefined'){
                 try{
                     var meta=await window.AnimeMetadata.fetchJikanForAnime(animeName);
                     if(meta&&meta.fullData) jd=meta.fullData;
                 }catch(e){}
             }
-            // For sequels (or if primary fetch failed): direct Jikan by malId
+            // For sequels (or if primary fetch failed/not applicable): direct Jikan by malId
             if(!jd) jd=await jikanByMalId(curId);
             if(!jd){ console.warn('[MALSync] Jikan unavailable for malId',curId); break; }
 
+            // ── NEW: Explicit Season Jump ──
+            // If user has separate local entries for seasons (e.g. Iruma S4)
+            // but metadata maps it to S1 ID, we walk relations until we hit Season 4.
+            if (targetSeason > 1 && currentSeasonIndex < targetSeason) {
+                var next=null;
+                (jd.relations||[]).forEach(function(rel){
+                    if(rel.relation==='Sequel')
+                        (rel.entry||[]).forEach(function(e){ if(e.type==='anime'&&!next) next=String(e.mal_id); });
+                });
+                if (next) {
+                    curId = next;
+                    currentSeasonIndex++;
+                    await new Promise(function(r){setTimeout(r,400);}); // Jikan rate limit
+                    continue; 
+                } else {
+                    // Could not find sequel to reach target season, fallback to treating as S1
+                    console.warn('[MALSync] Target season '+targetSeason+' unreachable from MAL:'+startId);
+                }
+            }
+
             var epCnt=jd.episodes||9999;
             segments.push({malId:curId, offset:cumOffset, epCount:epCnt});
-            if(localEp<=cumOffset+epCnt) break; // found segment
+            
+            // For targetSeason > 1, we stop immediately once we hit the correct season entry
+            if(targetSeason > 1 || localEp<=cumOffset+epCnt) break; 
 
             cumOffset+=epCnt;
             // Follow Sequel relation
@@ -519,17 +628,44 @@ var MALSync = (function(){
     }
 
     // ── Full MAL list import ──────────────────────────────────────────
-    //
-    // Three-step approach:
-    //  1. Fetch all anime from MAL API via GAS proxy.
-    //  2. Build a reverse map  malId → local anime name  by:
-    //       a. Loading metadata.json into RAM  (P2 — fast, ~few KB)
-    //       b. Calling AnimeMetadata.getMalId(name) for each local anime
-    //          which checks  P1 localStorage → P2 _inMemoryMeta → P3 titleIndex
-    //       c. Direct meta_* LS fallback if AnimeMetadata not available
-    //  3. Write / create tracking entries for all matched anime, then call
-    //     window.renderHistory() so the page updates without a manual refresh.
-    //
+    function resolveLocalNames(malId, malEnTitle, malIdToNamesMap, allAnimeNames, tk) {
+        // LAYER 1: cached malSegments → most accurate for merged/watched series
+        var segMatches = [];
+        Object.keys(tk).forEach(function(name) {
+            var segs = tk[name] && tk[name].malSegments;
+            if (!segs) return;
+            segs.forEach(function(seg) {
+                if (String(seg.malId) === String(malId)) {
+                    if (segMatches.indexOf(name) === -1) segMatches.push(name);
+                }
+            });
+        });
+        if (segMatches.length > 0) return segMatches.map(function(n) { return { name: n, layer: 1 }; });
+
+
+        // LAYER 2: EN title + season extraction → works for English-named local entries
+        if (malEnTitle) {
+            var enMatches = findLocalByEnTitle(malEnTitle, allAnimeNames);
+            if (enMatches.length > 0) {
+                // Collect top match + its (Dub Indo) sibling
+                var top = enMatches[0].name;
+                var result = [top];
+                var dubName = top.replace(/\s*\(Dub Indo\)\s*$/, '') + ' (Dub Indo)';
+                if (allAnimeNames.indexOf(dubName) !== -1 && dubName !== top) result.push(dubName);
+                // Also add if top IS the dub, find the sub
+                if (top.indexOf('(Dub Indo)') !== -1) {
+                    var subName = top.replace(/\s*\(Dub Indo\)/, '').trim();
+                    if (allAnimeNames.indexOf(subName) !== -1) result.unshift(subName);
+                }
+                return result.map(function(n) { return { name: n, layer: 2 }; });
+            }
+        }
+
+        // LAYER 3: metadata.json malId map → catches Indonesian/romaji-named entries
+        var l3 = malIdToNamesMap.get(String(malId)) || [];
+        return l3.map(function(n) { return { name: n, layer: 3 }; });
+    }
+
     async function importFromMAL(){
         if(!isConnected()||!getGasUrl()) return;
         var btn=document.getElementById('mal-sync-btn');
@@ -558,6 +694,7 @@ var MALSync = (function(){
                     var mls=n.my_list_status;
                     malMap[String(n.id)]={
                         title:        n.title||'',
+                        enTitle:      (n.alternative_titles && n.alternative_titles.en) || '',
                         status:       mls.status||'',
                         score:        mls.score||0,
                         numWatched:   mls.num_episodes_watched||0,
@@ -571,161 +708,109 @@ var MALSync = (function(){
             });
 
             // ── Step 2: build reverse map via AnimeMetadata (all 3 priorities) ──
-            //
-            // AnimeMetadata.getMalId checks:
-            //   P3 → titleIndex  (offline DB in RAM — already loaded if index.html was visited)
-            //   P1 → localStorage meta_* keys  (Jikan on-demand, player.html visits)
-            //   P2 → _inMemoryMeta  (metadata.json loaded below)
-            //
-            // We load metadata.json first because bookmark.html never calls
-            // setupMetadata, so _inMemoryMeta is null and P2 would be skipped.
             if(typeof window.AnimeMetadata !== 'undefined'){
-                try{
-                    var loaded = await window.AnimeMetadata.loadMetadataJson();
-                    console.log('[MALSync] metadata.json '+(loaded?'loaded':'not available')+
-                                (loaded ? ' ('+Object.keys(window.AnimeMetadata._inMemoryMetaSize||{}).length+' entries)' : ''));
-                }catch(e){
-                    console.warn('[MALSync] metadata.json load error:',e.message);
-                }
+                try{ await window.AnimeMetadata.loadMetadataJson(); } catch(e){}
             }
 
             // Iterate local anime list → resolve malId for each name
-            var malIdToName={};
+            var malIdToNamesMap = new Map(); // String(malId) -> Array of Names
             var localList=[];
             try{
-                var _adRaw=lsGet('anime_data');
-                if(_adRaw) localList=(JSON.parse(_adRaw).anime_list||[]);
-            }catch(e){ console.warn('[MALSync] Cannot read anime_data from LS:',e.message); }
+                if (typeof animeDataMap !== 'undefined' && animeDataMap.size > 0) {
+                    localList = Array.from(animeDataMap.values());
+                } else {
+                    var _adRaw=lsGet('anime_data');
+                    if(_adRaw) localList=(JSON.parse(_adRaw).anime_list||[]);
+                }
+            }catch(e){ console.warn('[MALSync] Cannot read anime_data:',e.message); }
 
-            var metaMatches=0, lsFallbacks=0, noMatch=0;
+            var allAnimeNames = localList.map(function(a){ return a.name; });
+
             localList.forEach(function(a){
                 var mid=null;
-
-                // Primary: AnimeMetadata.getMalId covers P3→P1→P2
                 if(typeof window.AnimeMetadata !== 'undefined'){
                     try{ mid=window.AnimeMetadata.getMalId(a.name)||null; }catch(e){}
-                    if(mid) metaMatches++;
                 }
-
-                // Fallback: direct LS meta_* scan (P1 only, for when AnimeMetadata unavailable)
                 if(!mid){
                     try{
                         var _mr=lsGet('meta_'+a.name);
-                        if(_mr){
-                            var _md=JSON.parse(_mr);
-                            if(_md.malId&&!_md.not_found){ mid=String(_md.malId); lsFallbacks++; }
-                        }
+                        if(_mr){ var _md=JSON.parse(_mr); if(_md.malId&&!_md.not_found) mid=String(_md.malId); }
                     }catch(e){}
                 }
-
-                if(mid){ malIdToName[String(mid)]=a.name; }
-                else { noMatch++; }
+                if(mid){
+                    mid = String(mid);
+                    if(!malIdToNamesMap.has(mid)) malIdToNamesMap.set(mid, []);
+                    malIdToNamesMap.get(mid).push(a.name);
+                }
             });
-            console.log('[MALSync] Reverse map built: '+Object.keys(malIdToName).length+' entries'+
-                        ' | AnimeMetadata: '+metaMatches+', LS fallback: '+lsFallbacks+
-                        ', no match: '+noMatch+' (of '+localList.length+' local anime)');
 
             // ── Step 3: write tracking data ──────────────────────────────
             var tk=getTK();
             var nNew=0, nUpdated=0, nSkipped=0, nRefreshed=0;
+            var changed = false;
 
-            // 3a. Refresh MAL fields on entries that already have real playback data.
-            //     We look up their malId by name (same getMalId path).
-            Object.keys(tk).forEach(function(name){
-                if(!tk[name].lastWatchedVideoId) return; // MAL-only entry — handled in 3b
-                try{
-                    var mid=malIdToName
-                        // reverse the map: find the key whose value === name
-                        ? Object.keys(malIdToName).find(function(id){return malIdToName[id]===name;})
-                        : null;
-                    if(!mid&&typeof window.AnimeMetadata!=='undefined'){
-                        mid=window.AnimeMetadata.getMalId(name)||null;
-                        if(mid) mid=String(mid);
-                    }
-                    if(!mid) return;
-                    var entry=malMap[mid];
-                    if(!entry) return;
-                    tk[name].malStatus=entry.status;
-                    tk[name].malScore=entry.score;
-                    tk[name].malIsRewatching=entry.isRewatching;
-                    nRefreshed++;
-                    console.log('[MALSync] Refreshed play-tracked: '+name+' → '+entry.status);
-                }catch(e){}
-            });
-
-            // 3b. Create / update entries for every MAL anime that has a local name match.
-            var changed = nRefreshed > 0;
             Object.keys(malMap).forEach(function(malId){
-                var entry=malMap[malId];
-                var name=malIdToName[malId];
-
+                var entry = malMap[malId];
+                
                 // Skip plan_to_watch with 0 episodes — nothing to show
-                if(entry.status==='plan_to_watch'&&entry.numWatched===0){
-                    console.log('[MALSync] Skip PTW/0ep: "'+entry.title+'" (MAL:'+malId+')');
+                if(entry.status==='plan_to_watch'&&entry.numWatched===0) return;
+
+                var resolved = resolveLocalNames(malId, entry.enTitle, malIdToNamesMap, allAnimeNames, tk);
+                if(resolved.length === 0){
                     nSkipped++;
                     return;
                 }
 
-                if(!name){
-                    // Not in the local collection yet — no card to create
-                    console.log('[MALSync] No local match: MAL:'+malId+' "'+entry.title+'"');
-                    nSkipped++;
-                    return;
-                }
+                resolved.forEach(function(res){
+                    var name = res.name;
+                    var layer = res.layer;
 
-                // Entry already has real playback data — already refreshed in 3a
-                if(tk[name]&&tk[name].lastWatchedVideoId){
-                    return;
-                }
+                    // Calculate local episode number
+                    var localEp = entry.numWatched;
+                    if (layer === 1) {
+                        // Find matching segment for offset
+                        var segs = tk[name].malSegments || [];
+                        var seg = segs.find(function(s){ return String(s.malId) === String(malId); });
+                        if (seg) localEp = seg.offset + entry.numWatched;
+                    }
+                    // Layer 2 & 3: separate seasons, localEp = entry.numWatched (no offset)
 
-                var isNew=!tk[name];
-                if(isNew){
-                    tk[name]={visitCount:0};
-                    nNew++;
-                    console.log('[MALSync] NEW entry: "'+name+'" (MAL:'+malId+
-                                ') status='+entry.status+' ep='+entry.numWatched+
-                                (entry.isRewatching?' [rewatching]':''));
-                } else {
-                    nUpdated++;
-                    console.log('[MALSync] UPDATE entry: "'+name+'" (MAL:'+malId+
-                                ') status='+entry.status+' ep='+entry.numWatched+
-                                (entry.isRewatching?' [rewatching]':''));
-                }
+                    var isNew = !tk[name];
+                    var isPlayTracked = tk[name] && tk[name].lastWatchedVideoId;
 
-                // MAL status / score / rewatch flag
-                tk[name].malStatus      = entry.status;
-                tk[name].malScore       = entry.score;
-                tk[name].malIsRewatching= entry.isRewatching;
+                    if (isPlayTracked) {
+                        // 3a logic: Refresh MAL fields only
+                        tk[name].malStatus = entry.status;
+                        tk[name].malScore = entry.score;
+                        tk[name].malIsRewatching = entry.isRewatching;
+                        nRefreshed++;
+                    } else {
+                        // 3b logic: Create/Full update
+                        if (isNew) { tk[name] = { visitCount: 0 }; nNew++; }
+                        else nUpdated++;
 
-                // lastWatchedAt — use MAL updated_at as proxy (makes entry visible in history)
-                if(!tk[name].lastWatchedAt)
-                    tk[name].lastWatchedAt = entry.updatedAt;
-
-                // Episode progress from MAL
-                if(!tk[name].lastWatchedEpisodeNumber && entry.numWatched > 0)
-                    tk[name].lastWatchedEpisodeNumber = entry.numWatched;
-
-                // visitCount — episodes watched is a meaningful proxy
-                if(!tk[name].visitCount && entry.numWatched > 0)
-                    tk[name].visitCount = entry.numWatched;
-
-                // ── Restore cross-device watchtime from MAL comment ──────
-                // _doSync writes {"ep":<localEp>,"t":<seconds>} to the MAL
-                // comment field when syncing an episode switch. On a second
-                // device this arrives here and restores the playback position.
-                if (entry.comments && !tk[name].lastWatchedTime) {
-                    try {
-                        var _cwt = JSON.parse(entry.comments);
-                        if (typeof _cwt.ep === 'number' && typeof _cwt.t === 'number' && _cwt.t > 5) {
-                            tk[name].lastWatchedTime          = _cwt.t;
-                            // ep in comment is local episode number (before offset)
-                            if (!tk[name].lastWatchedEpisodeNumber)
-                                tk[name].lastWatchedEpisodeNumber = _cwt.ep;
-                            console.log('[MALSync] Restored watchtime for '+name+': ep'+_cwt.ep+' t='+_cwt.t+'s');
+                        tk[name].malStatus       = entry.status;
+                        tk[name].malScore        = entry.score;
+                        tk[name].malIsRewatching = entry.isRewatching;
+                        if(!tk[name].lastWatchedAt) tk[name].lastWatchedAt = entry.updatedAt;
+                        if(localEp > 0 && !tk[name].lastWatchedEpisodeNumber) {
+                            tk[name].lastWatchedEpisodeNumber = localEp;
+                            if(!tk[name].visitCount) tk[name].visitCount = localEp;
                         }
-                    } catch(e) {}
-                }
 
+                        // Restore cross-device watchtime from MAL comment
+                        if (entry.comments && !tk[name].lastWatchedTime) {
+                            try {
+                                var _cwt = JSON.parse(entry.comments);
+                                if (typeof _cwt.ep === 'number' && typeof _cwt.t === 'number' && _cwt.t > 5) {
+                                    tk[name].lastWatchedTime = _cwt.t;
+                                    tk[name].lastWatchedEpisodeNumber = _cwt.ep;
+                                    console.log('[MALSync] Restored watchtime for '+name+': ep'+_cwt.ep+' t='+_cwt.t+'s');
+                                }
+                            } catch(e) {}
+                        }
+                    }
+                });
                 changed=true;
             });
 
@@ -737,17 +822,14 @@ var MALSync = (function(){
             lsSet('mal_last_import', String(Date.now()));
             updateSyncStatus();
 
-            // ── Re-render the history page if we're on bookmark.html ────
-            // renderHistory() is a top-level function in bookmark.html's script block.
-            // Calling it here avoids the race where the page rendered "Belum Ada Riwayat"
-            // before this async import finished writing to localStorage.
             if(typeof window.renderHistory === 'function'){
                 console.log('[MALSync] Triggering renderHistory()');
                 window.renderHistory();
             }
 
-            var matched = Object.keys(malIdToName).filter(function(id){ return !!malMap[id]; }).length;
-            showToast('✓ '+all.length+' anime MAL · '+matched+' cocok · '+nNew+' baru');
+            var matchedCount = 0;
+            malIdToNamesMap.forEach(function(names, id){ if(malMap[id]) matchedCount++; });
+            showToast('✓ '+all.length+' anime MAL · '+matchedCount+' cocok · '+nNew+' baru');
 
         }catch(e){
             console.warn('[MALSync] importFromMAL error:',e.message, e);
