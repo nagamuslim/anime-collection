@@ -310,17 +310,17 @@ jobs:
             || echo "No errors in log"
             
       # the scraped files. parseItsAnime handles the Title/URL/Chapters format.
-      - name: Phase 4a: Create Patch Script
+      - name: "Phase 4a: Create Patch Script"
         run: |
           cat <<'PATCH' > patch_metadata.py
           import json
           import os
           import sys
-
+ 
           PREFIX = "meta_"
           META_FILE = "metadata.json"
           MAIN_DB_FILE = "anime_data.json"
-
+ 
           # Load offline DB
           if len(sys.argv) >= 2 and os.path.isfile(sys.argv[1]):
               print(f"[INFO] Reading offline DB from file: {sys.argv[1]}")
@@ -329,9 +329,9 @@ jobs:
           else:
               print("[INFO] Reading offline DB from stdin (Manami Project)...")
               db = json.load(sys.stdin)
-
+ 
           data = db["data"]
-
+ 
           # Build MAL ID lookup
           print("[INFO] Building MAL index...")
           mal_lookup = {}
@@ -342,7 +342,6 @@ jobs:
               )
               if not mal_src:
                   continue
-
               mal_id = mal_src.split("anime/")[1].split("/")[0]
               mal_lookup[mal_id] = {
                   "malId": mal_id,
@@ -351,192 +350,179 @@ jobs:
                   "allTitles": [anime["title"]] + list(anime.get("synonyms", [])),
                   "score": anime.get("score", {}).get("arithmeticMean", None),
               }
-
           print(f"[INFO] DB loaded: {len(mal_lookup):,} MAL entries")
-
+ 
           # Load metadata.json
           if not os.path.isfile(META_FILE):
               print(f"[ERROR] {META_FILE} not found. Run: node metadata.js --phase1")
               sys.exit(1)
-
           with open(META_FILE, "r", encoding="utf-8") as f:
               meta = json.load(f)
-
+ 
           # Load anime_data.json
           if not os.path.isfile(MAIN_DB_FILE):
               print(f"[ERROR] {MAIN_DB_FILE} not found.")
               sys.exit(1)
-
           with open(MAIN_DB_FILE, "r", encoding="utf-8") as f:
               main_db = json.load(f)
-
           if "anime_list" not in main_db or not isinstance(main_db["anime_list"], list):
               print("[ERROR] anime_data.json does not contain a valid 'anime_list' array.")
               sys.exit(1)
-
+ 
           before_found = sum(
               1 for k, v in meta.items() if k.startswith(PREFIX) and not v.get("not_found")
           )
           before_nf = sum(
               1 for k, v in meta.items() if k.startswith(PREFIX) and v.get("not_found")
           )
-
           print(f"[INFO] metadata.json before: {before_found} matched | {before_nf} not_found")
-
+ 
           # Helpers
           patched = 0
           warned = 0
-
+ 
           def patch(anime_name, mal_id):
               global patched, warned
               key = PREFIX + anime_name
               rec = mal_lookup.get(str(mal_id))
               if rec:
                   meta[key] = rec
-                  print(
-                      f"  [PATCH] {anime_name[:60]:<60} MAL:{mal_id:<6} {rec['matchedTitle'][:45]}"
-                  )
+                  print(f"  [PATCH] {anime_name[:60]:<60} MAL:{mal_id:<6} {rec['matchedTitle'][:45]}")
                   patched += 1
               else:
-                  print(
-                      f"  [WARN]  MAL:{mal_id} not in offline DB — setting not_found for: {anime_name}"
-                  )
+                  print(f"  [WARN]  MAL:{mal_id} not in offline DB — setting not_found for: {anime_name}")
                   meta[key] = {"not_found": True}
                   warned += 1
-
+ 
           def mark_not_found(anime_name):
               key = PREFIX + anime_name
               if key not in meta or meta[key].get("not_found"):
                   meta[key] = {"not_found": True}
-
+ 
           def remove_entry(anime_name):
               key = PREFIX + anime_name
               if key in meta:
                   del meta[key]
                   print(f"  [DEL]   {anime_name} from metadata")
-
               before_len = len(main_db["anime_list"])
               main_db["anime_list"] = [
                   a for a in main_db["anime_list"] if a.get("name") != anime_name
               ]
               if len(main_db["anime_list"]) < before_len:
                   print(f"  [DEL]   {anime_name} from anime_data.json")
-          
+ 
           # ─────────────────────────────────────────────────────────────
           # STEP 1 — Remove invalid entries
           # ─────────────────────────────────────────────────────────────
-          print('\n[STEP 1] Removing invalid entries...')
-          remove_entry('Cuplikan episode Classroom of the Elite S2')
-          remove_entry('Ani-One x Dr. STONE Science Class')
-          remove_entry('【Compilation】 LINK CLICK')
-          remove_entry('【Compilation】 LINK CLICK Bridon Arc')
-          remove_entry('【Compilation】 LINK CLICK Season 2')
-          remove_entry('【Compilation】 The Daily Life of the Immortal King')
-          remove_entry('[Tayang Terbatas] Fullmetal Alchemist')
-          remove_entry('⚽️【Required skill for a detective: Soccer(?)】🕵 Detectives These Days Are Crazy!')
-          
+          print("\n[STEP 1] Removing invalid entries...")
+          remove_entry("Cuplikan episode Classroom of the Elite S2")
+          remove_entry("Ani-One x Dr. STONE Science Class")
+          remove_entry("【Compilation】 LINK CLICK")
+          remove_entry("【Compilation】 LINK CLICK Bridon Arc")
+          remove_entry("【Compilation】 LINK CLICK Season 2")
+          remove_entry("【Compilation】 The Daily Life of the Immortal King")
+          remove_entry("[Tayang Terbatas] Fullmetal Alchemist")
+          remove_entry("⚽️【Required skill for a detective: Soccer(?)】🕵 Detectives These Days Are Crazy!")
+ 
           # ─────────────────────────────────────────────────────────────
           # STEP 2 — Patch verified MAL IDs
-          # All IDs triple-checked against the offline DB and YouTube transcripts.
+          # Quote rule: " by default; ' when title itself contains "; """ when both.
+          # Safe inside <<'PATCH' heredoc — bash passes content byte-for-byte.
           # ─────────────────────────────────────────────────────────────
-          print('\n[STEP 2] Applying verified MAL ID patches...')
-          
-          # Replaced Claude's fake BTOOOM! match with the correct localized light novel adaptation
-          patch('Bermain Game Kematian untuk Sesuap Nasi.',                        59711) # Shibou Yuugi de Meshi o Kuu
-          patch('Pahlawan Sampah',                                                 61217) # Yuusha no Kuzu
-          
-          # The new ones identified by Gemini:
-          patch('Blood River',                                                     51727) # Anhe Zhuan / Tales of Dark River
-          patch('Dragon\'s Triumph in the Celestial Realm',                         63416) # Long Po Jiutian
-          patch('Pak Bos, Sudah Waktunya Bertempur',                               40776) # Shachou, Battle no Jikan Desu!
-          
-          # Indonesian titles - all verified against offline DB ──────────
-          patch('(Grimoire of Zero) Kitab Sihir yang Dimulai dari ZERO',           34176)
-          patch('Aku Adalah \"Behemoth\", Monster Rank-S, Tapi Malah Dikira Kucing', 58473)
-          patch('Aku Jadi Populer, Gimana Sih?',                                   32899)
-          patch('Alice dan Zouroku',                                                34350)
-          patch('Ancestors, Please Help Me Season 1',                               57877)
-          patch('Apotek di Dunia Lain',                                             49438)
-          patch('Budak Korps Elite Kota Sihir',                                     50392)
-          patch('Budak Korps Elite Kota Sihir - Musim Kedua',                       58505)
-          patch('Catatan Perjalanan Pengumpul Material di Dunia Lain',              61174)
-          patch('Catatan Perjalanan Pengumpul Material di Dunia Lain (Dub Indo)',   61174)
-          patch('Chinese Thriller',                                                 33339)
-          patch('Chronos Ruler All Episodes',                                       34565)
-          patch('Collapse Galaxy',                                                  33630)
-          patch('Ekskul Host SMA Ouran',                                              853)
-          patch('Ekskul Seni ini Bermasalah',                                       31952)
-          patch('Extra of Yuanchu Mountain: The Demon Saint Awakens',               55655)
-          patch('Gacha Tak Hingga',                                                 60303)
-          patch('Gen AI',                                                           53787)
-          patch('Hang-in There Douki-chan',                                         49605)
-          patch('Kehidupan ke-7 Nona Antagonis',                                    56352)
-          patch('Ketemuan, Gelut 5 Detik Kemudian',                                 43814)
-          patch('Koleksi Ito Junji',                                                36124)
-          patch('Life and Death Replay',                                            47231)
-          patch('Masalah Kecil Sang Putri Sihir',                                   57353)
-          patch('Nailoong VS Bombloong',                                            60822)
-          patch('Pahlawan Pingsan dan Putri Pembunuh',                              60951)
-          patch('Pahlawan Telah Tiada!',                                            51706)
-          patch('Para Penghuni Bawah Tanah',                                        56348)
-          patch('Penguasa Misteri',                                                 49818)
-          patch('Penjinak Binatang yang Bertemu Gadis Bertelinga Hewan',            52046)
-          patch('Pertahanan Wilayah Seru oleh Tuan Tanah Santai',                   61549)
-          patch('Protokol Berwarna Hujan Kita',                                     55894)
-          patch('Rokudo dan Wanita Berandalan',                                     54259)
-          patch('Sahabat Manaria',                                                  31537)
-          patch('Sayap Tempur Gabungan 502 Brave Witches',                          32866)
-          patch('Senko si Rubah Penolong',                                          38759)
-          patch('Soul Buster Episode',                                              33775)
-          patch('Statusku Sebagai Asasin Jauh Lebih Kuat Dari Milik Pahlawan',     61026)
-          patch('Statusku Sebagai Asasin Jauh Lebih Kuat Dari Milik Pahlawan (Dub Indo)', 61026)
-          patch('Teater Kegelapan S9',                                              49110)
-          patch('Teater Kegelapan S10',                                             50599)
-          patch('Telepati Debu Bintang',                                            53262)
-          patch('The Ace Censor',                                                   29087)
-          patch('The Blood of Youth',                                               38918)
-          patch('The Immortal Ascension',                                           41219)
-          patch('The Relentless Quest',                                             50581)
-          patch('Ubur-ubur Tak Bisa Berenang di Malam Hari',                        54839)
-          patch('Waelth and Wonder',                                                61609)
-          patch('联盒圀',                                                             52909)
-          patch('魔動王',                                                             2818)
-          patch_entry('Ikan yang Lepas Dari Pancingku', 62893)
-          patch_entry('Reinkarnasiku Ingin Jadi Tulang Rusuk Pahlawan!', 63376)
-
-          
+          print("\n[STEP 2] Applying verified MAL ID patches...")
+ 
+          patch("Bermain Game Kematian untuk Sesuap Nasi.",                        59711) # Shibou Yuugi de Meshi o Kuu
+          patch("Pahlawan Sampah",                                                 61217) # Yuusha no Kuzu
+          patch("Blood River",                                                     51727) # Anhe Zhuan / Tales of Dark River
+          patch("Dragon's Triumph in the Celestial Realm",                         63416) # Long Po Jiutian
+          patch("Pak Bos, Sudah Waktunya Bertempur",                               40776) # Shachou, Battle no Jikan Desu!
+ 
+          # Indonesian titles — all verified against offline DB ──────────────────────
+          patch("(Grimoire of Zero) Kitab Sihir yang Dimulai dari ZERO",           34176)
+          patch('Aku Adalah "Behemoth", Monster Rank-S, Tapi Malah Dikira Kucing', 58473) # title has " → outer '
+          patch("Aku Jadi Populer, Gimana Sih?",                                   32899)
+          patch("Alice dan Zouroku",                                               34350)
+          patch("Ancestors, Please Help Me Season 1",                              57877)
+          patch("Apotek di Dunia Lain",                                            49438)
+          patch("Budak Korps Elite Kota Sihir",                                    50392)
+          patch("Budak Korps Elite Kota Sihir - Musim Kedua",                      58505)
+          patch("Catatan Perjalanan Pengumpul Material di Dunia Lain",             61174)
+          patch("Catatan Perjalanan Pengumpul Material di Dunia Lain (Dub Indo)",  61174)
+          patch("Chinese Thriller",                                                33339)
+          patch("Chronos Ruler All Episodes",                                      34565)
+          patch("Collapse Galaxy",                                                 33630)
+          patch("Ekskul Host SMA Ouran",                                             853)
+          patch("Ekskul Seni ini Bermasalah",                                      31952)
+          patch("Extra of Yuanchu Mountain: The Demon Saint Awakens",              55655)
+          patch("Gacha Tak Hingga",                                                60303)
+          patch("Gen AI",                                                          53787)
+          patch("Hang-in There Douki-chan",                                        49605)
+          patch("Ikan yang Lepas Dari Pancingku",                                  62893) # was patch_entry — FIXED
+          patch("Kakuriyo -Penginapan & Santapan untuk Roh- 2",                   58772) # Kakuriyo no Yadomeshi Ni — NEW
+          patch("Kakuriyo -Penginapan & Santapan untuk Roh- 2 (Dub Indo)",        58772) # NEW
+          patch("Kehidupan ke-7 Nona Antagonis",                                   56352)
+          patch("Ketemuan, Gelut 5 Detik Kemudian",                                43814)
+          patch("Koleksi Ito Junji",                                               36124)
+          patch("Life and Death Replay",                                           47231)
+          patch("Masalah Kecil Sang Putri Sihir",                                  57353)
+          patch("Nailoong VS Bombloong",                                           60822)
+          patch("Pahlawan Pingsan dan Putri Pembunuh",                             60951)
+          patch("Pahlawan Telah Tiada!",                                           51706)
+          patch("Para Penghuni Bawah Tanah",                                       56348)
+          patch("Penguasa Misteri",                                                49818)
+          patch("Penjinak Binatang yang Bertemu Gadis Bertelinga Hewan",           52046)
+          patch("Pertahanan Wilayah Seru oleh Tuan Tanah Santai",                  61549)
+          patch("Protokol Berwarna Hujan Kita",                                    55894)
+          patch("Reinkarnasiku Ingin Jadi Tulang Rusuk Pahlawan!",                 63376) # was patch_entry — FIXED
+          patch("Rokudo dan Wanita Berandalan",                                    54259)
+          patch("Sahabat Manaria",                                                 31537)
+          patch("Sayap Tempur Gabungan 502 Brave Witches",                         32866)
+          patch("Senko si Rubah Penolong",                                         38759)
+          patch("Soul Buster Episode",                                             33775)
+          patch("Statusku Sebagai Asasin Jauh Lebih Kuat Dari Milik Pahlawan",    61026)
+          patch("Statusku Sebagai Asasin Jauh Lebih Kuat Dari Milik Pahlawan (Dub Indo)", 61026)
+          patch("Teater Kegelapan S9",                                             49110)
+          patch("Teater Kegelapan S10",                                            50599)
+          patch("Telepati Debu Bintang",                                           53262)
+          patch("The Ace Censor",                                                  29087)
+          patch("The Blood of Youth",                                              38918)
+          patch("The Immortal Ascension",                                          41219)
+          patch("The Relentless Quest",                                            50581)
+          patch("Ubur-ubur Tak Bisa Berenang di Malam Hari",                       54839)
+          patch("Waelth and Wonder",                                               61609)
+          patch("联盒圀",                                                            52909)
+          patch("魔動王",                                                            2818)
+ 
           # ─────────────────────────────────────────────────────────────
-          # STEP 3 — Mark genuinely absent entries (not in Manami DB)
-          # These 11 are Motion Comics (Vomics) or POPS Movingtoons 
-          # which are universally banned/rejected by MyAnimeList rules.
+          # STEP 3 — Mark genuinely absent entries (no MAL ID exists)
+          # Motion Comics / Vomics / POPS Movingtoons — banned by MAL rules.
           # ─────────────────────────────────────────────────────────────
-          print('\n[STEP 3] Flagging Motion Comics/Vomics as legitimately not_found...')
-          
+          print("\n[STEP 3] Flagging Motion Comics/Vomics as legitimately not_found...")
+ 
           MISSING_NO_MAL = [
-              'Bad Luck',
-              'Cast Out by My Family, I Awakened 900 Million Stat Points',
-              'Cross Dimension Big Show',
-              'Fantasy Dancer',
-              'My Brother is A T-Rex',
-              'Rise of the Saint King',
-              'Survival Diary of a Villainess 2',
-              'The Flower of Dynasties',
-              'The System Forces Me to Be a Villain',
-              'Yama Reborn: Master of Fate',
-              '团内禁止恋爱',
+              "Bad Luck",
+              "Cast Out by My Family, I Awakened 900 Million Stat Points",
+              "Cross Dimension Big Show",
+              "Fantasy Dancer",
+              "My Brother is A T-Rex",
+              "Rise of the Saint King",
+              "Survival Diary of a Villainess 2",
+              "The Flower of Dynasties",
+              "The System Forces Me to Be a Villain",
+              "Yama Reborn: Master of Fate",
+              "团内禁止恋爱",
           ]
-          
+ 
           for name in MISSING_NO_MAL:
               mark_not_found(name)
               print(f"  [FLAG]  {name} marked as not_found (Motion Comic/No MAL ID)")
-
+ 
           # Save both files
           with open(META_FILE, "w", encoding="utf-8") as f:
               json.dump(meta, f, indent=2, ensure_ascii=False)
-
           with open(MAIN_DB_FILE, "w", encoding="utf-8") as f:
               json.dump(main_db, f, indent=2, ensure_ascii=False)
-
+ 
           after_found = sum(
               1 for k, v in meta.items() if k.startswith(PREFIX) and not v.get("not_found")
           )
@@ -545,7 +531,7 @@ jobs:
           )
           total = after_found + after_nf
           gained = after_found - before_found
-
+ 
           print(
               f"""
           [SUCCESS] metadata.json and anime_data.json patched and saved.
