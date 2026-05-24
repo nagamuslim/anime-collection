@@ -407,6 +407,101 @@
       "is_donghua": false
     },
     {
+      "name": "'Tis Time for Torture, Princess",
+      "videos": [
+        {
+          "animeName": "'Tis Time for Torture, Princess",
+          "episode": 1,
+          "title": "《'Tis Time for Torture, Princess》#1 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=ojbMGU_qioI",
+          "video_id": "ojbMGU_qioI"
+        },
+        {
+          "animeName": "'Tis Time for Torture, Princess",
+          "episode": 2,
+          "title": "《'Tis Time for Torture, Princess》#2 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=T88AbzMFLhA",
+          "video_id": "T88AbzMFLhA"
+        },
+        {
+          "animeName": "'Tis Time for Torture, Princess",
+          "episode": 3,
+          "title": "《'Tis Time for Torture, Princess》#3 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=feSTJAfmUVo",
+          "video_id": "feSTJAfmUVo"
+        },
+        {
+          "animeName": "'Tis Time for Torture, Princess",
+          "episode": 4,
+          "title": "《'Tis Time for Torture, Princess》#4 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=uCJFpOyT4CI",
+          "video_id": "uCJFpOyT4CI"
+        },
+        {
+          "animeName": "'Tis Time for Torture, Princess",
+          "episode": 5,
+          "title": "《'Tis Time for Torture, Princess》#5 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=VH36m21zB4Y",
+          "video_id": "VH36m21zB4Y"
+        },
+        {
+          "animeName": "'Tis Time for Torture, Princess",
+          "episode": 6,
+          "title": "《'Tis Time for Torture, Princess》#6 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=gB_Ry7sWluQ",
+          "video_id": "gB_Ry7sWluQ"
+        },
+        {
+          "animeName": "'Tis Time for Torture, Princess",
+          "episode": 7,
+          "title": "《'Tis Time for Torture, Princess》#7 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=yUkk9D2yv5I",
+          "video_id": "yUkk9D2yv5I"
+        },
+        {
+          "animeName": "'Tis Time for Torture, Princess",
+          "episode": 8,
+          "title": "《'Tis Time for Torture, Princess》#8 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=rErWMRlnyqU",
+          "video_id": "rErWMRlnyqU"
+        },
+        {
+          "animeName": "'Tis Time for Torture, Princess",
+          "episode": 9,
+          "title": "《'Tis Time for Torture, Princess》#9 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=51SCyU-gw_w",
+          "video_id": "51SCyU-gw_w"
+        },
+        {
+          "animeName": "'Tis Time for Torture, Princess",
+          "episode": 10,
+          "title": "《'Tis Time for Torture, Princess》#10 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=X-x2LvtluS8",
+          "video_id": "X-x2LvtluS8"
+        },
+        {
+          "animeName": "'Tis Time for Torture, Princess",
+          "episode": 11,
+          "title": "《'Tis Time for Torture, Princess》#11 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=ML-jP2vDXB0",
+          "video_id": "ML-jP2vDXB0"
+        },
+        {
+          "animeName": "'Tis Time for Torture, Princess",
+          "episode": 12,
+          "title": "《'Tis Time for Torture, Princess》#12 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=M7tZJWprp2I",
+          "video_id": "M7tZJWprp2I"
+        }
+      ],
+      "episode_count": 12,
+      "thumbnail_video_id": "ojbMGU_qioI",
+      "min_episode": 1,
+      "marathon_video_id": null,
+      "marathon_title": null,
+      "is_donghua": false
+    },
+    {
       "name": "'Tis Time for Torture, Princess Season 2",
       "videos": [
         {
@@ -6999,9 +7094,17 @@
           "url": "https://www.youtube.com/watch?v=6OY6v3eC5D8",
           "video_id": "6OY6v3eC5D8",
           "is_marathon": true
+        },
+        {
+          "animeName": "Akane-banashi",
+          "episode": 8,
+          "title": "《Akane-banashi》#8 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=YXtQgNLYxDs",
+          "video_id": "YXtQgNLYxDs",
+          "is_marathon": true
         }
       ],
-      "episode_count": 7,
+      "episode_count": 8,
       "thumbnail_video_id": "5cdar30vVYU",
       "min_episode": 1,
       "marathon_video_id": "5cdar30vVYU",
@@ -9884,86 +9987,98 @@
         {
           "animeName": "Anyway, I'm Falling in Love with You. Season 2",
           "episode": 13,
-          "title": "《Anyway, I'm Falling in Love with You. Season 2》#13 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=u2HHDLR6mTI",
-          "video_id": "u2HHDLR6mTI"
+          "title": "《Anyway, I'm Falling in Love with You. Season 2》#13 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=lmoaccGMkgY",
+          "video_id": "lmoaccGMkgY",
+          "is_marathon": true
         },
         {
           "animeName": "Anyway, I'm Falling in Love with You. Season 2",
           "episode": 14,
-          "title": "《Anyway, I'm Falling in Love with You. Season 2》#14 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=to3mL33Y3YI",
-          "video_id": "to3mL33Y3YI"
+          "title": "《Anyway, I'm Falling in Love with You. Season 2》#14 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=_KzbUQANcrI",
+          "video_id": "_KzbUQANcrI",
+          "is_marathon": true
         },
         {
           "animeName": "Anyway, I'm Falling in Love with You. Season 2",
           "episode": 15,
-          "title": "《Anyway, I'm Falling in Love with You. Season 2》#15 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=2_CWG2TjuOs",
-          "video_id": "2_CWG2TjuOs"
+          "title": "《Anyway, I'm Falling in Love with You. Season 2》#15 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=GtLeq3EpPCc",
+          "video_id": "GtLeq3EpPCc",
+          "is_marathon": true
         },
         {
           "animeName": "Anyway, I'm Falling in Love with You. Season 2",
           "episode": 16,
-          "title": "《Anyway, I'm Falling in Love with You. Season 2》#16 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=A0w4mOTPM-E",
-          "video_id": "A0w4mOTPM-E"
+          "title": "《Anyway, I'm Falling in Love with You. Season 2》#16 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=cqLnadvrRKA",
+          "video_id": "cqLnadvrRKA",
+          "is_marathon": true
         },
         {
           "animeName": "Anyway, I'm Falling in Love with You. Season 2",
           "episode": 17,
-          "title": "《Anyway, I'm Falling in Love with You. Season 2》#17 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=wApwxulnT8o",
-          "video_id": "wApwxulnT8o"
+          "title": "《Anyway, I'm Falling in Love with You. Season 2》#17 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=Yrsi8XAWmWI",
+          "video_id": "Yrsi8XAWmWI",
+          "is_marathon": true
         },
         {
           "animeName": "Anyway, I'm Falling in Love with You. Season 2",
           "episode": 18,
-          "title": "《Anyway, I'm Falling in Love with You. Season 2》#18 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=E8flpxtmTy4",
-          "video_id": "E8flpxtmTy4"
+          "title": "《Anyway, I'm Falling in Love with You. Season 2》#18 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=H6FQ23nnGpI",
+          "video_id": "H6FQ23nnGpI",
+          "is_marathon": true
         },
         {
           "animeName": "Anyway, I'm Falling in Love with You. Season 2",
           "episode": 19,
-          "title": "《Anyway, I'm Falling in Love with You. Season 2》#19 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=pRTR4LF7nGM",
-          "video_id": "pRTR4LF7nGM"
+          "title": "《Anyway, I'm Falling in Love with You. Season 2》#19 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=ClbEbXULW-o",
+          "video_id": "ClbEbXULW-o",
+          "is_marathon": true
         },
         {
           "animeName": "Anyway, I'm Falling in Love with You. Season 2",
           "episode": 20,
-          "title": "《Anyway, I'm Falling in Love with You. Season 2》#20 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=NLdGgQnAPS4",
-          "video_id": "NLdGgQnAPS4"
+          "title": "《Anyway, I'm Falling in Love with You. Season 2》#20 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=XM3Gu50NVNw",
+          "video_id": "XM3Gu50NVNw",
+          "is_marathon": true
         },
         {
           "animeName": "Anyway, I'm Falling in Love with You. Season 2",
           "episode": 21,
-          "title": "《Anyway, I'm Falling in Love with You. Season 2》#21 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=rfspYLAEFE0",
-          "video_id": "rfspYLAEFE0"
+          "title": "《Anyway, I'm Falling in Love with You. Season 2》#21 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=ylPhPnhDmd8",
+          "video_id": "ylPhPnhDmd8",
+          "is_marathon": true
         },
         {
           "animeName": "Anyway, I'm Falling in Love with You. Season 2",
           "episode": 22,
-          "title": "《Anyway, I'm Falling in Love with You. Season 2》#22 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=xi_gJM07040",
-          "video_id": "xi_gJM07040"
+          "title": "《Anyway, I'm Falling in Love with You. Season 2》#22 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=LtaXslp_GJg",
+          "video_id": "LtaXslp_GJg",
+          "is_marathon": true
         },
         {
           "animeName": "Anyway, I'm Falling in Love with You. Season 2",
           "episode": 23,
-          "title": "《Anyway, I'm Falling in Love with You. Season 2》#23 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=xhmwCeKVvOA",
-          "video_id": "xhmwCeKVvOA"
+          "title": "《Anyway, I'm Falling in Love with You. Season 2》#23 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=xTrT07M7sLQ",
+          "video_id": "xTrT07M7sLQ",
+          "is_marathon": true
         },
         {
           "animeName": "Anyway, I'm Falling in Love with You. Season 2",
           "episode": 24,
-          "title": "《Anyway, I'm Falling in Love with You. Season 2》#24 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=AS_SbEiSE70",
-          "video_id": "AS_SbEiSE70"
+          "title": "《Anyway, I'm Falling in Love with You. Season 2》#24 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=yqUgNNyPLdE",
+          "video_id": "yqUgNNyPLdE",
+          "is_marathon": true
         }
       ],
       "episode_count": 24,
@@ -19594,9 +19709,18 @@
           "video_id": "zpXZC5fqjMQ",
           "is_donghua": true,
           "is_marathon": true
+        },
+        {
+          "animeName": "Battle Through the Heavens Season 9",
+          "episode": 269,
+          "title": "🌟4K | INDOSUB | Battle Through the Heavens S9EP269(200) |  Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=haeMnzvSXDU",
+          "video_id": "haeMnzvSXDU",
+          "is_donghua": true,
+          "is_marathon": true
         }
       ],
-      "episode_count": 37,
+      "episode_count": 38,
       "thumbnail_video_id": "blNQU01x0vc",
       "min_episode": 232,
       "marathon_video_id": "blNQU01x0vc",
@@ -50346,305 +50470,268 @@
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 1,
-          "title": "《Future GPX Cyber Formula》#1 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=BplyEOPbi6I",
-          "video_id": "BplyEOPbi6I",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#1 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=3foF4f1zYMY",
+          "video_id": "3foF4f1zYMY"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 2,
-          "title": "《Future GPX Cyber Formula》#2 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=mXi7jwa4MaE",
-          "video_id": "mXi7jwa4MaE",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#2 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=oCIYjivxlbk",
+          "video_id": "oCIYjivxlbk"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 3,
-          "title": "《Future GPX Cyber Formula》#3 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=0JYdOOda9BQ",
-          "video_id": "0JYdOOda9BQ",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#3 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=oHVogB6myh4",
+          "video_id": "oHVogB6myh4"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 4,
-          "title": "《Future GPX Cyber Formula》#4 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=z4DxsaJ68PQ",
-          "video_id": "z4DxsaJ68PQ",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#4 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=H8H0DFy0L5M",
+          "video_id": "H8H0DFy0L5M"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 5,
-          "title": "《Future GPX Cyber Formula》#5 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=TcwFKax_jVA",
-          "video_id": "TcwFKax_jVA",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#5 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=rl8FLCrolDQ",
+          "video_id": "rl8FLCrolDQ"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 6,
-          "title": "《Future GPX Cyber Formula》#6 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=m2-V_OHZuq0",
-          "video_id": "m2-V_OHZuq0",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#6 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=lnVv36AqWB8",
+          "video_id": "lnVv36AqWB8"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 7,
-          "title": "《Future GPX Cyber Formula》#7 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=PIutHNOqduw",
-          "video_id": "PIutHNOqduw",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#7 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=Ma5d6nhkdgo",
+          "video_id": "Ma5d6nhkdgo"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 8,
-          "title": "《Future GPX Cyber Formula》#8 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=GTVsmiZzuXs",
-          "video_id": "GTVsmiZzuXs",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#8 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=1AIhEzUnLLU",
+          "video_id": "1AIhEzUnLLU"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 9,
-          "title": "《Future GPX Cyber Formula》#9 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=rsOrsF3gWHc",
-          "video_id": "rsOrsF3gWHc",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#9 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=5Fyip4_3nxw",
+          "video_id": "5Fyip4_3nxw"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 10,
-          "title": "《Future GPX Cyber Formula》#10 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=6iiE1qz47ec",
-          "video_id": "6iiE1qz47ec",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#10 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=evhrM127yZE",
+          "video_id": "evhrM127yZE"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 11,
-          "title": "《Future GPX Cyber Formula》#11 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=D3qsLD2os6U",
-          "video_id": "D3qsLD2os6U",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#11 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=4p0h6DEZIkQ",
+          "video_id": "4p0h6DEZIkQ"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 12,
-          "title": "《Future GPX Cyber Formula》#12 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=z14AjZEqP8A",
-          "video_id": "z14AjZEqP8A",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#12 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=L9WStbyHiSI",
+          "video_id": "L9WStbyHiSI"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 13,
-          "title": "《Future GPX Cyber Formula》#13 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=djCDLs5CYEQ",
-          "video_id": "djCDLs5CYEQ",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#13 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=Bf0hBgPIlEg",
+          "video_id": "Bf0hBgPIlEg"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 14,
-          "title": "《Future GPX Cyber Formula》#14 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=JaWqOVjCnxQ",
-          "video_id": "JaWqOVjCnxQ",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#14 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=V4h9imYdyl8",
+          "video_id": "V4h9imYdyl8"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 15,
-          "title": "《Future GPX Cyber Formula》#15 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=WTfml1ehgwQ",
-          "video_id": "WTfml1ehgwQ",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#15 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=31R83sCDI48",
+          "video_id": "31R83sCDI48"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 16,
-          "title": "《Future GPX Cyber Formula》#16 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=haCbJI9049c",
-          "video_id": "haCbJI9049c",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#16 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=okLdyAFkdws",
+          "video_id": "okLdyAFkdws"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 17,
-          "title": "《Future GPX Cyber Formula》#17 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=Db9hh5viIt8",
-          "video_id": "Db9hh5viIt8",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#17 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=O_qC9sB7UZA",
+          "video_id": "O_qC9sB7UZA"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 18,
-          "title": "《Future GPX Cyber Formula》#18 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=r2qp6d743Y0",
-          "video_id": "r2qp6d743Y0",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#18 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=jeaFW2y3fF0",
+          "video_id": "jeaFW2y3fF0"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 19,
-          "title": "《Future GPX Cyber Formula》#19 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=6v4FNtzhkSI",
-          "video_id": "6v4FNtzhkSI",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#19 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=HgdkyJPrhhU",
+          "video_id": "HgdkyJPrhhU"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 20,
-          "title": "《Future GPX Cyber Formula》#20 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=xBJ-a9RNNXM",
-          "video_id": "xBJ-a9RNNXM",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#20 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=B1mcJfT0H04",
+          "video_id": "B1mcJfT0H04"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 21,
-          "title": "《Future GPX Cyber Formula》#21 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=_ojyUZwAqSM",
-          "video_id": "_ojyUZwAqSM",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#21 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=G122hkw7v8c",
+          "video_id": "G122hkw7v8c"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 22,
-          "title": "《Future GPX Cyber Formula》#22 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=0SFTgmPoytU",
-          "video_id": "0SFTgmPoytU",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#22 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=BJwykjHMe04",
+          "video_id": "BJwykjHMe04"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 23,
-          "title": "《Future GPX Cyber Formula》#23 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=dN3PnQaPH_0",
-          "video_id": "dN3PnQaPH_0",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#23 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=ho0WBfJUcws",
+          "video_id": "ho0WBfJUcws"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 24,
-          "title": "《Future GPX Cyber Formula》#24 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=Rkvi3V7WMTo",
-          "video_id": "Rkvi3V7WMTo",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#24 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=-6P4DeBP-0Y",
+          "video_id": "-6P4DeBP-0Y"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 25,
-          "title": "《Future GPX Cyber Formula》#25 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=ajqhvcp8-YQ",
-          "video_id": "ajqhvcp8-YQ",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#25 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=hgP1LCn34WQ",
+          "video_id": "hgP1LCn34WQ"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 26,
-          "title": "《Future GPX Cyber Formula》#26 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=8dT51BsjyoU",
-          "video_id": "8dT51BsjyoU",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#26 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=B0uWKxlBusA",
+          "video_id": "B0uWKxlBusA"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 27,
-          "title": "《Future GPX Cyber Formula》#27 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=xGjjqE6oU1s",
-          "video_id": "xGjjqE6oU1s",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#27 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=G4vGaFXaWxU",
+          "video_id": "G4vGaFXaWxU"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 28,
-          "title": "《Future GPX Cyber Formula》#28 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=ztjH3XYUVpE",
-          "video_id": "ztjH3XYUVpE",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#28 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=G6Ubfc4b4V4",
+          "video_id": "G6Ubfc4b4V4"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 29,
-          "title": "《Future GPX Cyber Formula》#29 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=2HaGNa1hBg0",
-          "video_id": "2HaGNa1hBg0",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#29 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=Z4YJ47mp1_k",
+          "video_id": "Z4YJ47mp1_k"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 30,
-          "title": "《Future GPX Cyber Formula》#30 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=xJRcgAh9lCs",
-          "video_id": "xJRcgAh9lCs",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#30 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=BlGeoV9-afo",
+          "video_id": "BlGeoV9-afo"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 31,
-          "title": "《Future GPX Cyber Formula》#31 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=81YLV7TPYyc",
-          "video_id": "81YLV7TPYyc",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#31 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=iorl9sb8C1g",
+          "video_id": "iorl9sb8C1g"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 32,
-          "title": "《Future GPX Cyber Formula》#32 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=dfJJjjLTfAI",
-          "video_id": "dfJJjjLTfAI",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#32 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=YNrPUhZ3DYg",
+          "video_id": "YNrPUhZ3DYg"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 33,
-          "title": "《Future GPX Cyber Formula》#33 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=xJY3pbfjw2M",
-          "video_id": "xJY3pbfjw2M",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#33 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=r_OUoohtmMc",
+          "video_id": "r_OUoohtmMc"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 34,
-          "title": "《Future GPX Cyber Formula》#34 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=09n0Bs8o39I",
-          "video_id": "09n0Bs8o39I",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#34 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=Fz1uaUQ72zQ",
+          "video_id": "Fz1uaUQ72zQ"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 35,
-          "title": "《Future GPX Cyber Formula》#35 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=Pb9a4AZDGRo",
-          "video_id": "Pb9a4AZDGRo",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#35 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=hoQmxGQLK1c",
+          "video_id": "hoQmxGQLK1c"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 36,
-          "title": "《Future GPX Cyber Formula》#36 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=UBddh1wZ8UE",
-          "video_id": "UBddh1wZ8UE",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#36 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=UmedEEdZzf8",
+          "video_id": "UmedEEdZzf8"
         },
         {
           "animeName": "Future GPX Cyber Formula",
           "episode": 37,
-          "title": "《Future GPX Cyber Formula》#37 (ENG sub | JP dub)【Ani-One】",
-          "url": "https://www.youtube.com/watch?v=51A3jcBzSCA",
-          "video_id": "51A3jcBzSCA",
-          "is_marathon": true
+          "title": "《Future GPX Cyber Formula》#37 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=-ZhuJOUKH0Q",
+          "video_id": "-ZhuJOUKH0Q"
         }
       ],
       "episode_count": 37,
-      "thumbnail_video_id": "BplyEOPbi6I",
+      "thumbnail_video_id": "3foF4f1zYMY",
       "min_episode": 1,
-      "marathon_video_id": "BplyEOPbi6I",
-      "marathon_title": "Future GPX Cyber Formula",
+      "marathon_video_id": null,
+      "marathon_title": null,
       "is_donghua": false
     },
     {
@@ -51227,9 +51314,17 @@
           "url": "https://www.youtube.com/watch?v=AwteyONUR08",
           "video_id": "AwteyONUR08",
           "is_marathon": true
+        },
+        {
+          "animeName": "GHOST CONCERT : missing Songs",
+          "episode": 8,
+          "title": "《GHOST CONCERT : missing Songs》#8 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=Lqb4YR4UFRU",
+          "video_id": "Lqb4YR4UFRU",
+          "is_marathon": true
         }
       ],
-      "episode_count": 7,
+      "episode_count": 8,
       "thumbnail_video_id": "Caj2oX2YWsc",
       "min_episode": 1,
       "marathon_video_id": "Caj2oX2YWsc",
@@ -51280,9 +51375,23 @@
           "title": "《GHOST CONCERT: missing Songs》#6 (ID Sub)【Ani-One Indonesia】",
           "url": "https://www.youtube.com/watch?v=hdv17uT0NPk",
           "video_id": "hdv17uT0NPk"
+        },
+        {
+          "animeName": "GHOST CONCERT: missing Songs",
+          "episode": 7,
+          "title": "《GHOST CONCERT: missing Songs》#7 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=icP_x6koG_4",
+          "video_id": "icP_x6koG_4"
+        },
+        {
+          "animeName": "GHOST CONCERT: missing Songs",
+          "episode": 8,
+          "title": "《GHOST CONCERT: missing Songs》#8 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=h9jvD4lxjnw",
+          "video_id": "h9jvD4lxjnw"
         }
       ],
-      "episode_count": 6,
+      "episode_count": 8,
       "thumbnail_video_id": "nMFBS-4Uz18",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -53514,9 +53623,36 @@
           "video_id": "urr868hpQec",
           "is_marathon": true,
           "is_donghua": true
+        },
+        {
+          "animeName": "God Troubles Me Season 4",
+          "episode": 7,
+          "title": "God Troubles Me Season 4 #7 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=EoqCzEor2Zw",
+          "video_id": "EoqCzEor2Zw",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "God Troubles Me Season 4",
+          "episode": 8,
+          "title": "God Troubles Me Season 4 #8 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=qmkXg-dkbuc",
+          "video_id": "qmkXg-dkbuc",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "God Troubles Me Season 4",
+          "episode": 9,
+          "title": "God Troubles Me Season 4 #9 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=l2An2cASP_w",
+          "video_id": "l2An2cASP_w",
+          "is_marathon": true,
+          "is_donghua": true
         }
       ],
-      "episode_count": 6,
+      "episode_count": 9,
       "thumbnail_video_id": "eOu0eYYD-T8",
       "min_episode": 1,
       "marathon_video_id": "eOu0eYYD-T8",
@@ -54582,26 +54718,26 @@
           "animeName": "Great Journey Of Teenagers 4",
           "episode": 20,
           "title": "MULTISUB【Great Journey Of Teenagers 4】 EP20 | Wuxia Animation | YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=2ghrvpJnWz8",
-          "video_id": "2ghrvpJnWz8",
+          "url": "https://www.youtube.com/watch?v=cV7sJuMDVVk",
+          "video_id": "cV7sJuMDVVk",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Great Journey Of Teenagers 4",
           "episode": 21,
-          "title": "🌟Menbers Preview🌟MULTISUB【Great Journey Of Teenagers 4】 EP21 | Wuxia Animation | YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=886-RXt_ZBQ",
-          "video_id": "886-RXt_ZBQ",
+          "title": "MULTISUB【Great Journey Of Teenagers 4】 EP21 | Wuxia Animation | YOUKU ANIME",
+          "url": "https://www.youtube.com/watch?v=SB9gJt90IKI",
+          "video_id": "SB9gJt90IKI",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Great Journey Of Teenagers 4",
           "episode": 22,
-          "title": "🌟Menbers Preview🌟MULTISUB【Great Journey Of Teenagers 4】 EP22 | Wuxia Animation | YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=K42G_PdfBQQ",
-          "video_id": "K42G_PdfBQQ",
+          "title": "MULTISUB【Great Journey Of Teenagers 4】 EP22 | Wuxia Animation | YOUKU ANIME",
+          "url": "https://www.youtube.com/watch?v=5tPp5Z6a8rQ",
+          "video_id": "5tPp5Z6a8rQ",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -54626,18 +54762,18 @@
         {
           "animeName": "Great Journey Of Teenagers 4",
           "episode": 25,
-          "title": "🌟Menbers Preview🌟MULTISUB【Great Journey Of Teenagers 4】 EP25 | Wuxia Animation | YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=u3UZC4_x0gA",
-          "video_id": "u3UZC4_x0gA",
+          "title": "MULTISUB【Great Journey Of Teenagers 4】 EP25 | Wuxia Animation | YOUKU ANIME",
+          "url": "https://www.youtube.com/watch?v=gId4omhjiGs",
+          "video_id": "gId4omhjiGs",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Great Journey Of Teenagers 4",
           "episode": 26,
-          "title": "🌟Menbers Preview🌟MULTISUB【Great Journey Of Teenagers 4】 EP26 | Wuxia Animation | YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=8BWasj0xab4",
-          "video_id": "8BWasj0xab4",
+          "title": "MULTISUB【Great Journey Of Teenagers 4】 EP26 | Wuxia Animation | YOUKU ANIME",
+          "url": "https://www.youtube.com/watch?v=S5FD7YreqfE",
+          "video_id": "S5FD7YreqfE",
           "is_donghua": true,
           "is_marathon": true
         }
@@ -66476,11 +66612,12 @@
           "is_marathon": true
         },
         {
-          "animeName": "JUJUTSU KAISEN: The Culling Game Part 1",
+          "animeName": "JUJUTSU KAISEN The Culling Game Part 1",
           "episode": 50,
-          "title": "《JUJUTSU KAISEN: The Culling Game Part 1》#50 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=roXm7JSatvU",
-          "video_id": "roXm7JSatvU"
+          "title": "《JUJUTSU KAISEN The Culling Game Part 1》#50 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=zi2vn6G4iaQ",
+          "video_id": "zi2vn6G4iaQ",
+          "is_marathon": true
         },
         {
           "animeName": "JUJUTSU KAISEN: The Culling Game Part 1",
@@ -66860,6 +66997,178 @@
       "min_episode": 5,
       "marathon_video_id": "jBmUrT-vw-g",
       "marathon_title": "Kaiju No. 8",
+      "is_donghua": false
+    },
+    {
+      "name": "Kaiju No. 8 (Season 1)",
+      "videos": [
+        {
+          "animeName": "Kaiju No. 8 (Season 1)",
+          "episode": 1,
+          "title": "《Kaiju No. 8 (Season 1)》#1 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=gTZW4p46oFs",
+          "video_id": "gTZW4p46oFs"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 1)",
+          "episode": 2,
+          "title": "《Kaiju No. 8 (Season 1)》#2 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=7UpDR3dMEcI",
+          "video_id": "7UpDR3dMEcI"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 1)",
+          "episode": 3,
+          "title": "《Kaiju No. 8 (Season 1)》#3 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=nSgblO5hyx4",
+          "video_id": "nSgblO5hyx4"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 1)",
+          "episode": 4,
+          "title": "《Kaiju No. 8 (Season 1)》#4 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=shYEnWafPJI",
+          "video_id": "shYEnWafPJI"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 1)",
+          "episode": 5,
+          "title": "《Kaiju No. 8 (Season 1)》#5 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=-1IAg79X46o",
+          "video_id": "-1IAg79X46o"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 1)",
+          "episode": 6,
+          "title": "《Kaiju No. 8 (Season 1)》#6 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=wBiDMp-_9aY",
+          "video_id": "wBiDMp-_9aY"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 1)",
+          "episode": 7,
+          "title": "《Kaiju No. 8 (Season 1)》#7 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=S2qpXyf9z-M",
+          "video_id": "S2qpXyf9z-M"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 1)",
+          "episode": 8,
+          "title": "《Kaiju No. 8 (Season 1)》#8 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=U1hHWvCiYLU",
+          "video_id": "U1hHWvCiYLU"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 1)",
+          "episode": 9,
+          "title": "《Kaiju No. 8 (Season 1)》#9 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=sIkYY64W4HE",
+          "video_id": "sIkYY64W4HE"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 1)",
+          "episode": 10,
+          "title": "《Kaiju No. 8 (Season 1)》#10 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=MOOJ40spfjk",
+          "video_id": "MOOJ40spfjk"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 1)",
+          "episode": 11,
+          "title": "《Kaiju No. 8 (Season 1)》#11 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=oHJAGBcQKuQ",
+          "video_id": "oHJAGBcQKuQ"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 1)",
+          "episode": 12,
+          "title": "《Kaiju No. 8 (Season 1)》#12 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=PKKJ3Mk1FtM",
+          "video_id": "PKKJ3Mk1FtM"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 13,
+          "title": "《Kaiju No. 8 (Season 2)》#13 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=gvHeKAkcavI",
+          "video_id": "gvHeKAkcavI"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 14,
+          "title": "《Kaiju No. 8 (Season 2)》#14 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=veNkvLsaeIY",
+          "video_id": "veNkvLsaeIY"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 15,
+          "title": "《Kaiju No. 8 (Season 2)》#15 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=bdY2Zm446aA",
+          "video_id": "bdY2Zm446aA"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 16,
+          "title": "《Kaiju No. 8 (Season 2)》#16 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=4wdpDewAOPw",
+          "video_id": "4wdpDewAOPw"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 17,
+          "title": "《Kaiju No. 8 (Season 2)》#17 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=Mvh5S19nSDA",
+          "video_id": "Mvh5S19nSDA"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 18,
+          "title": "《Kaiju No. 8 (Season 2)》#18 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=ZijqHEW5l_g",
+          "video_id": "ZijqHEW5l_g"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 19,
+          "title": "《Kaiju No. 8 (Season 2)》#19 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=sfn6aeSuxCs",
+          "video_id": "sfn6aeSuxCs"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 20,
+          "title": "《Kaiju No. 8 (Season 2)》#20 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=iXbdoO8DNPc",
+          "video_id": "iXbdoO8DNPc"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 21,
+          "title": "《Kaiju No. 8 (Season 2)》#21 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=44g8k61fl2Q",
+          "video_id": "44g8k61fl2Q"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 22,
+          "title": "《Kaiju No. 8 (Season 2)》#22 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=GU3ftfS8By0",
+          "video_id": "GU3ftfS8By0"
+        },
+        {
+          "animeName": "Kaiju No. 8 (Season 2)",
+          "episode": 23,
+          "title": "《Kaiju No. 8 (Season 2)》#23 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=bBOFfpDE5ro",
+          "video_id": "bBOFfpDE5ro"
+        }
+      ],
+      "episode_count": 23,
+      "thumbnail_video_id": "gTZW4p46oFs",
+      "min_episode": 1,
+      "marathon_video_id": null,
+      "marathon_title": null,
       "is_donghua": false
     },
     {
@@ -68831,9 +69140,17 @@
           "url": "https://www.youtube.com/watch?v=y2uBKGqOzR0",
           "video_id": "y2uBKGqOzR0",
           "is_marathon": true
+        },
+        {
+          "animeName": "Kirio Fan Club",
+          "episode": 8,
+          "title": "《Kirio Fan Club》#8 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=hD-OVIU5y98",
+          "video_id": "hD-OVIU5y98",
+          "is_marathon": true
         }
       ],
-      "episode_count": 7,
+      "episode_count": 8,
       "thumbnail_video_id": "51_GOGstF78",
       "min_episode": 1,
       "marathon_video_id": "51_GOGstF78",
@@ -69741,9 +70058,17 @@
           "url": "https://www.youtube.com/watch?v=Xwn_hpsXtnQ",
           "video_id": "Xwn_hpsXtnQ",
           "is_marathon": true
+        },
+        {
+          "animeName": "Koala's Diary",
+          "episode": 33,
+          "title": "《Koala's Diary》#33 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=prhU8IA62yo",
+          "video_id": "prhU8IA62yo",
+          "is_marathon": true
         }
       ],
-      "episode_count": 32,
+      "episode_count": 33,
       "thumbnail_video_id": "CTK-GSWCBak",
       "min_episode": 1,
       "marathon_video_id": "CTK-GSWCBak",
@@ -70844,9 +71169,17 @@
           "url": "https://www.youtube.com/watch?v=T3j7LlLOS90",
           "video_id": "T3j7LlLOS90",
           "is_marathon": true
+        },
+        {
+          "animeName": "Kujima: Why Sing, When You Can Warble",
+          "episode": 7,
+          "title": "《Kujima: Why Sing, When You Can Warble》#7 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=bWWZjUZ443M",
+          "video_id": "bWWZjUZ443M",
+          "is_marathon": true
         }
       ],
-      "episode_count": 6,
+      "episode_count": 7,
       "thumbnail_video_id": "1ZBBdgYXW7g",
       "min_episode": 1,
       "marathon_video_id": "1ZBBdgYXW7g",
@@ -71291,9 +71624,17 @@
           "url": "https://www.youtube.com/watch?v=zUC9SJ93odY",
           "video_id": "zUC9SJ93odY",
           "is_marathon": true
+        },
+        {
+          "animeName": "Kusunoki's Garden of Gods",
+          "episode": 8,
+          "title": "《Kusunoki's Garden of Gods》#8 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=RkcUYKs3FEs",
+          "video_id": "RkcUYKs3FEs",
+          "is_marathon": true
         }
       ],
-      "episode_count": 7,
+      "episode_count": 8,
       "thumbnail_video_id": "BxSsUmxgylI",
       "min_episode": 1,
       "marathon_video_id": "BxSsUmxgylI",
@@ -76243,9 +76584,17 @@
           "url": "https://www.youtube.com/watch?v=Ub8oceg5wxg",
           "video_id": "Ub8oceg5wxg",
           "is_marathon": true
+        },
+        {
+          "animeName": "MAO",
+          "episode": 8,
+          "title": "《MAO》#8 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=120tr-3aUR8",
+          "video_id": "120tr-3aUR8",
+          "is_marathon": true
         }
       ],
-      "episode_count": 7,
+      "episode_count": 8,
       "thumbnail_video_id": "Uh5S9Po06Js",
       "min_episode": 1,
       "marathon_video_id": "Uh5S9Po06Js",
@@ -79230,103 +79579,186 @@
       "is_donghua": false
     },
     {
+      "name": "MF GHOST 1st Season",
+      "videos": [
+        {
+          "animeName": "MF GHOST 1st Season",
+          "episode": 1,
+          "title": "《MF GHOST 1st Season》#1 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=RQlSWXlfL2U",
+          "video_id": "RQlSWXlfL2U"
+        },
+        {
+          "animeName": "MF GHOST 1st Season",
+          "episode": 2,
+          "title": "《MF GHOST 1st Season》#2 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=mXSG0bpv2vg",
+          "video_id": "mXSG0bpv2vg"
+        },
+        {
+          "animeName": "MF GHOST 1st Season",
+          "episode": 3,
+          "title": "《MF GHOST 1st Season》#3 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=xLolkbgJCpo",
+          "video_id": "xLolkbgJCpo"
+        },
+        {
+          "animeName": "MF GHOST 1st Season",
+          "episode": 4,
+          "title": "《MF GHOST 1st Season》#4 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=0c0nt6JBu_Y",
+          "video_id": "0c0nt6JBu_Y"
+        },
+        {
+          "animeName": "MF GHOST 1st Season",
+          "episode": 5,
+          "title": "《MF GHOST 1st Season》#5 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=1LLhMmzoaso",
+          "video_id": "1LLhMmzoaso"
+        },
+        {
+          "animeName": "MF GHOST 1st Season",
+          "episode": 6,
+          "title": "《MF GHOST 1st Season》#6 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=cWYlDhNtT0Q",
+          "video_id": "cWYlDhNtT0Q"
+        },
+        {
+          "animeName": "MF GHOST 1st Season",
+          "episode": 7,
+          "title": "《MF GHOST 1st Season》#7 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=a3Xe7jW2I-U",
+          "video_id": "a3Xe7jW2I-U"
+        },
+        {
+          "animeName": "MF GHOST 1st Season",
+          "episode": 8,
+          "title": "《MF GHOST 1st Season》#8 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=3r8bPZHKUSg",
+          "video_id": "3r8bPZHKUSg"
+        },
+        {
+          "animeName": "MF GHOST 1st Season",
+          "episode": 9,
+          "title": "《MF GHOST 1st Season》#9 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=yza8WyNl_qQ",
+          "video_id": "yza8WyNl_qQ"
+        },
+        {
+          "animeName": "MF GHOST 1st Season",
+          "episode": 10,
+          "title": "《MF GHOST 1st Season》#10 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=s06vwBEbcME",
+          "video_id": "s06vwBEbcME"
+        },
+        {
+          "animeName": "MF GHOST 1st Season",
+          "episode": 11,
+          "title": "《MF GHOST 1st Season》#11 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=7iNhEu7sFGQ",
+          "video_id": "7iNhEu7sFGQ"
+        },
+        {
+          "animeName": "MF GHOST 1st Season",
+          "episode": 12,
+          "title": "《MF GHOST 1st Season》#12 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=eTAuPvlaNGc",
+          "video_id": "eTAuPvlaNGc"
+        }
+      ],
+      "episode_count": 12,
+      "thumbnail_video_id": "RQlSWXlfL2U",
+      "min_episode": 1,
+      "marathon_video_id": null,
+      "marathon_title": null,
+      "is_donghua": false
+    },
+    {
       "name": "MF GHOST 3rd Season",
       "videos": [
         {
           "animeName": "MF GHOST 2nd Season",
           "episode": 13,
-          "title": "《MF GHOST 2nd Season》#13 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=PB5oyKgA40c",
-          "video_id": "PB5oyKgA40c",
-          "is_marathon": true
+          "title": "《MF GHOST 2nd Season》#13 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=ugsv7RE6Zus",
+          "video_id": "ugsv7RE6Zus"
         },
         {
           "animeName": "MF GHOST 2nd Season",
           "episode": 14,
-          "title": "《MF GHOST 2nd Season》#14 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=6-p6RcOS7CQ",
-          "video_id": "6-p6RcOS7CQ",
-          "is_marathon": true
+          "title": "《MF GHOST 2nd Season》#14 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=y_213KbIEVc",
+          "video_id": "y_213KbIEVc"
         },
         {
           "animeName": "MF GHOST 2nd Season",
           "episode": 15,
-          "title": "《MF GHOST 2nd Season》#15 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=cv19brCOSeo",
-          "video_id": "cv19brCOSeo",
-          "is_marathon": true
+          "title": "《MF GHOST 2nd Season》#15 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=VHcuJCqUZ5Y",
+          "video_id": "VHcuJCqUZ5Y"
         },
         {
           "animeName": "MF GHOST 2nd Season",
           "episode": 16,
-          "title": "《MF GHOST 2nd Season》#16 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=_AFLzHdTOnQ",
-          "video_id": "_AFLzHdTOnQ",
-          "is_marathon": true
+          "title": "《MF GHOST 2nd Season》#16 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=HBC3gFe_W-0",
+          "video_id": "HBC3gFe_W-0"
         },
         {
           "animeName": "MF GHOST 2nd Season",
           "episode": 17,
-          "title": "《MF GHOST 2nd Season》#17 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=Zh9gffwU6MU",
-          "video_id": "Zh9gffwU6MU",
-          "is_marathon": true
+          "title": "《MF GHOST 2nd Season》#17 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=vOu6b86DKOI",
+          "video_id": "vOu6b86DKOI"
         },
         {
           "animeName": "MF GHOST 2nd Season",
           "episode": 18,
-          "title": "《MF GHOST 2nd Season》#18 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=rsc6-1Vb2oU",
-          "video_id": "rsc6-1Vb2oU",
-          "is_marathon": true
+          "title": "《MF GHOST 2nd Season》#18 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=_0Alg0K6pFY",
+          "video_id": "_0Alg0K6pFY"
         },
         {
           "animeName": "MF GHOST 2nd Season",
           "episode": 19,
-          "title": "《MF GHOST 2nd Season》#19 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=sydjtNNk7mw",
-          "video_id": "sydjtNNk7mw",
-          "is_marathon": true
+          "title": "《MF GHOST 2nd Season》#19 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=gQA8BTApqR0",
+          "video_id": "gQA8BTApqR0"
         },
         {
           "animeName": "MF GHOST 2nd Season",
           "episode": 20,
-          "title": "《MF GHOST 2nd Season》#20 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=_0pOCid4VQI",
-          "video_id": "_0pOCid4VQI",
-          "is_marathon": true
+          "title": "《MF GHOST 2nd Season》#20 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=XUX3tlrfoEE",
+          "video_id": "XUX3tlrfoEE"
         },
         {
           "animeName": "MF GHOST 2nd Season",
           "episode": 21,
-          "title": "《MF GHOST 2nd Season》#21 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=eXt-vLb-LU8",
-          "video_id": "eXt-vLb-LU8",
-          "is_marathon": true
+          "title": "《MF GHOST 2nd Season》#21 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=ZG6Dhh-9nA4",
+          "video_id": "ZG6Dhh-9nA4"
         },
         {
           "animeName": "MF GHOST 2nd Season",
           "episode": 22,
-          "title": "《MF GHOST 2nd Season》#22 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=XIhi03mfWPs",
-          "video_id": "XIhi03mfWPs",
-          "is_marathon": true
+          "title": "《MF GHOST 2nd Season》#22 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=o64Kto72b88",
+          "video_id": "o64Kto72b88"
         },
         {
           "animeName": "MF GHOST 2nd Season",
           "episode": 23,
-          "title": "《MF GHOST 2nd Season》#23 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=xFCQvGSrUF4",
-          "video_id": "xFCQvGSrUF4",
-          "is_marathon": true
+          "title": "《MF GHOST 2nd Season》#23 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=urR5kOl4t7U",
+          "video_id": "urR5kOl4t7U"
         },
         {
           "animeName": "MF GHOST 2nd Season",
           "episode": 24,
-          "title": "《MF GHOST 2nd Season》#24 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=j5VKh-N-BQc",
-          "video_id": "j5VKh-N-BQc",
-          "is_marathon": true
+          "title": "《MF GHOST 2nd Season》#24 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=RDgoahDUlVQ",
+          "video_id": "RDgoahDUlVQ"
         },
         {
           "animeName": "MF GHOST 3rd Season",
@@ -79434,10 +79866,10 @@
         }
       ],
       "episode_count": 25,
-      "thumbnail_video_id": "PB5oyKgA40c",
+      "thumbnail_video_id": "ugsv7RE6Zus",
       "min_episode": 13,
-      "marathon_video_id": "PB5oyKgA40c",
-      "marathon_title": "MF GHOST 3rd Season",
+      "marathon_video_id": null,
+      "marathon_title": null,
       "is_donghua": false
     },
     {
@@ -80220,9 +80652,17 @@
           "url": "https://www.youtube.com/watch?v=oosShFoLcNM",
           "video_id": "oosShFoLcNM",
           "is_marathon": true
+        },
+        {
+          "animeName": "Mistress Kanan Is Devilishly Easy",
+          "episode": 8,
+          "title": "《Mistress Kanan Is Devilishly Easy》#8 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=sGgvHh361SE",
+          "video_id": "sGgvHh361SE",
+          "is_marathon": true
         }
       ],
-      "episode_count": 7,
+      "episode_count": 8,
       "thumbnail_video_id": "fi9ro3yZcEY",
       "min_episode": 1,
       "marathon_video_id": "fi9ro3yZcEY",
@@ -81191,9 +81631,17 @@
           "url": "https://www.youtube.com/watch?v=58jkSt8m1Qg",
           "video_id": "58jkSt8m1Qg",
           "is_marathon": true
+        },
+        {
+          "animeName": "Monster Eater",
+          "episode": 8,
+          "title": "《Monster Eater》#8 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=pPAK1a1JOGs",
+          "video_id": "pPAK1a1JOGs",
+          "is_marathon": true
         }
       ],
-      "episode_count": 7,
+      "episode_count": 8,
       "thumbnail_video_id": "1q6dedaKSdI",
       "min_episode": 1,
       "marathon_video_id": "1q6dedaKSdI",
@@ -89915,9 +90363,17 @@
           "url": "https://www.youtube.com/watch?v=kRqp5N9kQ_A",
           "video_id": "kRqp5N9kQ_A",
           "is_marathon": true
+        },
+        {
+          "animeName": "Petals of Reincarnation",
+          "episode": 8,
+          "title": "《Petals of Reincarnation》#8 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=A_18j_cQDVM",
+          "video_id": "A_18j_cQDVM",
+          "is_marathon": true
         }
       ],
-      "episode_count": 7,
+      "episode_count": 8,
       "thumbnail_video_id": "fZSsEZvp4ko",
       "min_episode": 1,
       "marathon_video_id": "fZSsEZvp4ko",
@@ -94796,9 +95252,17 @@
           "url": "https://www.youtube.com/watch?v=cd8TvNqpjW4",
           "video_id": "cd8TvNqpjW4",
           "is_marathon": true
+        },
+        {
+          "animeName": "Rooster Fighter",
+          "episode": 6,
+          "title": "《Rooster Fighter》#6 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=l8JKf6rh5dQ",
+          "video_id": "l8JKf6rh5dQ",
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "LthcDIraW2s",
       "min_episode": 1,
       "marathon_video_id": "LthcDIraW2s",
@@ -95332,25 +95796,23 @@
         {
           "animeName": "Sakuna: Of Rice and Ruin Korora Rice Cultivation Diary",
           "episode": 1,
-          "title": "《Sakuna: Of Rice and Ruin Korora Rice Cultivation Diary》Special #1 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=LJbkqqfEcoU",
-          "video_id": "LJbkqqfEcoU",
-          "is_marathon": true
+          "title": "《Sakuna: Of Rice and Ruin Korora Rice Cultivation Diary》Special #1 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=kybHiami9nI",
+          "video_id": "kybHiami9nI"
         },
         {
           "animeName": "Sakuna: Of Rice and Ruin Korora Rice Cultivation Diary",
           "episode": 2,
-          "title": "《Sakuna: Of Rice and Ruin Korora Rice Cultivation Diary》Special #2 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=NzS3uWTzMVw",
-          "video_id": "NzS3uWTzMVw",
-          "is_marathon": true
+          "title": "《Sakuna: Of Rice and Ruin Korora Rice Cultivation Diary》Special #2 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=PDc0WkXB9x8",
+          "video_id": "PDc0WkXB9x8"
         }
       ],
       "episode_count": 2,
-      "thumbnail_video_id": "LJbkqqfEcoU",
+      "thumbnail_video_id": "kybHiami9nI",
       "min_episode": 1,
-      "marathon_video_id": "LJbkqqfEcoU",
-      "marathon_title": "Sakuna: Of Rice and Ruin Korora Rice Cultivation Diary",
+      "marathon_video_id": null,
+      "marathon_title": null,
       "is_donghua": false
     },
     {
@@ -105835,9 +106297,45 @@
           "video_id": "DHmIAAmAxm4",
           "is_marathon": true,
           "is_donghua": true
+        },
+        {
+          "animeName": "Tales of Herding God",
+          "episode": 3,
+          "title": "Tales of Herding God #3 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=J2eHkP9YXLA",
+          "video_id": "J2eHkP9YXLA",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Tales of Herding God",
+          "episode": 4,
+          "title": "Tales of Herding God #4 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=n-bzhVYH6UA",
+          "video_id": "n-bzhVYH6UA",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Tales of Herding God",
+          "episode": 5,
+          "title": "Tales of Herding God #5 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=yT5TCJE2YYk",
+          "video_id": "yT5TCJE2YYk",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Tales of Herding God",
+          "episode": 6,
+          "title": "Tales of Herding God #6 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=z8inymxiCeA",
+          "video_id": "z8inymxiCeA",
+          "is_marathon": true,
+          "is_donghua": true
         }
       ],
-      "episode_count": 2,
+      "episode_count": 6,
       "thumbnail_video_id": "x-PXDxtZFX4",
       "min_episode": 1,
       "marathon_video_id": "x-PXDxtZFX4",
@@ -108403,9 +108901,17 @@
           "url": "https://www.youtube.com/watch?v=Ah2t8_qegQo",
           "video_id": "Ah2t8_qegQo",
           "is_marathon": true
+        },
+        {
+          "animeName": "The Classroom of a Black Cat and a Witch",
+          "episode": 7,
+          "title": "《The Classroom of a Black Cat and a Witch》#7 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=Q1_Qt23jgmE",
+          "video_id": "Q1_Qt23jgmE",
+          "is_marathon": true
         }
       ],
-      "episode_count": 6,
+      "episode_count": 7,
       "thumbnail_video_id": "bFwW728v9wo",
       "min_episode": 1,
       "marathon_video_id": "bFwW728v9wo",
@@ -109590,11 +110096,11 @@
           "is_marathon": true
         },
         {
-          "animeName": "The Demon Hunter 2",
+          "animeName": "The Demon Hunter3",
           "episode": 9,
-          "title": "MULTISUB【The Demon Hunter 2】EP09 | Hot-blooded ancient-style comics | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=607pdaW0FEU",
-          "video_id": "607pdaW0FEU",
+          "title": "【沧元图3 The Demon Hunter3】EP09 试看 Preview  | MUTISUB | 优酷动漫  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=poB7ohvZ7-Q",
+          "video_id": "poB7ohvZ7-Q",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -112409,9 +112915,25 @@
           "url": "https://www.youtube.com/watch?v=de21QOgfWfw",
           "video_id": "de21QOgfWfw",
           "is_marathon": true
+        },
+        {
+          "animeName": "The Great Sage Ryddel and the Hands of Time",
+          "episode": 7,
+          "title": "《The Great Sage Ryddel and the Hands of Time》#7 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=uBmhuGCGke8",
+          "video_id": "uBmhuGCGke8",
+          "is_marathon": true
+        },
+        {
+          "animeName": "The Great Sage Ryddel and the Hands of Time",
+          "episode": 8,
+          "title": "《The Great Sage Ryddel and the Hands of Time》#8 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=GYtyCP4TwTg",
+          "video_id": "GYtyCP4TwTg",
+          "is_marathon": true
         }
       ],
-      "episode_count": 6,
+      "episode_count": 8,
       "thumbnail_video_id": "aOOjA9cSrCU",
       "min_episode": 1,
       "marathon_video_id": "aOOjA9cSrCU",
@@ -112745,105 +113267,93 @@
         {
           "animeName": "The Iceblade Sorcerer Shall Rule the World",
           "episode": 1,
-          "title": "《The Iceblade Sorcerer Shall Rule the World》#1 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=2cvQWcxqyro",
-          "video_id": "2cvQWcxqyro",
-          "is_marathon": true
+          "title": "《The Iceblade Sorcerer Shall Rule the World》#1 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=8yiqFMqguh0",
+          "video_id": "8yiqFMqguh0"
         },
         {
           "animeName": "The Iceblade Sorcerer Shall Rule the World",
           "episode": 2,
-          "title": "《The Iceblade Sorcerer Shall Rule the World》#2 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=Rp9LjS80MkQ",
-          "video_id": "Rp9LjS80MkQ",
-          "is_marathon": true
+          "title": "《The Iceblade Sorcerer Shall Rule the World》#2 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=GD7cS_lBA5k",
+          "video_id": "GD7cS_lBA5k"
         },
         {
           "animeName": "The Iceblade Sorcerer Shall Rule the World",
           "episode": 3,
-          "title": "《The Iceblade Sorcerer Shall Rule the World》#3 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=3FNeCI-CHoU",
-          "video_id": "3FNeCI-CHoU",
-          "is_marathon": true
+          "title": "《The Iceblade Sorcerer Shall Rule the World》#3 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=muuieDBue9k",
+          "video_id": "muuieDBue9k"
         },
         {
           "animeName": "The Iceblade Sorcerer Shall Rule the World",
           "episode": 4,
-          "title": "《The Iceblade Sorcerer Shall Rule the World》#4 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=3JzsTEQG7Ck",
-          "video_id": "3JzsTEQG7Ck",
-          "is_marathon": true
+          "title": "《The Iceblade Sorcerer Shall Rule the World》#4 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=45fStXIsVY8",
+          "video_id": "45fStXIsVY8"
         },
         {
           "animeName": "The Iceblade Sorcerer Shall Rule the World",
           "episode": 5,
-          "title": "《The Iceblade Sorcerer Shall Rule the World》#5 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=i4C82wtuhIg",
-          "video_id": "i4C82wtuhIg",
-          "is_marathon": true
+          "title": "《The Iceblade Sorcerer Shall Rule the World》#5 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=7KAcZJql-ak",
+          "video_id": "7KAcZJql-ak"
         },
         {
           "animeName": "The Iceblade Sorcerer Shall Rule the World",
           "episode": 6,
-          "title": "《The Iceblade Sorcerer Shall Rule the World》#6 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=iP8PSgKEvJE",
-          "video_id": "iP8PSgKEvJE",
-          "is_marathon": true
+          "title": "《The Iceblade Sorcerer Shall Rule the World》#6 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=7QQPS_kTccw",
+          "video_id": "7QQPS_kTccw"
         },
         {
           "animeName": "The Iceblade Sorcerer Shall Rule the World",
           "episode": 7,
-          "title": "《The Iceblade Sorcerer Shall Rule the World》#7 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=-CQXcqrcTaw",
-          "video_id": "-CQXcqrcTaw",
-          "is_marathon": true
+          "title": "《The Iceblade Sorcerer Shall Rule the World》#7 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=9TCL2p_Q-rs",
+          "video_id": "9TCL2p_Q-rs"
         },
         {
           "animeName": "The Iceblade Sorcerer Shall Rule the World",
           "episode": 8,
-          "title": "《The Iceblade Sorcerer Shall Rule the World》#8 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=Va6owiU7WzY",
-          "video_id": "Va6owiU7WzY",
-          "is_marathon": true
+          "title": "《The Iceblade Sorcerer Shall Rule the World》#8 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=3g4ecISOE-8",
+          "video_id": "3g4ecISOE-8"
         },
         {
           "animeName": "The Iceblade Sorcerer Shall Rule the World",
           "episode": 9,
-          "title": "《The Iceblade Sorcerer Shall Rule the World》#9 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=t_lpx067O08",
-          "video_id": "t_lpx067O08",
-          "is_marathon": true
+          "title": "《The Iceblade Sorcerer Shall Rule the World》#9 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=GGP8dFkMHzU",
+          "video_id": "GGP8dFkMHzU"
         },
         {
           "animeName": "The Iceblade Sorcerer Shall Rule the World",
           "episode": 10,
-          "title": "《The Iceblade Sorcerer Shall Rule the World》#10 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=ohIWBUa5Tso",
-          "video_id": "ohIWBUa5Tso",
-          "is_marathon": true
+          "title": "《The Iceblade Sorcerer Shall Rule the World》#10 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=HBc0FHW9wp8",
+          "video_id": "HBc0FHW9wp8"
         },
         {
           "animeName": "The Iceblade Sorcerer Shall Rule the World",
           "episode": 11,
-          "title": "《The Iceblade Sorcerer Shall Rule the World》#11 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=IJLfL_u21Jw",
-          "video_id": "IJLfL_u21Jw",
-          "is_marathon": true
+          "title": "《The Iceblade Sorcerer Shall Rule the World》#11 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=0Xxpf6_i6Y0",
+          "video_id": "0Xxpf6_i6Y0"
         },
         {
           "animeName": "The Iceblade Sorcerer Shall Rule the World",
           "episode": 12,
-          "title": "《The Iceblade Sorcerer Shall Rule the World》#12 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=rxSbLS27jtQ",
-          "video_id": "rxSbLS27jtQ",
-          "is_marathon": true
+          "title": "《The Iceblade Sorcerer Shall Rule the World》#12 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=ii3ezAlVcJQ",
+          "video_id": "ii3ezAlVcJQ"
         }
       ],
       "episode_count": 12,
-      "thumbnail_video_id": "2cvQWcxqyro",
+      "thumbnail_video_id": "8yiqFMqguh0",
       "min_episode": 1,
-      "marathon_video_id": "2cvQWcxqyro",
-      "marathon_title": "The Iceblade Sorcerer Shall Rule the World",
+      "marathon_video_id": null,
+      "marathon_title": null,
       "is_donghua": false
     },
     {
@@ -127651,9 +128161,9 @@
         {
           "animeName": "The Young Brewmaster's Adventure",
           "episode": 18,
-          "title": "ENGSUB【The Young Brewmaster's Adventure】EP18 | New to the Martial Arts World | Wuxia|YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=NG31ODHoSsQ",
-          "video_id": "NG31ODHoSsQ",
+          "title": "ENGSUB【少年白马醉春风 The Young Brewmaster's Adventure】EP18暗河杀阵！：应是故人来 | 玄幻古风漫 | 优酷动漫 YOUKU ANIME",
+          "url": "https://www.youtube.com/watch?v=aJNsIT5N9OM",
+          "video_id": "aJNsIT5N9OM",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -128746,9 +129256,9 @@
         {
           "animeName": "Threads of Fate: A War Untold",
           "episode": 1,
-          "title": "MULTISUB【 Threads of Fate: A War Untold】EP01 |  YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=7t5Jp6YjKM0",
-          "video_id": "7t5Jp6YjKM0",
+          "title": "【Threads of Fate: A War Untold】EP01 Destiny | MULTISUB | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=1HY5NngvNZk",
+          "video_id": "1HY5NngvNZk",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -128772,9 +129282,9 @@
         }
       ],
       "episode_count": 3,
-      "thumbnail_video_id": "7t5Jp6YjKM0",
+      "thumbnail_video_id": "1HY5NngvNZk",
       "min_episode": 1,
-      "marathon_video_id": "7t5Jp6YjKM0",
+      "marathon_video_id": "1HY5NngvNZk",
       "marathon_title": "Threads of Fate: A War Untold",
       "is_donghua": true
     },
@@ -136513,9 +137023,17 @@
           "url": "https://www.youtube.com/watch?v=ol1DYB9hQ4w",
           "video_id": "ol1DYB9hQ4w",
           "is_marathon": true
+        },
+        {
+          "animeName": "Yowayowa Sensei",
+          "episode": 7,
+          "title": "《Yowayowa Sensei》#7 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=RddXvbGXvgw",
+          "video_id": "RddXvbGXvgw",
+          "is_marathon": true
         }
       ],
-      "episode_count": 6,
+      "episode_count": 7,
       "thumbnail_video_id": "fGeOQMI8KWs",
       "min_episode": 1,
       "marathon_video_id": "fGeOQMI8KWs",
@@ -137249,6 +137767,6 @@
       "is_donghua": false
     }
   ],
-  "total_series": 848,
-  "last_updated": "2026-05-21"
+  "total_series": 845,
+  "last_updated": "2026-05-24"
 }
