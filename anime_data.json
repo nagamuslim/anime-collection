@@ -4772,6 +4772,44 @@
       "is_donghua": true
     },
     {
+      "name": "A Mortal's Journey S5: The War of Molan",
+      "videos": [
+        {
+          "animeName": "A Mortal's Journey S5: The War of Molan",
+          "episode": 1,
+          "title": "A Mortal's Journey S5: The War of Molan #1 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=qOC2YSyrFds",
+          "video_id": "qOC2YSyrFds",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "A Mortal's Journey S5: The War of Molan",
+          "episode": 2,
+          "title": "A Mortal's Journey S5: The War of Molan #2 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=dar33h_sdbU",
+          "video_id": "dar33h_sdbU",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "A Mortal's Journey S5: The War of Molan",
+          "episode": 3,
+          "title": "A Mortal's Journey S5: The War of Molan #3 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=KweH26WOhT8",
+          "video_id": "KweH26WOhT8",
+          "is_marathon": true,
+          "is_donghua": true
+        }
+      ],
+      "episode_count": 3,
+      "thumbnail_video_id": "qOC2YSyrFds",
+      "min_episode": 1,
+      "marathon_video_id": "qOC2YSyrFds",
+      "marathon_title": "A Mortal's Journey S5: The War of Molan",
+      "is_donghua": true
+    },
+    {
       "name": "A Mortal's Journey Season 2",
       "videos": [
         {
@@ -9092,9 +9130,9 @@
         {
           "animeName": "Ancient War Soul",
           "episode": 18,
-          "title": "🌟會員搶先看🌟ENGSUB【太古戰魂 Ancient War Soul】EP18 古風勵志國漫 | 優酷動畫 YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=jd3Gb_yrY8I",
-          "video_id": "jd3Gb_yrY8I",
+          "title": "ENGSUB【太古战魂 Ancient War Soul】EP18 古风励志国漫 | 优酷动漫  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=0ltclt8lG6o",
+          "video_id": "0ltclt8lG6o",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -10129,6 +10167,26 @@
       "is_donghua": true
     },
     {
+      "name": "Apocalyptic Imprisonment: My Nemesis Secretly Loves Me",
+      "videos": [
+        {
+          "animeName": "Apocalyptic Imprisonment: My Nemesis Secretly Loves Me",
+          "episode": 1,
+          "title": "【Apocalyptic Imprisonment: My Nemesis Secretly Loves Me】EP01 | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=3M8ax6wq948",
+          "video_id": "3M8ax6wq948",
+          "is_donghua": true,
+          "is_marathon": true
+        }
+      ],
+      "episode_count": 1,
+      "thumbnail_video_id": "3M8ax6wq948",
+      "min_episode": 1,
+      "marathon_video_id": null,
+      "marathon_title": null,
+      "is_donghua": true
+    },
+    {
       "name": "Apokalips Dunia Lain Mynoghra",
       "videos": [
         {
@@ -10506,8 +10564,8 @@
           "animeName": "Apotheosis",
           "episode": 9,
           "title": "MULTISUB【Apotheosis】EP09 | Xianxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=q_MOS0pvvJs",
-          "video_id": "q_MOS0pvvJs",
+          "url": "https://www.youtube.com/watch?v=2spk0W1GMLE",
+          "video_id": "2spk0W1GMLE",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -10906,9 +10964,459 @@
           "video_id": "_LIovTJ3DYA",
           "is_donghua": true,
           "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 54,
+          "title": "MULTISUB【Apotheosis2】EP54 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=gyKnDRRkEKM",
+          "video_id": "gyKnDRRkEKM",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 55,
+          "title": "MULTISUB【Apotheosis2】EP55 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=4z9Dbqqurcs",
+          "video_id": "4z9Dbqqurcs",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 56,
+          "title": "MULTISUB【Apotheosis2】EP56 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=J2dm7mHq3xs",
+          "video_id": "J2dm7mHq3xs",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 57,
+          "title": "MULTISUB【Apotheosis2】EP57 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=-hMkLGz6RA8",
+          "video_id": "-hMkLGz6RA8",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 58,
+          "title": "MULTISUB【Apotheosis2】EP58 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=2rzL_XaVdiw",
+          "video_id": "2rzL_XaVdiw",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 59,
+          "title": "MULTISUB【Apotheosis2】EP59 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=sodifa61XwI",
+          "video_id": "sodifa61XwI",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 60,
+          "title": "MULTISUB【Apotheosis2】EP60 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=XZagUcDpJsQ",
+          "video_id": "XZagUcDpJsQ",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 61,
+          "title": "MULTISUB【Apotheosis2】EP61 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=RudTK6h-biI",
+          "video_id": "RudTK6h-biI",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 62,
+          "title": "MULTISUB【Apotheosis2】EP62 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=qvu2UCIMCs4",
+          "video_id": "qvu2UCIMCs4",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 63,
+          "title": "MULTISUB【Apotheosis2】EP63 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=hDpAsRwIMNM",
+          "video_id": "hDpAsRwIMNM",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 64,
+          "title": "MULTISUB【Apotheosis2】EP64 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=dOmpfpSB_iY",
+          "video_id": "dOmpfpSB_iY",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 65,
+          "title": "MULTISUB【Apotheosis2】EP65 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=lT9ViposOb8",
+          "video_id": "lT9ViposOb8",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 66,
+          "title": "MULTISUB【Apotheosis2】EP66 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=OEf_bheEwFY",
+          "video_id": "OEf_bheEwFY",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 67,
+          "title": "MULTISUB【Apotheosis2】EP67 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=r7HnPSQBkq0",
+          "video_id": "r7HnPSQBkq0",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 68,
+          "title": "MULTISUB【Apotheosis2】EP68 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=BYBOr3K9MKw",
+          "video_id": "BYBOr3K9MKw",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 69,
+          "title": "MULTISUB【Apotheosis2】EP69 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=ZfAcq0SeFbg",
+          "video_id": "ZfAcq0SeFbg",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 70,
+          "title": "MULTISUB【Apotheosis2】EP70 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=K-vqI0ypa_A",
+          "video_id": "K-vqI0ypa_A",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 71,
+          "title": "MULTISUB【Apotheosis2】EP71 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=tBhc7LOP-Jo",
+          "video_id": "tBhc7LOP-Jo",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 72,
+          "title": "MULTISUB【Apotheosis2】EP72 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=3K35kwjDOP8",
+          "video_id": "3K35kwjDOP8",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 73,
+          "title": "MULTISUB【Apotheosis2】EP73 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=oNCt-c0FwT0",
+          "video_id": "oNCt-c0FwT0",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 74,
+          "title": "MULTISUB【Apotheosis2】EP74 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=17YAahZiZ1Q",
+          "video_id": "17YAahZiZ1Q",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 75,
+          "title": "MULTISUB【Apotheosis2】EP75 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=Q3Xll91FQQo",
+          "video_id": "Q3Xll91FQQo",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 76,
+          "title": "MULTISUB【Apotheosis2】EP76 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=BnAXqu1juC8",
+          "video_id": "BnAXqu1juC8",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 77,
+          "title": "MULTISUB【Apotheosis2】EP77 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=mM_KFf4dPhI",
+          "video_id": "mM_KFf4dPhI",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 78,
+          "title": "MULTISUB【Apotheosis2】EP78 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=P-2WUZV6Pck",
+          "video_id": "P-2WUZV6Pck",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 79,
+          "title": "MULTISUB【Apotheosis2】EP79 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=Jb0SkljraRc",
+          "video_id": "Jb0SkljraRc",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 80,
+          "title": "MULTISUB【Apotheosis2】EP80 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=gkk1h64EX0c",
+          "video_id": "gkk1h64EX0c",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 81,
+          "title": "MULTISUB【Apotheosis2】EP81 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=wpedbsGk2Dg",
+          "video_id": "wpedbsGk2Dg",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 82,
+          "title": "MULTISUB【Apotheosis2】EP82 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=a4VxiPLvtD0",
+          "video_id": "a4VxiPLvtD0",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 83,
+          "title": "MULTISUB【Apotheosis2】EP83 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=WcCdr2e_WjE",
+          "video_id": "WcCdr2e_WjE",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 84,
+          "title": "MULTISUB【Apotheosis2】EP84 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=otHgcFObAVI",
+          "video_id": "otHgcFObAVI",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 85,
+          "title": "MULTISUB【Apotheosis2】EP85 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=Jb4NgV0cks0",
+          "video_id": "Jb4NgV0cks0",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 86,
+          "title": "MULTISUB【Apotheosis2】EP86 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=YklZolYhY90",
+          "video_id": "YklZolYhY90",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 87,
+          "title": "MULTISUB【Apotheosis2】EP87 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=gK208dc36UY",
+          "video_id": "gK208dc36UY",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 88,
+          "title": "MULTISUB【Apotheosis2】EP88 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=HS-wDz2Pv2Y",
+          "video_id": "HS-wDz2Pv2Y",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 89,
+          "title": "MULTISUB【Apotheosis2】EP89 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=ugMLQNaVkq0",
+          "video_id": "ugMLQNaVkq0",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 90,
+          "title": "MULTISUB【Apotheosis2】EP90 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=IpHoYaBkOPQ",
+          "video_id": "IpHoYaBkOPQ",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 91,
+          "title": "MULTISUB【Apotheosis2】EP91 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=htfBeoHnAnA",
+          "video_id": "htfBeoHnAnA",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 92,
+          "title": "MULTISUB【Apotheosis2】EP92 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=i1nvVBmVx1Q",
+          "video_id": "i1nvVBmVx1Q",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 93,
+          "title": "MULTISUB【Apotheosis2】EP93 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=JJlpdJB_K-E",
+          "video_id": "JJlpdJB_K-E",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 95,
+          "title": "MULTISUB【Apotheosis2】EP95 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=_lV98Cd_hKs",
+          "video_id": "_lV98Cd_hKs",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 96,
+          "title": "MULTISUB【Apotheosis2】EP96 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=-IyARV6Hr78",
+          "video_id": "-IyARV6Hr78",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 97,
+          "title": "MULTISUB【Apotheosis2】EP97 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=wusFrjh6Jwo",
+          "video_id": "wusFrjh6Jwo",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 98,
+          "title": "MULTISUB【Apotheosis2】EP98 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=FUdM5tTrpBI",
+          "video_id": "FUdM5tTrpBI",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 99,
+          "title": "MULTISUB【Apotheosis2】EP99 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=r5m3JnOzrWU",
+          "video_id": "r5m3JnOzrWU",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 100,
+          "title": "MULTISUB【Apotheosis2】EP100 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=4kZbtlvvAxk",
+          "video_id": "4kZbtlvvAxk",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 101,
+          "title": "MULTISUB【Apotheosis2】EP101 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=mRleVXgMgSQ",
+          "video_id": "mRleVXgMgSQ",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 102,
+          "title": "MULTISUB【Apotheosis2】EP102 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=w-ryQL2ZVlw",
+          "video_id": "w-ryQL2ZVlw",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 103,
+          "title": "MULTISUB【Apotheosis2】EP103 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=4FT6glbHxV0",
+          "video_id": "4FT6glbHxV0",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Apotheosis2",
+          "episode": 104,
+          "title": "MULTISUB【Apotheosis2】EP104 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=GhcFUAA4Nl0",
+          "video_id": "GhcFUAA4Nl0",
+          "is_donghua": true,
+          "is_marathon": true
         }
       ],
-      "episode_count": 53,
+      "episode_count": 103,
       "thumbnail_video_id": "Rec_iuK9T3s",
       "min_episode": 1,
       "marathon_video_id": "Rec_iuK9T3s",
@@ -18983,7 +19491,7 @@
         {
           "animeName": "Battle Through the Heavens",
           "episode": 201,
-          "title": "🌟INDOSUB | Battle Through the Heavens EP 201 | Yuewen Animation",
+          "title": "🌟ENG SUB | Battle Through the Heavens EP 201 | Yuewen Animation",
           "url": "https://www.youtube.com/watch?v=ngSMpT9ctRU",
           "video_id": "ngSMpT9ctRU",
           "is_donghua": true,
@@ -19235,36 +19743,36 @@
         {
           "animeName": "Battle Through the Heavens",
           "episode": 229,
-          "title": "🌟INDOSUB | Battle Through the Heavens EP 229 Part 1 | Yuewen Animation",
-          "url": "https://www.youtube.com/watch?v=8-wNFaL-7Rk",
-          "video_id": "8-wNFaL-7Rk",
+          "title": "🌟INDOSUB | Battle Through the Heavens EP 229 | Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=roW3kBE8LXg",
+          "video_id": "roW3kBE8LXg",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Battle Through the Heavens",
           "episode": 230,
-          "title": "🌟INDOSUB | Battle Through the Heavens EP 230 Part 1 | Yuewen Animation",
-          "url": "https://www.youtube.com/watch?v=NN13af21-mU",
-          "video_id": "NN13af21-mU",
+          "title": "🌟INDOSUB | Battle Through the Heavens EP 230 | Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=1QSIM2G4wkI",
+          "video_id": "1QSIM2G4wkI",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Battle Through the Heavens",
           "episode": 231,
-          "title": "🌟INDOSUB | Battle Through the Heavens EP 231 Part 1 | Yuewen Animation",
-          "url": "https://www.youtube.com/watch?v=M7A5o0m7kDs",
-          "video_id": "M7A5o0m7kDs",
+          "title": "🌟INDOSUB | Battle Through the Heavens EP 231 | Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=CtxG-i5j2d0",
+          "video_id": "CtxG-i5j2d0",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Battle Through the Heavens",
           "episode": 232,
-          "title": "🌟INDOSUB | Battle Through the Heavens EP 232 Part 1 | Yuewen Animation",
-          "url": "https://www.youtube.com/watch?v=TmtHp-mBpNU",
-          "video_id": "TmtHp-mBpNU",
+          "title": "🌟INDOSUB | Battle Through the Heavens EP 232 | Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=6PK5Rs9cx8c",
+          "video_id": "6PK5Rs9cx8c",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -19514,7 +20022,7 @@
         {
           "animeName": "Battle Through the Heavens Season 9",
           "episode": 260,
-          "title": "🌟4K | INDOSUB | Battle Through the Heavens S9EP260(191) |  Yuewen Animation",
+          "title": "🌟4K | ENG SUB | Battle Through the Heavens S9EP260(191) | Yuewen Animation",
           "url": "https://www.youtube.com/watch?v=gHWyFmT6NQc",
           "video_id": "gHWyFmT6NQc",
           "is_donghua": true,
@@ -19555,9 +20063,90 @@
           "video_id": "830hTpE_VE0",
           "is_donghua": true,
           "is_marathon": true
+        },
+        {
+          "animeName": "Battle Through the Heavens Season 9",
+          "episode": 265,
+          "title": "🌟4K | INDOSUB | Battle Through the Heavens S9EP265(196) |  Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=OGTwkfNipl8",
+          "video_id": "OGTwkfNipl8",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Battle Through the Heavens Season 9",
+          "episode": 266,
+          "title": "🌟4K | INDOSUB | Battle Through the Heavens S9EP266(197) |  Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=ZbOyQXz9AaI",
+          "video_id": "ZbOyQXz9AaI",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Battle Through the Heavens Season 9",
+          "episode": 267,
+          "title": "🌟4K | INDOSUB | Battle Through the Heavens S9EP267(198) |  Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=_h7MCRMyrL4",
+          "video_id": "_h7MCRMyrL4",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Battle Through the Heavens Season 9",
+          "episode": 268,
+          "title": "🌟4K | INDOSUB | Battle Through the Heavens S9EP268(199) |  Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=zpXZC5fqjMQ",
+          "video_id": "zpXZC5fqjMQ",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Battle Through the Heavens Season 9",
+          "episode": 269,
+          "title": "🌟4K | INDOSUB | Battle Through the Heavens S9EP269(200) |  Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=haeMnzvSXDU",
+          "video_id": "haeMnzvSXDU",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Battle Through the Heavens Season 9",
+          "episode": 270,
+          "title": "🌟4K | INDOSUB | Battle Through the Heavens S9EP270(201) |  Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=NkboxC-lCUM",
+          "video_id": "NkboxC-lCUM",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Battle Through the Heavens Season 9",
+          "episode": 271,
+          "title": "🌟4K | INDOSUB | Battle Through the Heavens S9EP271(202) |  Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=3YzBE0Su-yA",
+          "video_id": "3YzBE0Su-yA",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Battle Through the Heavens Season 9",
+          "episode": 272,
+          "title": "🌟4K | INDOSUB | Battle Through the Heavens S9EP272(203) |  Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=2DFlromdyH8",
+          "video_id": "2DFlromdyH8",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Battle Through the Heavens Season 9",
+          "episode": 273,
+          "title": "🌟4K | INDOSUB | Battle Through the Heavens S9EP273(204) |  Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=ssLGW_6qcxU",
+          "video_id": "ssLGW_6qcxU",
+          "is_donghua": true,
+          "is_marathon": true
         }
       ],
-      "episode_count": 252,
+      "episode_count": 261,
       "thumbnail_video_id": "8ZHsVLXgFdM",
       "min_episode": 1,
       "marathon_video_id": "8ZHsVLXgFdM",
@@ -21232,18 +21821,18 @@
         {
           "animeName": "Beyond Time's Gaze",
           "episode": 2,
-          "title": "MULTISUB【Beyond Time's Gaze】EP02 | 优酷动漫  YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=Zt4-DNrKqOw",
-          "video_id": "Zt4-DNrKqOw",
+          "title": "MULTISUB【光阴之外 Beyond Time's Gaze】EP02 挡我者死 |  优酷动漫  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=UT6M76RcqRw",
+          "video_id": "UT6M76RcqRw",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Beyond Time's Gaze",
           "episode": 3,
-          "title": "🌟Menbers Only🌟MULTISUB【Beyond Time's Gaze】EP03 | Xianxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=yWZH_1pGIM0",
-          "video_id": "yWZH_1pGIM0",
+          "title": "MULTISUB【Beyond Time's Gaze】EP03 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=cgZXr8JK5K8",
+          "video_id": "cgZXr8JK5K8",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -21478,8 +22067,8 @@
           "animeName": "Big Brother",
           "episode": 20,
           "title": "MULTISUB【Big Brother】EP20 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=_DT78gCkRbo",
-          "video_id": "_DT78gCkRbo",
+          "url": "https://www.youtube.com/watch?v=M4-w4PynXjE",
+          "video_id": "M4-w4PynXjE",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -22000,8 +22589,8 @@
           "animeName": "Big Brother",
           "episode": 82,
           "title": "MULTISUB【Big Brother】EP82 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=EANDhPb09TU",
-          "video_id": "EANDhPb09TU",
+          "url": "https://www.youtube.com/watch?v=7FpvMwcBFzg",
+          "video_id": "7FpvMwcBFzg",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -22009,17 +22598,17 @@
           "animeName": "Big Brother",
           "episode": 83,
           "title": "MULTISUB【Big Brother】EP83 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=LLpVUOJsTe8",
-          "video_id": "LLpVUOJsTe8",
+          "url": "https://www.youtube.com/watch?v=MbTOUrqjZVs",
+          "video_id": "MbTOUrqjZVs",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Big Brother",
           "episode": 84,
-          "title": "MULTISUB【Big Brother】EP84 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=AZsL304azbA",
-          "video_id": "AZsL304azbA",
+          "title": "ENGSUB【师兄啊师兄 Big Brother】EP84 | 古风励志国漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=WpXze1qWV1w",
+          "video_id": "WpXze1qWV1w",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -22027,8 +22616,8 @@
           "animeName": "Big Brother",
           "episode": 85,
           "title": "MULTISUB【Big Brother】EP85 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=UeC9aqwDawg",
-          "video_id": "UeC9aqwDawg",
+          "url": "https://www.youtube.com/watch?v=dOSC7-w4j2M",
+          "video_id": "dOSC7-w4j2M",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -22036,8 +22625,8 @@
           "animeName": "Big Brother",
           "episode": 86,
           "title": "MULTISUB【Big Brother】EP86 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=4pJo2YhtsOY",
-          "video_id": "4pJo2YhtsOY",
+          "url": "https://www.youtube.com/watch?v=4vaLlz3Jfj4",
+          "video_id": "4vaLlz3Jfj4",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -22045,8 +22634,8 @@
           "animeName": "Big Brother",
           "episode": 87,
           "title": "MULTISUB【Big Brother】EP87 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=Ew2_SVJNFY4",
-          "video_id": "Ew2_SVJNFY4",
+          "url": "https://www.youtube.com/watch?v=6JDrUKP3olY",
+          "video_id": "6JDrUKP3olY",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -22054,8 +22643,8 @@
           "animeName": "Big Brother",
           "episode": 88,
           "title": "MULTISUB【Big Brother】EP88 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=U8ckRWaYjgI",
-          "video_id": "U8ckRWaYjgI",
+          "url": "https://www.youtube.com/watch?v=yXbv5kqdtrU",
+          "video_id": "yXbv5kqdtrU",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -22063,26 +22652,26 @@
           "animeName": "Big Brother",
           "episode": 89,
           "title": "MULTISUB【Big Brother】EP89 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=nXR0u7eB8xU",
-          "video_id": "nXR0u7eB8xU",
+          "url": "https://www.youtube.com/watch?v=2XIb9Dq_3S4",
+          "video_id": "2XIb9Dq_3S4",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Big Brother",
           "episode": 90,
-          "title": "🌟Menbers Preview🌟MULTISUB【Big Brother】EP90 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=aiyADF7fbhs",
-          "video_id": "aiyADF7fbhs",
+          "title": "MULTISUB【Big Brother】EP90 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=i1M5U9nLebM",
+          "video_id": "i1M5U9nLebM",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Big Brother",
           "episode": 91,
-          "title": "🌟Menbers Preview🌟MULTISUB【Big Brother】EP91 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=c9zxKIEXONM",
-          "video_id": "c9zxKIEXONM",
+          "title": "MULTISUB【Big Brother】EP91 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=k_7EjqTgZ3U",
+          "video_id": "k_7EjqTgZ3U",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -26648,6 +27237,329 @@
       "min_episode": 1,
       "marathon_video_id": "t1j8Cb_f1S8",
       "marathon_title": "Bleach (Season 7)",
+      "is_donghua": false
+    },
+    {
+      "name": "BLEACH: Thousand-Year Blood War - The Conflict",
+      "videos": [
+        {
+          "animeName": "BLEACH Thousand-Year Blood War",
+          "episode": 1,
+          "title": "【Limited-Time Free to Watch】《BLEACH Thousand-Year Blood War》#1 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=uiw5xswZQsQ",
+          "video_id": "uiw5xswZQsQ",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH Thousand-Year Blood War",
+          "episode": 2,
+          "title": "【Limited-Time Free to Watch】《BLEACH Thousand-Year Blood War》#2 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=R0DyETh9YLk",
+          "video_id": "R0DyETh9YLk",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH Thousand-Year Blood War",
+          "episode": 4,
+          "title": "【Limited-Time Free to Watch】《BLEACH Thousand-Year Blood War》#4 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=-CX-hyDz3pg",
+          "video_id": "-CX-hyDz3pg",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH Thousand-Year Blood War",
+          "episode": 5,
+          "title": "【Limited-Time Free to Watch】《BLEACH Thousand-Year Blood War》#5 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=ij2A88BkiZA",
+          "video_id": "ij2A88BkiZA",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH Thousand-Year Blood War",
+          "episode": 6,
+          "title": "【Limited-Time Free to Watch】《BLEACH Thousand-Year Blood War》#6 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=c4drScAyU3s",
+          "video_id": "c4drScAyU3s",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH Thousand-Year Blood War",
+          "episode": 7,
+          "title": "【Limited-Time Free to Watch】《BLEACH Thousand-Year Blood War》#7 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=EdsMxYeCdWM",
+          "video_id": "EdsMxYeCdWM",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH Thousand-Year Blood War",
+          "episode": 8,
+          "title": "【Limited-Time Free to Watch】《BLEACH Thousand-Year Blood War》#8 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=FjMaBIIsWd8",
+          "video_id": "FjMaBIIsWd8",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH Thousand-Year Blood War",
+          "episode": 9,
+          "title": "【Limited-Time Free to Watch】《BLEACH Thousand-Year Blood War》#9 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=h4fFa5z-A8g",
+          "video_id": "h4fFa5z-A8g",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH Thousand-Year Blood War",
+          "episode": 10,
+          "title": "【Limited-Time Free to Watch】《BLEACH Thousand-Year Blood War》#10 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=A4CY2DOtkys",
+          "video_id": "A4CY2DOtkys",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH Thousand-Year Blood War",
+          "episode": 11,
+          "title": "【Limited-Time Free to Watch】《BLEACH Thousand-Year Blood War》#11 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=X8Vo-1RuUD4",
+          "video_id": "X8Vo-1RuUD4",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH Thousand-Year Blood War",
+          "episode": 12,
+          "title": "【Limited-Time Free to Watch】《BLEACH Thousand-Year Blood War》#12 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=_ORh_ZXtDcU",
+          "video_id": "_ORh_ZXtDcU",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH Thousand-Year Blood War",
+          "episode": 13,
+          "title": "【Limited-Time Free to Watch】《BLEACH Thousand-Year Blood War》#13 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=TUk-wAL9-I8",
+          "video_id": "TUk-wAL9-I8",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Separation",
+          "episode": 14,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Separation》#14 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=kjbAaqXNHME",
+          "video_id": "kjbAaqXNHME",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Separation",
+          "episode": 15,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Separation》#15 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=90P9j6FZfEI",
+          "video_id": "90P9j6FZfEI",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Separation",
+          "episode": 16,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Separation》#16 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=C2W7R5TlLY0",
+          "video_id": "C2W7R5TlLY0",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Separation",
+          "episode": 17,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Separation》#17 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=e4ZavmFRUr8",
+          "video_id": "e4ZavmFRUr8",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Separation",
+          "episode": 18,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Separation》#18 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=u4he3lAqbGo",
+          "video_id": "u4he3lAqbGo",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Separation",
+          "episode": 19,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Separation》#19 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=NAkUFjpBWvc",
+          "video_id": "NAkUFjpBWvc",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Separation",
+          "episode": 20,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Separation》#20 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=6z8tMUEyVak",
+          "video_id": "6z8tMUEyVak",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Separation",
+          "episode": 21,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Separation》#21 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=-cBPeRyX5zg",
+          "video_id": "-cBPeRyX5zg",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Separation",
+          "episode": 22,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Separation》#22 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=FhKRO3WN43E",
+          "video_id": "FhKRO3WN43E",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Separation",
+          "episode": 23,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Separation》#23 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=8LOL6AO_hmw",
+          "video_id": "8LOL6AO_hmw",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Separation",
+          "episode": 24,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Separation》#24 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=HwnI6P3Hkow",
+          "video_id": "HwnI6P3Hkow",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Separation",
+          "episode": 25,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Separation》#25 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=P_m_nUHDbTc",
+          "video_id": "P_m_nUHDbTc",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Separation",
+          "episode": 26,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Separation》#26 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=s_WPPA7E4Eg",
+          "video_id": "s_WPPA7E4Eg",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Conflict",
+          "episode": 27,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Conflict》#27 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=LMwDwSXr36I",
+          "video_id": "LMwDwSXr36I",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Conflict",
+          "episode": 28,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Conflict》#28 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=_8qisi_KeP4",
+          "video_id": "_8qisi_KeP4",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Conflict",
+          "episode": 29,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Conflict》#29 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=1PTWz-sDxwI",
+          "video_id": "1PTWz-sDxwI",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Conflict",
+          "episode": 30,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Conflict》#30【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=4kHiLqHo2BM",
+          "video_id": "4kHiLqHo2BM",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Conflict",
+          "episode": 31,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Conflict》#31 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=RQ9ZflCreOs",
+          "video_id": "RQ9ZflCreOs",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Conflict",
+          "episode": 32,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Conflict》#32 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=UXMQSk-D22w",
+          "video_id": "UXMQSk-D22w",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Conflict",
+          "episode": 33,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Conflict》#33 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=3GDIzjytUNg",
+          "video_id": "3GDIzjytUNg",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Conflict",
+          "episode": 34,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Conflict》#34 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=sBLLkjv3pK4",
+          "video_id": "sBLLkjv3pK4",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Conflict",
+          "episode": 35,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Conflict》#35 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=LF-pAcBrC14",
+          "video_id": "LF-pAcBrC14",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Conflict",
+          "episode": 36,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Conflict》#36 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=RTGYtVL9z28",
+          "video_id": "RTGYtVL9z28",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Conflict",
+          "episode": 37,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Conflict》#37 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=luF1f3ZS6Xg",
+          "video_id": "luF1f3ZS6Xg",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Conflict",
+          "episode": 38,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Conflict》#38 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=q_OvFv0czFw",
+          "video_id": "q_OvFv0czFw",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Conflict",
+          "episode": 39,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Conflict》#39 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=DLnlJfuj23s",
+          "video_id": "DLnlJfuj23s",
+          "is_marathon": true
+        },
+        {
+          "animeName": "BLEACH: Thousand-Year Blood War - The Conflict",
+          "episode": 40,
+          "title": "【Limited-Time Free to Watch】《BLEACH: Thousand-Year Blood War - The Conflict》#40 【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=FaTddpUPxl8",
+          "video_id": "FaTddpUPxl8",
+          "is_marathon": true
+        }
+      ],
+      "episode_count": 39,
+      "thumbnail_video_id": "uiw5xswZQsQ",
+      "min_episode": 1,
+      "marathon_video_id": "uiw5xswZQsQ",
+      "marathon_title": "BLEACH: Thousand-Year Blood War - The Conflict",
       "is_donghua": false
     },
     {
@@ -31296,6 +32208,42 @@
       "videos": [
         {
           "animeName": "Chronos Ruler All Episodes",
+          "episode": 1,
+          "title": "【时间支配者 动画 Chronos Ruler All Episodes】EP01 | 存在与虚无 | 科幻冒险漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=nCp6z-Xyx8Q",
+          "video_id": "nCp6z-Xyx8Q",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Chronos Ruler All Episodes",
+          "episode": 2,
+          "title": "【时间支配者 动画 Chronos Ruler All Episodes】EP02 | 记忆与想起 | 科幻冒险漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=DH5pdXJC5Og",
+          "video_id": "DH5pdXJC5Og",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Chronos Ruler All Episodes",
+          "episode": 3,
+          "title": "【时间支配者 动画 Chronos Ruler All Episodes】EP03 | 偶像的黄昏 | 科幻冒险漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=VgbOhqWAxIQ",
+          "video_id": "VgbOhqWAxIQ",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Chronos Ruler All Episodes",
+          "episode": 4,
+          "title": "【时间支配者 动画 Chronos Ruler All Episodes】EP04 | 不安的概念 | 科幻冒险漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=jd4ht3dcrQU",
+          "video_id": "jd4ht3dcrQU",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Chronos Ruler All Episodes",
           "episode": 5,
           "title": "【时间支配者 动画 Chronos Ruler All Episodes】EP05 | 善恶的彼岸 | 科幻冒险漫 | 优酷动漫 YOUKU ANIMATION",
           "url": "https://www.youtube.com/watch?v=T3AD12fCN1o",
@@ -31332,18 +32280,54 @@
         },
         {
           "animeName": "Chronos Ruler All Episodes",
+          "episode": 9,
+          "title": "【时间支配者 动画 Chronos Ruler All Episodes】EP09 | 责任与原理 | 科幻冒险漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=wcH3e-YxrXw",
+          "video_id": "wcH3e-YxrXw",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Chronos Ruler All Episodes",
+          "episode": 10,
+          "title": "【时间支配者 动画 Chronos Ruler All Episodes】EP10 | 推测与反驳 | 科幻冒险漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=15HUgn9oRVo",
+          "video_id": "15HUgn9oRVo",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Chronos Ruler All Episodes",
+          "episode": 11,
+          "title": "【时间支配者 动画 Chronos Ruler All Episodes】EP11 | 自我的超越 | 科幻冒险漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=vD88HQv9xis",
+          "video_id": "vD88HQv9xis",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Chronos Ruler All Episodes",
           "episode": 12,
           "title": "【时间支配者 动画 Chronos Ruler All Episodes】EP12 | 过程与存在 | 科幻冒险漫 | 优酷动漫 YOUKU ANIMATION",
           "url": "https://www.youtube.com/watch?v=5wmIl9KcDks",
           "video_id": "5wmIl9KcDks",
           "is_donghua": true,
           "is_marathon": true
+        },
+        {
+          "animeName": "Chronos Ruler All Episodes",
+          "episode": 13,
+          "title": "【时间支配者 动画 Chronos Ruler All Episodes】EP13 | 唤醒的未来 | 科幻冒险漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=oTdk85j_Nt8",
+          "video_id": "oTdk85j_Nt8",
+          "is_donghua": true,
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
-      "thumbnail_video_id": "T3AD12fCN1o",
-      "min_episode": 5,
-      "marathon_video_id": "T3AD12fCN1o",
+      "episode_count": 13,
+      "thumbnail_video_id": "nCp6z-Xyx8Q",
+      "min_episode": 1,
+      "marathon_video_id": "nCp6z-Xyx8Q",
       "marathon_title": "Chronos Ruler All Episodes",
       "is_donghua": true
     },
@@ -40628,9 +41612,9 @@
         {
           "animeName": "Divine Manifestation",
           "episode": 2,
-          "title": "🌟Menbers Preview🌟MULTISUB【Divine Manifestation】EP02 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=oogSBwJC0aM",
-          "video_id": "oogSBwJC0aM",
+          "title": "MULTISUB【 Divine Manifestation】EP02 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=UvMpuYCO7no",
+          "video_id": "UvMpuYCO7no",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -43065,18 +44049,18 @@
         {
           "animeName": "Eclipse of Illusion",
           "episode": 4,
-          "title": "🌟Menbers Preview🌟MULTISUB【Eclipse of Illusion】EP04 | Xianxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=jUqma8jzItk",
-          "video_id": "jUqma8jzItk",
+          "title": "MULTISUB【Eclipse of Illusion】EP04 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=--XJoY4odO4",
+          "video_id": "--XJoY4odO4",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Eclipse of Illusion",
           "episode": 5,
-          "title": "🌟Menbers Preview🌟MULTISUB【Eclipse of Illusion】EP05 | Xianxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=7PL-r4dyWXk",
-          "video_id": "7PL-r4dyWXk",
+          "title": "MULTISUB【Eclipse of Illusion】EP05 | Xianxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=vmXZCQayC9A",
+          "video_id": "vmXZCQayC9A",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -43167,6 +44151,44 @@
       "min_episode": 1,
       "marathon_video_id": "msoK2QutkUM",
       "marathon_title": "Eclipse of Illusion",
+      "is_donghua": true
+    },
+    {
+      "name": "Eclipse of Illusion SP: The Miasma War",
+      "videos": [
+        {
+          "animeName": "Eclipse of Illusion SP: The Miasma War",
+          "episode": 1,
+          "title": "【Eclipse of Illusion  SP: The Miasma War】EP01 Preview | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=rBYznjkVJfY",
+          "video_id": "rBYznjkVJfY",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Eclipse of Illusion SP: The Miasma War",
+          "episode": 2,
+          "title": "【云深不知梦 特别篇：逐冥之役 Eclipse of Illusion  SP: The Miasma War】EP02 Preview | 优酷动漫  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=doCyFOG00vo",
+          "video_id": "doCyFOG00vo",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Eclipse of Illusion SP: The Miasma War",
+          "episode": 3,
+          "title": "【Eclipse of Illusion  SP: The Miasma War】EP03 Preview | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=YLmrDPmhyQ0",
+          "video_id": "YLmrDPmhyQ0",
+          "is_donghua": true,
+          "is_marathon": true
+        }
+      ],
+      "episode_count": 3,
+      "thumbnail_video_id": "rBYznjkVJfY",
+      "min_episode": 1,
+      "marathon_video_id": "rBYznjkVJfY",
+      "marathon_title": "Eclipse of Illusion SP: The Miasma War",
       "is_donghua": true
     },
     {
@@ -53130,9 +54152,9 @@
         {
           "animeName": "Glorious Revenge of Ye Feng",
           "episode": 88,
-          "title": "MULTISUB【Glorious Revenge of Ye Feng】EP88 | Xuanhuan Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=CxRHJX_uY1k",
-          "video_id": "CxRHJX_uY1k",
+          "title": "ENGSUB【Glorious Revenge of Ye Feng】EP88 | Soul Evolution Plan  | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=OgsZmpNP3lo",
+          "video_id": "OgsZmpNP3lo",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -53176,8 +54198,8 @@
           "animeName": "Glorious Revenge of Ye Feng",
           "episode": 93,
           "title": "MULTISUB【Glorious Revenge of Ye Feng】EP93 | Xuanhuan Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=1Wn3CbDcSo0",
-          "video_id": "1Wn3CbDcSo0",
+          "url": "https://www.youtube.com/watch?v=J40JAqq_NXM",
+          "video_id": "J40JAqq_NXM",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -55370,26 +56392,26 @@
           "animeName": "Great Journey Of Teenagers 4",
           "episode": 20,
           "title": "MULTISUB【Great Journey Of Teenagers 4】 EP20 | Wuxia Animation | YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=2ghrvpJnWz8",
-          "video_id": "2ghrvpJnWz8",
+          "url": "https://www.youtube.com/watch?v=cV7sJuMDVVk",
+          "video_id": "cV7sJuMDVVk",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Great Journey Of Teenagers 4",
           "episode": 21,
-          "title": "🌟Menbers Preview🌟MULTISUB【Great Journey Of Teenagers 4】 EP21 | Wuxia Animation | YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=886-RXt_ZBQ",
-          "video_id": "886-RXt_ZBQ",
+          "title": "MULTISUB【Great Journey Of Teenagers 4】 EP21 | Wuxia Animation | YOUKU ANIME",
+          "url": "https://www.youtube.com/watch?v=SB9gJt90IKI",
+          "video_id": "SB9gJt90IKI",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Great Journey Of Teenagers 4",
           "episode": 22,
-          "title": "🌟Menbers Preview🌟MULTISUB【Great Journey Of Teenagers 4】 EP22 | Wuxia Animation | YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=K42G_PdfBQQ",
-          "video_id": "K42G_PdfBQQ",
+          "title": "MULTISUB【Great Journey Of Teenagers 4】 EP22 | Wuxia Animation | YOUKU ANIME",
+          "url": "https://www.youtube.com/watch?v=5tPp5Z6a8rQ",
+          "video_id": "5tPp5Z6a8rQ",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -55414,18 +56436,18 @@
         {
           "animeName": "Great Journey Of Teenagers 4",
           "episode": 25,
-          "title": "🌟Menbers Preview🌟MULTISUB【Great Journey Of Teenagers 4】 EP25 | Wuxia Animation | YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=u3UZC4_x0gA",
-          "video_id": "u3UZC4_x0gA",
+          "title": "MULTISUB【Great Journey Of Teenagers 4】 EP25 | Wuxia Animation | YOUKU ANIME",
+          "url": "https://www.youtube.com/watch?v=gId4omhjiGs",
+          "video_id": "gId4omhjiGs",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Great Journey Of Teenagers 4",
           "episode": 26,
-          "title": "🌟Menbers Preview🌟MULTISUB【Great Journey Of Teenagers 4】 EP26 | Wuxia Animation | YOUKU ANIME",
-          "url": "https://www.youtube.com/watch?v=8BWasj0xab4",
-          "video_id": "8BWasj0xab4",
+          "title": "MULTISUB【Great Journey Of Teenagers 4】 EP26 | Wuxia Animation | YOUKU ANIME",
+          "url": "https://www.youtube.com/watch?v=S5FD7YreqfE",
+          "video_id": "S5FD7YreqfE",
           "is_donghua": true,
           "is_marathon": true
         }
@@ -56483,13 +57505,60 @@
           "video_id": "NbbD59r4Mr4",
           "is_donghua": true,
           "is_marathon": true
+        },
+        {
+          "animeName": "Heaven's Game",
+          "episode": 8,
+          "title": "【 Heaven's Game】EP08 | MULTISUB |  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=MnVhTW7if9Y",
+          "video_id": "MnVhTW7if9Y",
+          "is_donghua": true,
+          "is_marathon": true
         }
       ],
-      "episode_count": 6,
+      "episode_count": 7,
       "thumbnail_video_id": "4er8kRDlm4g",
       "min_episode": 1,
       "marathon_video_id": "4er8kRDlm4g",
       "marathon_title": "Heaven's Game",
+      "is_donghua": true
+    },
+    {
+      "name": "Help! My roommate is a succubus!",
+      "videos": [
+        {
+          "animeName": "Help! My roommate is a succubus!",
+          "episode": 1,
+          "title": "【Help! My roommate is a succubus!】EP01 | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=RHUjCWJn8-8",
+          "video_id": "RHUjCWJn8-8",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Help! My roommate is a succubus!",
+          "episode": 2,
+          "title": "【救命！我的室友是钓系天花板 Help! My roommate is a succubus!】EP02 | 优酷动漫  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=iN5LwhTbZjk",
+          "video_id": "iN5LwhTbZjk",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Help! My roommate is a succubus!",
+          "episode": 3,
+          "title": "【救命！我的室友是钓系天花板 Help! My roommate is a succubus!】EP03 | 优酷动漫  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=hOXxIVp9Sew",
+          "video_id": "hOXxIVp9Sew",
+          "is_donghua": true,
+          "is_marathon": true
+        }
+      ],
+      "episode_count": 3,
+      "thumbnail_video_id": "RHUjCWJn8-8",
+      "min_episode": 1,
+      "marathon_video_id": "RHUjCWJn8-8",
+      "marathon_title": "Help! My roommate is a succubus!",
       "is_donghua": true
     },
     {
@@ -60367,9 +61436,41 @@
           "url": "https://www.youtube.com/watch?v=uWiwmGOi7UE",
           "video_id": "uWiwmGOi7UE",
           "is_marathon": true
+        },
+        {
+          "animeName": "Hyakki Yakoushou",
+          "episode": 9,
+          "title": "《Hyakki Yakoushou》#9 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=i4bBJFZvppo",
+          "video_id": "i4bBJFZvppo",
+          "is_marathon": true
+        },
+        {
+          "animeName": "Hyakki Yakoushou",
+          "episode": 10,
+          "title": "《Hyakki Yakoushou》#10 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=1OvhlOddK_4",
+          "video_id": "1OvhlOddK_4",
+          "is_marathon": true
+        },
+        {
+          "animeName": "Hyakki Yakoushou",
+          "episode": 11,
+          "title": "《Hyakki Yakoushou》#11 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=j07oHkhitqg",
+          "video_id": "j07oHkhitqg",
+          "is_marathon": true
+        },
+        {
+          "animeName": "Hyakki Yakoushou",
+          "episode": 12,
+          "title": "《Hyakki Yakoushou》#12 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=Eo-YSmc-w3U",
+          "video_id": "Eo-YSmc-w3U",
+          "is_marathon": true
         }
       ],
-      "episode_count": 8,
+      "episode_count": 12,
       "thumbnail_video_id": "-p_cs22CrBE",
       "min_episode": 1,
       "marathon_video_id": "-p_cs22CrBE",
@@ -70794,9 +71895,41 @@
           "url": "https://www.youtube.com/watch?v=l3aFJhMQT1Q",
           "video_id": "l3aFJhMQT1Q",
           "is_marathon": true
+        },
+        {
+          "animeName": "Koala's Diary",
+          "episode": 35,
+          "title": "《Koala's Diary》#35 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=o5BlJbzCy8k",
+          "video_id": "o5BlJbzCy8k",
+          "is_marathon": true
+        },
+        {
+          "animeName": "Koala's Diary",
+          "episode": 36,
+          "title": "《Koala's Diary》#36 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=B_QmPVQ_0bU",
+          "video_id": "B_QmPVQ_0bU",
+          "is_marathon": true
+        },
+        {
+          "animeName": "Koala's Diary",
+          "episode": 37,
+          "title": "《Koala's Diary》#37 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=iHpIlwkWlWY",
+          "video_id": "iHpIlwkWlWY",
+          "is_marathon": true
+        },
+        {
+          "animeName": "Koala's Diary",
+          "episode": 38,
+          "title": "《Koala's Diary》#38 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=2htDXvSNvYo",
+          "video_id": "2htDXvSNvYo",
+          "is_marathon": true
         }
       ],
-      "episode_count": 34,
+      "episode_count": 38,
       "thumbnail_video_id": "CTK-GSWCBak",
       "min_episode": 1,
       "marathon_video_id": "CTK-GSWCBak",
@@ -73964,8 +75097,8 @@
           "animeName": "Legend of Xianwu",
           "episode": 131,
           "title": "🌟Menbers Preview🌟MULTISUB【 Legend of Xianwu】EP131 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=A2wKOFwGnkA",
-          "video_id": "A2wKOFwGnkA",
+          "url": "https://www.youtube.com/watch?v=fXZ5xoTjS38",
+          "video_id": "fXZ5xoTjS38",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -73973,8 +75106,8 @@
           "animeName": "Legend of Xianwu",
           "episode": 132,
           "title": "🌟Menbers Preview🌟MULTISUB【 Legend of Xianwu】EP132 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=GNoiSLamyQI",
-          "video_id": "GNoiSLamyQI",
+          "url": "https://www.youtube.com/watch?v=sUCGSSSTuiM",
+          "video_id": "sUCGSSSTuiM",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -77750,7 +78883,7 @@
         {
           "animeName": "Martial Peak",
           "episode": 37,
-          "title": "⚡️INDOSUB | Martial Peak  EP 37 | Yuewen Animation Indonesia",
+          "title": "⚡️ENG SUB | Martial Peak EP 37 | Yuewen Animation Indonesia",
           "url": "https://www.youtube.com/watch?v=803kM01oeC8",
           "video_id": "803kM01oeC8",
           "is_donghua": true,
@@ -77795,7 +78928,7 @@
         {
           "animeName": "Martial Peak",
           "episode": 42,
-          "title": "⚡️INDOSUB | Martial Peak  EP 42 | Yuewen Animation Indonesia",
+          "title": "⚡️ENG SUB | Martial Peak EP 42 | Yuewen Animation Indonesia",
           "url": "https://www.youtube.com/watch?v=2_uiX3Qlob4",
           "video_id": "2_uiX3Qlob4",
           "is_donghua": true,
@@ -78491,7 +79624,7 @@
         {
           "animeName": "Martial Universe Season 6",
           "episode": 4,
-          "title": "🌟4K | NDOSUB | Martial Universe S6 EP04 | Yuewen Animation",
+          "title": "🌟4K | ENG SUB | Martial Universe S6 EP04 | Yuewen Animation",
           "url": "https://www.youtube.com/watch?v=4ReY5RBk_Dw",
           "video_id": "4ReY5RBk_Dw",
           "is_donghua": true,
@@ -78563,7 +79696,7 @@
         {
           "animeName": "Martial Universe Season 6",
           "episode": 12,
-          "title": "🌟4K | Martial Universe S6 EP12  | Yuewen Animation |EP72",
+          "title": "🌟4K | Martial Universe S6 EP12 | Yuewen Animation | EP72",
           "url": "https://www.youtube.com/watch?v=uvkMVe7uzfU",
           "video_id": "uvkMVe7uzfU",
           "is_donghua": true,
@@ -88632,6 +89765,101 @@
       "is_donghua": false
     },
     {
+      "name": "ONIMAI: I'm Now Your Sister!",
+      "videos": [
+        {
+          "animeName": "ONIMAI: I'm Now Your Sister!",
+          "episode": 1,
+          "title": "《ONIMAI: I'm Now Your Sister!》#1 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=_lFbHLmjF8E",
+          "video_id": "_lFbHLmjF8E"
+        },
+        {
+          "animeName": "ONIMAI: I'm Now Your Sister!",
+          "episode": 2,
+          "title": "《ONIMAI: I'm Now Your Sister!》#2 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=C7vNke5E4L8",
+          "video_id": "C7vNke5E4L8"
+        },
+        {
+          "animeName": "ONIMAI: I'm Now Your Sister!",
+          "episode": 3,
+          "title": "《ONIMAI: I'm Now Your Sister!》#3 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=OJBuIpi-Uv4",
+          "video_id": "OJBuIpi-Uv4"
+        },
+        {
+          "animeName": "ONIMAI: I'm Now Your Sister!",
+          "episode": 4,
+          "title": "《ONIMAI: I'm Now Your Sister!》#4 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=huTKm4ROxDw",
+          "video_id": "huTKm4ROxDw"
+        },
+        {
+          "animeName": "ONIMAI: I'm Now Your Sister!",
+          "episode": 5,
+          "title": "《ONIMAI: I'm Now Your Sister!》#5 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=H4DYarhk_X4",
+          "video_id": "H4DYarhk_X4"
+        },
+        {
+          "animeName": "ONIMAI: I'm Now Your Sister!",
+          "episode": 6,
+          "title": "《ONIMAI: I'm Now Your Sister!》#6 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=VF7yInmuveM",
+          "video_id": "VF7yInmuveM"
+        },
+        {
+          "animeName": "ONIMAI: I'm Now Your Sister!",
+          "episode": 7,
+          "title": "《ONIMAI: I'm Now Your Sister!》#7 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=0gui0xUvDkk",
+          "video_id": "0gui0xUvDkk"
+        },
+        {
+          "animeName": "ONIMAI: I'm Now Your Sister!",
+          "episode": 8,
+          "title": "《ONIMAI: I'm Now Your Sister!》#8 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=YwIzcNKTD3w",
+          "video_id": "YwIzcNKTD3w"
+        },
+        {
+          "animeName": "ONIMAI: I'm Now Your Sister!",
+          "episode": 9,
+          "title": "《ONIMAI: I'm Now Your Sister!》#9 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=hFytjrB8m50",
+          "video_id": "hFytjrB8m50"
+        },
+        {
+          "animeName": "ONIMAI: I'm Now Your Sister!",
+          "episode": 10,
+          "title": "《ONIMAI: I'm Now Your Sister!》#10 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=fOrWXZFaoAs",
+          "video_id": "fOrWXZFaoAs"
+        },
+        {
+          "animeName": "ONIMAI: I'm Now Your Sister!",
+          "episode": 11,
+          "title": "《ONIMAI: I'm Now Your Sister!》#11 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=cZmLmLXfYkk",
+          "video_id": "cZmLmLXfYkk"
+        },
+        {
+          "animeName": "ONIMAI: I'm Now Your Sister!",
+          "episode": 12,
+          "title": "《ONIMAI: I'm Now Your Sister!》#12 (ID sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=Fo1ZP6_hsOc",
+          "video_id": "Fo1ZP6_hsOc"
+        }
+      ],
+      "episode_count": 12,
+      "thumbnail_video_id": "_lFbHLmjF8E",
+      "min_episode": 1,
+      "marathon_video_id": null,
+      "marathon_title": null,
+      "is_donghua": false
+    },
+    {
       "name": "Onmyo Kaiten Re:Birth Verse",
       "videos": [
         {
@@ -91201,9 +92429,41 @@
           "url": "https://www.youtube.com/watch?v=pFMrDjTp8uc",
           "video_id": "pFMrDjTp8uc",
           "is_marathon": true
+        },
+        {
+          "animeName": "Petals of Reincarnation",
+          "episode": 10,
+          "title": "《Petals of Reincarnation》#10 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=nSn6bBvRTE8",
+          "video_id": "nSn6bBvRTE8",
+          "is_marathon": true
+        },
+        {
+          "animeName": "Petals of Reincarnation",
+          "episode": 11,
+          "title": "《Petals of Reincarnation》#11 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=mMRBHaxu08w",
+          "video_id": "mMRBHaxu08w",
+          "is_marathon": true
+        },
+        {
+          "animeName": "Petals of Reincarnation",
+          "episode": 12,
+          "title": "《Petals of Reincarnation》#12 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=bFDClUmBPHo",
+          "video_id": "bFDClUmBPHo",
+          "is_marathon": true
+        },
+        {
+          "animeName": "Petals of Reincarnation",
+          "episode": 13,
+          "title": "《Petals of Reincarnation》#13 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=m7zI6OrALJM",
+          "video_id": "m7zI6OrALJM",
+          "is_marathon": true
         }
       ],
-      "episode_count": 9,
+      "episode_count": 13,
       "thumbnail_video_id": "fZSsEZvp4ko",
       "min_episode": 1,
       "marathon_video_id": "fZSsEZvp4ko",
@@ -91441,6 +92701,15 @@
         },
         {
           "animeName": "Pheromones Say We're Not Meant to BeOur Pheromones Say No",
+          "episode": 5,
+          "title": "【Pheromones Say We're Not Meant to BeOur Pheromones Say No】EP05 |  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=cy0Dze3S4k8",
+          "video_id": "cy0Dze3S4k8",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Pheromones Say We're Not Meant to BeOur Pheromones Say No",
           "episode": 6,
           "title": "【Pheromones Say We're Not Meant to BeOur Pheromones Say No】EP06 | YOUKU ANIMATION",
           "url": "https://www.youtube.com/watch?v=luI8aHGxh80",
@@ -91611,7 +92880,7 @@
           "is_marathon": true
         }
       ],
-      "episode_count": 23,
+      "episode_count": 24,
       "thumbnail_video_id": "Hs-t5lnTllo",
       "min_episode": 1,
       "marathon_video_id": "Hs-t5lnTllo",
@@ -94787,9 +96056,37 @@
           "title": "Reinkarnasiku Ingin Jadi Tulang Rusuk Pahlawan! - Episode 4",
           "url": "https://www.youtube.com/watch?v=gWrQkA4vBIY",
           "video_id": "gWrQkA4vBIY"
+        },
+        {
+          "animeName": "Reinkarnasiku Ingin Jadi Tulang Rusuk Pahlawan!",
+          "episode": 5,
+          "title": "Reinkarnasiku Ingin Jadi Tulang Rusuk Pahlawan! - Episode 5",
+          "url": "https://www.youtube.com/watch?v=1N0N0k9icwI",
+          "video_id": "1N0N0k9icwI"
+        },
+        {
+          "animeName": "Reinkarnasiku Ingin Jadi Tulang Rusuk Pahlawan!",
+          "episode": 6,
+          "title": "Reinkarnasiku Ingin Jadi Tulang Rusuk Pahlawan! - Episode 6",
+          "url": "https://www.youtube.com/watch?v=aQhcbsHSMus",
+          "video_id": "aQhcbsHSMus"
+        },
+        {
+          "animeName": "Reinkarnasiku Ingin Jadi Tulang Rusuk Pahlawan!",
+          "episode": 7,
+          "title": "Reinkarnasiku Ingin Jadi Tulang Rusuk Pahlawan! - Episode 7",
+          "url": "https://www.youtube.com/watch?v=uFf0PxGkQNI",
+          "video_id": "uFf0PxGkQNI"
+        },
+        {
+          "animeName": "Reinkarnasiku Ingin Jadi Tulang Rusuk Pahlawan!",
+          "episode": 8,
+          "title": "Reinkarnasiku Ingin Jadi Tulang Rusuk Pahlawan! - Episode 8",
+          "url": "https://www.youtube.com/watch?v=KEVq-7CFUfI",
+          "video_id": "KEVq-7CFUfI"
         }
       ],
-      "episode_count": 4,
+      "episode_count": 8,
       "thumbnail_video_id": "YXVwkL_zpDI",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -107363,9 +108660,72 @@
           "video_id": "FYS6ueTnlBM",
           "is_marathon": true,
           "is_donghua": true
+        },
+        {
+          "animeName": "Tales of Herding God",
+          "episode": 9,
+          "title": "Tales of Herding God #9 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=pX8FXech5rk",
+          "video_id": "pX8FXech5rk",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Tales of Herding God",
+          "episode": 10,
+          "title": "Tales of Herding God #10 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=mYNehb_RQGM",
+          "video_id": "mYNehb_RQGM",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Tales of Herding God",
+          "episode": 11,
+          "title": "Tales of Herding God #11 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=YlBVSgAbcbE",
+          "video_id": "YlBVSgAbcbE",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Tales of Herding God",
+          "episode": 12,
+          "title": "Tales of Herding God #12 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=R8UtiT48ZqM",
+          "video_id": "R8UtiT48ZqM",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Tales of Herding God",
+          "episode": 13,
+          "title": "Tales of Herding God #13 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=7JGrv_7RHF8",
+          "video_id": "7JGrv_7RHF8",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Tales of Herding God",
+          "episode": 14,
+          "title": "Tales of Herding God #14 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=TRyWbjGpLDE",
+          "video_id": "TRyWbjGpLDE",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Tales of Herding God",
+          "episode": 16,
+          "title": "Tales of Herding God #16 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=vfmJ6QdRA6A",
+          "video_id": "vfmJ6QdRA6A",
+          "is_marathon": true,
+          "is_donghua": true
         }
       ],
-      "episode_count": 8,
+      "episode_count": 15,
       "thumbnail_video_id": "x-PXDxtZFX4",
       "min_episode": 1,
       "marathon_video_id": "x-PXDxtZFX4",
@@ -107609,9 +108969,9 @@
         {
           "animeName": "Taming My Fluffy Shizun",
           "episode": 2,
-          "title": "【Taming My Fluffy Shizun】EP02 | MULTISUB | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=rwMQLLXAK9I",
-          "video_id": "rwMQLLXAK9I",
+          "title": "【Taming My Fluffy Shizun】EP02 | MULTISUB |  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=k3Of5nJXfMw",
+          "video_id": "k3Of5nJXfMw",
           "is_donghua": true,
           "is_marathon": true
         }
@@ -109947,9 +111307,33 @@
           "url": "https://www.youtube.com/watch?v=jB7Whgodju4",
           "video_id": "jB7Whgodju4",
           "is_marathon": true
+        },
+        {
+          "animeName": "The Classroom of a Black Cat and a Witch",
+          "episode": 9,
+          "title": "《The Classroom of a Black Cat and a Witch》#9 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=X0TKIwgWQ30",
+          "video_id": "X0TKIwgWQ30",
+          "is_marathon": true
+        },
+        {
+          "animeName": "The Classroom of a Black Cat and a Witch",
+          "episode": 10,
+          "title": "《The Classroom of a Black Cat and a Witch》#10 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=RYXZ0FFBeBo",
+          "video_id": "RYXZ0FFBeBo",
+          "is_marathon": true
+        },
+        {
+          "animeName": "The Classroom of a Black Cat and a Witch",
+          "episode": 11,
+          "title": "《The Classroom of a Black Cat and a Witch》#11 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=AB449HU-UI0",
+          "video_id": "AB449HU-UI0",
+          "is_marathon": true
         }
       ],
-      "episode_count": 8,
+      "episode_count": 11,
       "thumbnail_video_id": "bFwW728v9wo",
       "min_episode": 1,
       "marathon_video_id": "bFwW728v9wo",
@@ -111161,11 +112545,11 @@
           "is_marathon": true
         },
         {
-          "animeName": "The Demon Hunter 2",
+          "animeName": "The Demon Hunter3",
           "episode": 12,
-          "title": "MULTISUB【The Demon Hunter 2】EP12 | Hot-blooded ancient-style comics | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=PP4iTXgV5mI",
-          "video_id": "PP4iTXgV5mI",
+          "title": "【沧元图3 The Demon Hunter3】EP12 试看 Preview  | MUTISUB | 优酷动漫  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=Q3vED6CkRfo",
+          "video_id": "Q3vED6CkRfo",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -111254,8 +112638,8 @@
           "animeName": "The Demon Hunter 2",
           "episode": 23,
           "title": "MULTISUB【The Demon Hunter 2】EP23 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=_bGTDAjJqSs",
-          "video_id": "_bGTDAjJqSs",
+          "url": "https://www.youtube.com/watch?v=BnTK9bhD9Nk",
+          "video_id": "BnTK9bhD9Nk",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -111271,9 +112655,9 @@
         {
           "animeName": "The Demon Hunter 2",
           "episode": 26,
-          "title": "🌟Menbers Preview🌟MULTISUB【The Demon Hunter 2】EP26 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=-degoBcuwXk",
-          "video_id": "-degoBcuwXk",
+          "title": "MULTISUB【The Demon Hunter 2】EP26 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=WRvRI4zHUqk",
+          "video_id": "WRvRI4zHUqk",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -111289,9 +112673,9 @@
         {
           "animeName": "The Demon Hunter 2",
           "episode": 28,
-          "title": "🌟Menbers Preview🌟MULTISUB【The Demon Hunter 2】EP28 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=nupuOdbteIQ",
-          "video_id": "nupuOdbteIQ",
+          "title": "MULTISUB【The Demon Hunter 2】EP28 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=IZwoxVWd_DU",
+          "video_id": "IZwoxVWd_DU",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -111325,36 +112709,36 @@
         {
           "animeName": "The Demon Hunter 2",
           "episode": 32,
-          "title": "🌟Menbers Preview🌟MULTISUB【The Demon Hunter 2】EP32 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=il51yE7QMZU",
-          "video_id": "il51yE7QMZU",
+          "title": "MULTISUB【The Demon Hunter 2】EP32 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=Dw0YlyDCDWs",
+          "video_id": "Dw0YlyDCDWs",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "The Demon Hunter 2",
           "episode": 33,
-          "title": "🌟Menbers Preview🌟MULTISUB【The Demon Hunter 2】EP33 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=Qx9t5cflPVo",
-          "video_id": "Qx9t5cflPVo",
+          "title": "MULTISUB【The Demon Hunter 2】EP33 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=Mlr35RNiR7Y",
+          "video_id": "Mlr35RNiR7Y",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "The Demon Hunter 2",
           "episode": 34,
-          "title": "🌟Menbers Preview🌟MULTISUB【The Demon Hunter 2】EP34 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=Iwm1QqoTMOg",
-          "video_id": "Iwm1QqoTMOg",
+          "title": "MULTISUB【The Demon Hunter 2】EP34 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=moZtoWokhZQ",
+          "video_id": "moZtoWokhZQ",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "The Demon Hunter 2",
           "episode": 35,
-          "title": "🌟Menbers Preview🌟MULTISUB【The Demon Hunter 2】EP35 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=x-9iAaG7aZM",
-          "video_id": "x-9iAaG7aZM",
+          "title": "MULTISUB【The Demon Hunter 2】EP35 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=C9OsXzzdwJU",
+          "video_id": "C9OsXzzdwJU",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -111391,6 +112775,35 @@
       "min_episode": 1,
       "marathon_video_id": "lom1cHBHYPk",
       "marathon_title": "The Demon Hunter 2",
+      "is_donghua": true
+    },
+    {
+      "name": "The Demon Hunter 2D",
+      "videos": [
+        {
+          "animeName": "The Demon Hunter 2D",
+          "episode": 1,
+          "title": "【沧元图 动态漫画 The Demon Hunter 2D】EP01 | 孟川战山主 |  热血古风漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=ZDuDPnqXIA4",
+          "video_id": "ZDuDPnqXIA4",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "The Demon Hunter 2D",
+          "episode": 2,
+          "title": "【沧元图 动态漫画 The Demon Hunter 2D】EP02 | 妖族大军来袭 |  热血古风漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=ifHy45tp9sw",
+          "video_id": "ifHy45tp9sw",
+          "is_donghua": true,
+          "is_marathon": true
+        }
+      ],
+      "episode_count": 2,
+      "thumbnail_video_id": "ZDuDPnqXIA4",
+      "min_episode": 1,
+      "marathon_video_id": "ZDuDPnqXIA4",
+      "marathon_title": "The Demon Hunter 2D",
       "is_donghua": true
     },
     {
@@ -111908,9 +113321,30 @@
           "title": "The Drops of God - Episode 4",
           "url": "https://www.youtube.com/watch?v=lB9-MyewUO4",
           "video_id": "lB9-MyewUO4"
+        },
+        {
+          "animeName": "The Drops of God",
+          "episode": 5,
+          "title": "The Drops of God - Episode 5",
+          "url": "https://www.youtube.com/watch?v=grbeUg_W2tI",
+          "video_id": "grbeUg_W2tI"
+        },
+        {
+          "animeName": "The Drops of God",
+          "episode": 6,
+          "title": "The Drops of God - Episode 6",
+          "url": "https://www.youtube.com/watch?v=ahJu9TjxXmM",
+          "video_id": "ahJu9TjxXmM"
+        },
+        {
+          "animeName": "The Drops of God",
+          "episode": 7,
+          "title": "The Drops of God - Episode 7",
+          "url": "https://www.youtube.com/watch?v=gEamxR8mOQU",
+          "video_id": "gEamxR8mOQU"
         }
       ],
-      "episode_count": 4,
+      "episode_count": 7,
       "thumbnail_video_id": "0DaULKSAUhc",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -123808,8 +125242,8 @@
           "animeName": "The Secrets of Star Divine Arts",
           "episode": 8,
           "title": "MULTISUB【The Secrets of Star Divine Arts】EP08 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=E-OgR8IVOGo",
-          "video_id": "E-OgR8IVOGo",
+          "url": "https://www.youtube.com/watch?v=SU-CLDHzf6k",
+          "video_id": "SU-CLDHzf6k",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -131275,185 +132709,163 @@
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 1,
-          "title": "《To Your Eternity Season 3》#1 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=DrjbHLh9jGY",
-          "video_id": "DrjbHLh9jGY",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#1 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=EZmJfcZbzUo",
+          "video_id": "EZmJfcZbzUo"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 2,
-          "title": "《To Your Eternity Season 3》#2 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=UwQ4xGs0KEg",
-          "video_id": "UwQ4xGs0KEg",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#2 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=XMViqzkL3YM",
+          "video_id": "XMViqzkL3YM"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 3,
-          "title": "《To Your Eternity Season 3》#3 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=sDcD5KGD7xg",
-          "video_id": "sDcD5KGD7xg",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#3 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=7vtNFBavmCE",
+          "video_id": "7vtNFBavmCE"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 4,
-          "title": "《To Your Eternity Season 3》#4 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=HdlxZOEKbj8",
-          "video_id": "HdlxZOEKbj8",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#4 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=kqA7Im5fZSw",
+          "video_id": "kqA7Im5fZSw"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 5,
-          "title": "《To Your Eternity Season 3》#5 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=LSZauK9oaEo",
-          "video_id": "LSZauK9oaEo",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#5 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=WTzV0YoTyh4",
+          "video_id": "WTzV0YoTyh4"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 6,
-          "title": "《To Your Eternity Season 3》#6 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=O4l5EpZ7xH4",
-          "video_id": "O4l5EpZ7xH4",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#6 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=Dc-FF1V5DRM",
+          "video_id": "Dc-FF1V5DRM"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 7,
-          "title": "《To Your Eternity Season 3》#7 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=tdXFmibrqQo",
-          "video_id": "tdXFmibrqQo",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#7 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=Bhmdb84kmws",
+          "video_id": "Bhmdb84kmws"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 8,
-          "title": "《To Your Eternity Season 3》#8 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=aT7ktInuQMI",
-          "video_id": "aT7ktInuQMI",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#8 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=PWSa1C6Dkvs",
+          "video_id": "PWSa1C6Dkvs"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 9,
-          "title": "《To Your Eternity Season 3》#9 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=SKeGKMRjEhc",
-          "video_id": "SKeGKMRjEhc",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#9 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=WOhxovXZcJk",
+          "video_id": "WOhxovXZcJk"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 10,
-          "title": "《To Your Eternity Season 3》#10 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=iQJew0HTV-c",
-          "video_id": "iQJew0HTV-c",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#10 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=kWJilzTSoys",
+          "video_id": "kWJilzTSoys"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 11,
-          "title": "《To Your Eternity Season 3》#11 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=4TF9UhgRS3s",
-          "video_id": "4TF9UhgRS3s",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#11 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=EldWBFJV2l8",
+          "video_id": "EldWBFJV2l8"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 12,
-          "title": "《To Your Eternity Season 3》#12 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=oCLaJf7hiRQ",
-          "video_id": "oCLaJf7hiRQ",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#12 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=MqwcxKxXYq0",
+          "video_id": "MqwcxKxXYq0"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 13,
-          "title": "《To Your Eternity Season 3》#13 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=niAAa-tzTj0",
-          "video_id": "niAAa-tzTj0",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#13 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=KztjM3cfueU",
+          "video_id": "KztjM3cfueU"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 14,
-          "title": "《To Your Eternity Season 3》#14 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=klyYc7ygr6A",
-          "video_id": "klyYc7ygr6A",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#14 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=FEKs2FKj8hU",
+          "video_id": "FEKs2FKj8hU"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 15,
-          "title": "《To Your Eternity Season 3》#15 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=Lk5HO06NXZU",
-          "video_id": "Lk5HO06NXZU",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#15 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=oN7pKTgmXj8",
+          "video_id": "oN7pKTgmXj8"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 16,
-          "title": "《To Your Eternity Season 3》#16 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=8lFqSRYjkd8",
-          "video_id": "8lFqSRYjkd8",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#16 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=it51xiJWXio",
+          "video_id": "it51xiJWXio"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 17,
-          "title": "《To Your Eternity Season 3》#17 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=GtNYYWv83LY",
-          "video_id": "GtNYYWv83LY",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#17 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=ZEKz4KQ9scI",
+          "video_id": "ZEKz4KQ9scI"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 18,
-          "title": "《To Your Eternity Season 3》#18 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=nFdq08ag4pI",
-          "video_id": "nFdq08ag4pI",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#18 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=7Jq930hCo-I",
+          "video_id": "7Jq930hCo-I"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 19,
-          "title": "《To Your Eternity Season 3》#19 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=zW07ynbTcWg",
-          "video_id": "zW07ynbTcWg",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#19 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=w5YMUJ5HSb4",
+          "video_id": "w5YMUJ5HSb4"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 20,
-          "title": "《To Your Eternity Season 3》#20 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=ZwFxZWKrOxQ",
-          "video_id": "ZwFxZWKrOxQ",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#20 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=SfhsO33FCO4",
+          "video_id": "SfhsO33FCO4"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 21,
-          "title": "《To Your Eternity Season 3》#21 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=OBfQoAhVJWs",
-          "video_id": "OBfQoAhVJWs",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#21 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=vVntQUy5Rt4",
+          "video_id": "vVntQUy5Rt4"
         },
         {
           "animeName": "To Your Eternity Season 3",
           "episode": 22,
-          "title": "《To Your Eternity Season 3》#22 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=fYs5sPXwork",
-          "video_id": "fYs5sPXwork",
-          "is_marathon": true
+          "title": "《To Your Eternity Season 3》#22 (ID Sub)【Ani-One Indonesia】",
+          "url": "https://www.youtube.com/watch?v=FedT1EdKLac",
+          "video_id": "FedT1EdKLac"
         }
       ],
       "episode_count": 22,
-      "thumbnail_video_id": "DrjbHLh9jGY",
+      "thumbnail_video_id": "EZmJfcZbzUo",
       "min_episode": 1,
-      "marathon_video_id": "DrjbHLh9jGY",
-      "marathon_title": "To Your Eternity Season 3",
+      "marathon_video_id": null,
+      "marathon_title": null,
       "is_donghua": false
     },
     {
@@ -135669,54 +137081,54 @@
         {
           "animeName": "Wealth and Wonder",
           "episode": 2,
-          "title": "🌟Menbers Preview🌟MULTISUB【Wealth and Wonder】EP02 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=QseN7mJ3F4s",
-          "video_id": "QseN7mJ3F4s",
+          "title": "MULTISUB【Wealth and Wonder】EP02 | Fantasy Anime | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=TPBnnaKfNSY",
+          "video_id": "TPBnnaKfNSY",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Wealth and Wonder",
           "episode": 3,
-          "title": "🌟Menbers Preview🌟MULTISUB【Wealth and Wonder】EP03 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=6UJcv7QhmRI",
-          "video_id": "6UJcv7QhmRI",
+          "title": "MULTISUB【Wealth and Wonder】EP03 | Fantasy Anime | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=sb7SNObMfF4",
+          "video_id": "sb7SNObMfF4",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Wealth and Wonder",
           "episode": 4,
-          "title": "🌟Menbers Preview🌟MULTISUB【Wealth and Wonder】EP04 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=TGyx5PQkN3c",
-          "video_id": "TGyx5PQkN3c",
+          "title": "MULTISUB【Wealth and Wonder】EP04 | Wuxia Animation | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=naNueaFZwhA",
+          "video_id": "naNueaFZwhA",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Wealth and Wonder",
           "episode": 5,
-          "title": "🌟Menbers Preview🌟MULTISUB【Wealth and Wonder】EP05 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=NtiW_mh6ldk",
-          "video_id": "NtiW_mh6ldk",
+          "title": "MULTISUB【Wealth and Wonder】EP05 | Fantasy Anime | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=HBIgN8VnnkA",
+          "video_id": "HBIgN8VnnkA",
           "is_donghua": true,
           "is_marathon": true
         },
         {
-          "animeName": "Wealth and Wonder",
+          "animeName": "Waelth and Wonder",
           "episode": 6,
-          "title": "🌟Menbers Preview🌟MULTISUB【Wealth and Wonder】EP06 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=NhrT9ZO2O48",
-          "video_id": "NhrT9ZO2O48",
+          "title": "MULTISUB【克金玩家 Waelth and Wonder】EP06 帅到没朋友 | 超燃玄幻国漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=nnkW_Ivaz80",
+          "video_id": "nnkW_Ivaz80",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Wealth and Wonder",
           "episode": 7,
-          "title": "🌟Menbers Preview🌟MULTISUB【Wealth and Wonder】EP07 | Fantasy Anime | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=R5-fbx1DeaM",
-          "video_id": "R5-fbx1DeaM",
+          "title": "MULTISUB【Wealth and Wonder】EP07 | Fantasy Anime | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=MVgUdO4_0ts",
+          "video_id": "MVgUdO4_0ts",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -135730,38 +137142,38 @@
           "is_marathon": true
         },
         {
-          "animeName": "Wealth and Wonder",
+          "animeName": "Waelth and Wonder",
           "episode": 9,
-          "title": "🌟Menbers Preview🌟MULTISUB【Wealth and Wonder】EP09 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=VD-TdqslteY",
-          "video_id": "VD-TdqslteY",
+          "title": "MULTISUB 【Waelth and Wonder】 EP09 | Super-Exciting Fantasy Chinese Anime | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=iY9O1eFht4U",
+          "video_id": "iY9O1eFht4U",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Wealth and Wonder",
           "episode": 10,
-          "title": "🌟Menbers Preview🌟MULTISUB【Wealth and Wonder】EP10 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=TZpjc7jupsA",
-          "video_id": "TZpjc7jupsA",
+          "title": "MULTISUB【Wealth and Wonder】EP10 | Fantasy Anime | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=wmnDFz_PepY",
+          "video_id": "wmnDFz_PepY",
           "is_donghua": true,
           "is_marathon": true
         },
         {
           "animeName": "Wealth and Wonder",
           "episode": 11,
-          "title": "🌟Menbers Preview🌟MULTISUB【Wealth and Wonder】EP11 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=QGNFxnMxWIs",
-          "video_id": "QGNFxnMxWIs",
+          "title": "MULTISUB【Wealth and Wonder】EP11 | Fantasy Anime | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=DfG3JFm5HNU",
+          "video_id": "DfG3JFm5HNU",
           "is_donghua": true,
           "is_marathon": true
         },
         {
-          "animeName": "Wealth and Wonder",
+          "animeName": "Waelth and Wonder",
           "episode": 12,
-          "title": "🌟Menbers Preview🌟MULTISUB【Wealth and Wonder】EP12 | Wuxia Animation | YOUKU ANIMATION",
-          "url": "https://www.youtube.com/watch?v=cENBeqChXC8",
-          "video_id": "cENBeqChXC8",
+          "title": "MULTISUB【克金玩家 Waelth and Wonder】EP12 我是你们play中的一环吗 | 超燃玄幻国漫 | 优酷动漫 YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=EyKH3CZv4Vk",
+          "video_id": "EyKH3CZv4Vk",
           "is_donghua": true,
           "is_marathon": true
         },
@@ -138981,6 +140393,6 @@
       "is_donghua": false
     }
   ],
-  "total_series": 852,
-  "last_updated": "2026-06-01"
+  "total_series": 859,
+  "last_updated": "2026-06-25"
 }
