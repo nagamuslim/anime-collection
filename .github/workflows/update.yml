@@ -1,6 +1,17 @@
 name: Auto-Scrape via Tor and Push
 on:
   workflow_dispatch:
+    inputs:
+      concurrency:
+        description: 'Concurrent yt-dlp jobs (used only when skip_scrapetube is checked)'
+        type: number
+        required: false
+        default: 8
+      skip_scrapetube:
+        description: 'Skip Phase 2/3 (scrapetube + fallback) and use yt-dlp-only get.sh instead'
+        type: boolean
+        required: false
+        default: false
   # schedule:
   #   - cron: '0 0 * * 0'
 jobs:
@@ -183,37 +194,50 @@ jobs:
 
       - name: Phase 1 — Extract Playlist URLs via yt-dlp
         run: |
-          CHANNELS=(
-            "https://www.youtube.com/channel/UCUn0hEbVJc273anl_0ozDMQ/playlists"
-            "https://www.youtube.com/channel/UCC-g5hWSvCbdB8HQQIA0_pg/playlists"
-            "https://www.youtube.com/channel/UCqyqBNOAlZgJ3dQoDSCbCjQ/playlists"
-            "https://www.youtube.com/@MuseIndonesia/playlists"
-            "https://www.youtube.com/channel/UCcYw1UUwxjIMYfvmdQrcyUA/playlists"
-            "https://www.youtube.com/channel/UCrcQMdsFqYpZOHDbm-fnNlw/playlists"
-            "https://www.youtube.com/channel/UCqX5I4e5iTpAt3tMYZJzZTQ/playlists"
-            "https://www.youtube.com/channel/UC0wNSTMWIL3qaorLx0jie6A/playlists"
-          )
-          touch all_playlists.txt
-          for CHANNEL in "${CHANNELS[@]}"; do
-            echo "Grabbing playlists for $CHANNEL ..."
-            for run in 1 2; do
-              COUNT=$(docker run --rm \
-                -v ${{ github.workspace }}:/workspace \
-                media-scraper \
-                yt-dlp --flat-playlist --print "%(url)s" "$CHANNEL" 2>/dev/null \
-                | awk 'NF && /youtube\.com/' | tee -a all_playlists.txt | wc -l)
-              echo "  → $COUNT playlists found (Run $run)"
-            done
-          done
+          if [[ "${{ inputs.skip_scrapetube }}" == "true" ]]; then
+            echo "Skip Scrapetube -> yt-dlp only"
+            docker run --rm \
+              -v ${{ github.workspace }}:/workspace \
+              media-scraper \
+              bash get.sh -j ${{ inputs.concurrency }}
+          else
+            echo "Run Scrapetube mode"
+            docker run --rm \
+              -v ${{ github.workspace }}:/workspace \
+              media-scraper \
+              bash get.sh playlists
+          fi
           sort -u all_playlists.txt -o all_playlists.txt
           echo "=== all_playlists.txt: $(wc -l < all_playlists.txt) entries ==="
           head -5 all_playlists.txt
+      - name: Phase 1b — Retry + Finalize (yt-dlp-only path)
+        if: ${{ inputs.skip_scrapetube }}
+        run: |
+          FAIL_COUNT=0
+          [ -s failed_playlists.txt ] && FAIL_COUNT=$(wc -l < failed_playlists.txt | tr -d ' ')
+          echo "=== failed_playlists.txt: $FAIL_COUNT playlists ==="
 
+          if [ "$FAIL_COUNT" -ge 400 ]; then
+            echo "::error::Fallback queue is too large ($FAIL_COUNT >= 400). Aborting to prevent runaway execution limits!"
+            exit 1
+          fi
+
+          if [ "$FAIL_COUNT" -gt 0 ]; then
+            echo "Retrying $FAIL_COUNT playlist(s) via get.sh..."
+            docker run --rm \
+              -v ${{ github.workspace }}:/workspace \
+              media-scraper \
+              bash get.sh videos failed_playlists.txt -j ${{ inputs.concurrency }}
+          fi
+
+          cp filtered_playlist_videos.txt raw_all_scraped.txt
+          echo "=== raw_all_scraped.txt: $(grep -c '^https' raw_all_scraped.txt 2>/dev/null || echo 0) URLs ==="
       # ── Phase 2: run old Python, tee stdout+stderr to scrape_log.txt ─────
       # tee is the ONLY logging addition — Python code is untouched.
       # Afterwards we merge both output files into raw_all_scraped.txt so
       # Phase 3 (yt-dlp fallback) and Phase 4 (awk sort) can read one file.
       - name: Phase 2 — Bulk Scrape via scrapetube
+        if: ${{ !inputs.skip_scrapetube }}
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/workspace \
@@ -238,6 +262,7 @@ jobs:
       # Pattern 2 (empty playlist):
       #   "No videos found for https://....  "  (trailing period)
       - name: Phase 3 — yt-dlp Fallback for Failed Playlists
+        if: ${{ !inputs.skip_scrapetube }}
         run: |
           # Extract failed URLs from the tee'd log
           grep -E '^(Error scraping|No videos found for) https' scrape_log.txt \
@@ -262,22 +287,9 @@ jobs:
 
           echo "Running yt-dlp fallback for $FAIL_COUNT playlists..."
 
-          while IFS= read -r playlist_url || [ -n "$playlist_url" ]; do
-            [ -z "$playlist_url" ] && continue
-            echo "  yt-dlp: $playlist_url"
-            docker run --rm \
-              -v ${{ github.workspace }}:/workspace \
-              media-scraper \
-              yt-dlp \
-                --flat-playlist \
-                --print "%(title)s" \
-                --print "%(webpage_url)s" \
-                --print "" \
-                --no-warnings \
-                --quiet \
-                "$playlist_url" 2>/dev/null >> raw_all_scraped.txt || \
-              echo "  [WARN] yt-dlp also failed for $playlist_url"
-          done < failed_playlists.txt
+          docker run --rm -v ${{ github.workspace }}:/workspace media-scraper bash get.sh videos failed_playlists.txt -j ${{ inputs.concurrency }}
+
+          [ -f filtered_playlist_videos.txt ] && cat filtered_playlist_videos.txt >> raw_all_scraped.txt
 
           echo "=== After fallback: $(grep -c '^https' raw_all_scraped.txt 2>/dev/null || echo 0) total URLs ==="
 
@@ -542,7 +554,13 @@ jobs:
           )
           PATCH
     
+      - name: Copy specific text files to root
+        run: |
+          cp data/filtered_its_anime.txt .
+          cp data/filtered_jade_dynasty.txt .
+
       - name: Phase 4b — Inject static It's Anime marathon files
+        if: false
         run: |
           # ── Jade Dynasty: 78-episode marathon ────────────────────────────
           cat <<'JADE' > filtered_static_jade.txt
