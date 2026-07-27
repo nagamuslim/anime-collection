@@ -27,7 +27,7 @@ jobs:
         run: |
           cat <<'EOF' > Dockerfile
           FROM python:slim-trixie
-          RUN apt-get update && apt-get install -y tor curl netcat-openbsd unzip && apt-get clean
+          RUN apt-get update && apt-get install -y tor curl findutils netcat-openbsd unzip && apt-get clean
           # requests[socks] pulls in PySocks — lets requests honour ALL_PROXY=socks5h://
           RUN pip install --no-cache-dir yt-dlp scrapetube requests[socks]
           # yt-dlp routes through Tor via config (ALL_PROXY doesn't apply to yt-dlp)
@@ -37,6 +37,267 @@ jobs:
           WORKDIR /workspace
           ENTRYPOINT ["/entrypoint.sh"]
           EOF
+      - name: Prepare Tor Dockerfile
+        run: |
+          cat <<'BASH' > get.sh
+          #!/bin/sh
+          set -u
+          
+          CHANNELS='
+          https://www.youtube.com/channel/UCUn0hEbVJc273anl_0ozDMQ/playlists
+          https://www.youtube.com/channel/UCC-g5hWSvCbdB8HQQIA0_pg/playlists
+          https://www.youtube.com/channel/UCqyqBNOAlZgJ3dQoDSCbCjQ/playlists
+          https://www.youtube.com/@MuseIndonesia/playlists
+          https://www.youtube.com/channel/UCcYw1UUwxjIMYfvmdQrcyUA/playlists
+          https://www.youtube.com/channel/UCrcQMdsFqYpZOHDbm-fnNlw/playlists
+          https://www.youtube.com/channel/UCqX5I4e5iTpAt3tMYZJzZTQ/playlists
+          https://www.youtube.com/channel/UC0wNSTMWIL3qaorLx0jie6A/playlists
+          '
+          
+          PLAYLIST_FILE="all_playlists.txt"
+          VIDEO_FILE="filtered_playlist_videos.txt"
+          FAILED_FILE="failed_playlists.txt"
+          
+          usage() {
+              cat <<EOF
+          Usage: $0 [MODE] [SOURCE] [-j N | --jobs N]
+          
+            (no argument)     Run both phases: fetch playlist URLs, then scrape those
+                               playlists for individual video title/URL pairs.
+            playlists          Phase 1 only: fetch playlist URLs -> ${PLAYLIST_FILE}
+            videos [SOURCE]    Phase 2 only: scrape videos from playlists.
+                                 SOURCE (optional) can be:
+                                   - omitted             -> read ${PLAYLIST_FILE}
+                                   - a path to a file     -> e.g. ${FAILED_FILE} to retry
+                                   - a single http(s) URL -> scrape just that playlist
+            -j, --jobs N       How many playlists/channels to process concurrently.
+                               Can also be set via the JOBS environment variable.
+                               Default: 1 (sequential).
+            -h, --help         Show this help.
+          
+          Notes:
+            - Any playlist that errors out during 'videos' gets recorded to
+              ${FAILED_FILE} (deduped) so you can retry just those.
+            - Progress lines include a timestamp + PID so you can visually confirm
+              whether jobs are actually overlapping in time.
+          
+          Examples:
+            ./get.posix.sh                              # sequential, both phases
+            JOBS=8 ./get.posix.sh videos                # 8 concurrent workers, full list
+            ./get.posix.sh videos ${FAILED_FILE} -j 8   # retry only failed, 8 workers
+          EOF
+          }
+          
+          now() { date '+%H:%M:%S'; }
+          
+          # ── Worker: one channel -> its playlist URLs ─────────────────────────────────
+          worker_playlist() {
+              CHANNEL="$1"
+              JOBDIR="$2"
+              [ -z "$CHANNEL" ] && return 0
+              OUT="$JOBDIR/pl.$$.txt"
+              : > "$OUT"
+          
+              printf '[%s] [pid %s] \033[36mGrabbing playlists for %s ...\033[0m\n' "$(now)" "$$" "$CHANNEL"
+              run=1
+              while [ "$run" -le 2 ]; do
+                  RUN_TMP=$(mktemp)
+                  yt-dlp --flat-playlist --print "%(url)s" "$CHANNEL" 2>/dev/null | grep -E "youtube\.com" > "$RUN_TMP"
+                  COUNT=$(wc -l < "$RUN_TMP" | tr -d ' ')
+                  if [ "$COUNT" -gt 0 ]; then
+                      cat "$RUN_TMP" >> "$OUT"
+                  fi
+                  rm -f "$RUN_TMP"
+                  printf '[%s] [pid %s] \033[33m  → %s playlists found (Run %s) [%s]\033[0m\n' "$(now)" "$$" "$COUNT" "$run" "$CHANNEL"
+                  run=$((run + 1))
+              done
+          }
+          
+          # ── Worker: one playlist -> its title/URL video blocks (+ failure tracking) ──
+          worker_video() {
+              PLAYLIST_URL="$1"
+              JOBDIR="$2"
+              [ -z "$PLAYLIST_URL" ] && return 0
+              OUT="$JOBDIR/vid.$$.txt"
+              RAW=$(mktemp)
+          
+              printf '[%s] [pid %s] \033[36mScraping videos from %s ...\033[0m\n' "$(now)" "$$" "$PLAYLIST_URL"
+          
+              yt-dlp --flat-playlist --print "%(title)s" --print "%(url)s" "$PLAYLIST_URL" 2>/dev/null > "$RAW"
+              STATUS=$?
+          
+              if [ "$STATUS" -ne 0 ]; then
+                  echo "$PLAYLIST_URL" >> "$JOBDIR/failed.$$.txt"
+                  rm -f "$RAW"
+                  printf '[%s] [pid %s] \033[31m  ✗ FAILED: %s\033[0m\n' "$(now)" "$$" "$PLAYLIST_URL" >&2
+                  return 0
+              fi
+          
+              awk 'NR % 2 { title = $0; next } { print title; print $0; print "" }' "$RAW" > "$OUT"
+              rm -f "$RAW"
+          
+              COUNT=$(grep -c "^$" "$OUT")
+              printf '[%s] [pid %s] \033[33m  → %s videos found [%s]\033[0m\n' "$(now)" "$$" "$COUNT" "$PLAYLIST_URL"
+          }
+          
+          # Internal worker dispatch -- invoked by xargs, not meant to be run by hand.
+          case "${1:-}" in
+              --worker-playlist)
+                  worker_playlist "$2" "$3"
+                  exit 0
+                  ;;
+              --worker-video)
+                  worker_video "$2" "$3"
+                  exit 0
+                  ;;
+          esac
+          
+          # ── Phase 1 driver ────────────────────────────────────────────────────────────
+          fetch_playlists() {
+              [ -f "$PLAYLIST_FILE" ] && rm -f "$PLAYLIST_FILE"
+              JOBDIR=$(mktemp -d)
+          
+              printf '%s\n' "$CHANNELS" | grep -v '^$' | xargs -P "$JOBS" -I{} sh "$0" --worker-playlist {} "$JOBDIR"
+          
+              cat "$JOBDIR"/pl.*.txt > "$PLAYLIST_FILE" 2>/dev/null
+              rm -rf "$JOBDIR"
+          
+              if [ -s "$PLAYLIST_FILE" ]; then
+                  sort -u "$PLAYLIST_FILE" -o "$PLAYLIST_FILE"
+                  printf '\n\033[32mPhase 1 done. Unique playlist URLs saved to %s\033[0m\n' "$PLAYLIST_FILE"
+              fi
+          }
+          
+          # ── Phase 2 driver ────────────────────────────────────────────────────────────
+          fetch_videos() {
+              SOURCE="${1:-$PLAYLIST_FILE}"
+              CLEANUP_INPUT=0
+              APPEND=0
+          
+              if [ -f "$SOURCE" ]; then
+                  INPUT_LIST="$SOURCE"
+                  [ "$SOURCE" != "$PLAYLIST_FILE" ] && APPEND=1
+              else
+                  case "$SOURCE" in
+                      http://*|https://*)
+                          INPUT_LIST=$(mktemp)
+                          echo "$SOURCE" > "$INPUT_LIST"
+                          CLEANUP_INPUT=1
+                          APPEND=1
+                          ;;
+                      *)
+                          echo "Error: '$SOURCE' is neither an existing file nor a http(s) URL." >&2
+                          exit 1
+                          ;;
+                  esac
+              fi
+          
+              if [ ! -s "$INPUT_LIST" ]; then
+                  echo "Error: $INPUT_LIST not found or empty. Run '$0 playlists' first, or pass a valid file/URL." >&2
+                  [ "$CLEANUP_INPUT" = 1 ] && rm -f "$INPUT_LIST"
+                  exit 1
+              fi
+          
+              JOBDIR=$(mktemp -d)
+          
+              # Snapshot the input list *before* touching VIDEO_FILE/FAILED_FILE below.
+              # This matters because SOURCE can legitimately be $FAILED_FILE itself
+              # (the retry workflow) -- clearing FAILED_FILE first would delete the
+              # very file we're about to read from.
+              SNAPSHOT="$JOBDIR/_input_snapshot.txt"
+              grep -v '^$' "$INPUT_LIST" > "$SNAPSHOT"
+              [ "$CLEANUP_INPUT" = 1 ] && rm -f "$INPUT_LIST"
+          
+              [ "$APPEND" = 0 ] && : > "$VIDEO_FILE"
+              rm -f "$FAILED_FILE"
+          
+              xargs -P "$JOBS" -I{} sh "$0" --worker-video {} "$JOBDIR" < "$SNAPSHOT"
+          
+              cat "$JOBDIR"/vid.*.txt >> "$VIDEO_FILE" 2>/dev/null
+          
+              if ls "$JOBDIR"/failed.*.txt >/dev/null 2>&1; then
+                  cat "$JOBDIR"/failed.*.txt > "$FAILED_FILE"
+                  sort -u "$FAILED_FILE" -o "$FAILED_FILE"
+              fi
+          
+              rm -rf "$JOBDIR"
+          
+              TOTAL=$(grep -c "^$" "$VIDEO_FILE" 2>/dev/null)
+              TOTAL=${TOTAL:-0}
+              printf '\n\033[32mPhase 2 done. %s video entries saved to %s\033[0m\n' "$TOTAL" "$VIDEO_FILE"
+          
+              if [ -s "$FAILED_FILE" ]; then
+                  FAILED_COUNT=$(wc -l < "$FAILED_FILE" | tr -d ' ')
+                  printf '\033[31mWarning: %s playlist(s) failed -- see %s\033[0m\n' "$FAILED_COUNT" "$FAILED_FILE" >&2
+                  printf '\033[31m  Retry with: %s videos %s -j %s\033[0m\n' "$0" "$FAILED_FILE" "$JOBS" >&2
+              fi
+          }
+          
+          # ── CLI parsing ───────────────────────────────────────────────────────────────
+          JOBS="${JOBS:-1}"
+          MODE=""
+          SOURCE_ARG=""
+          
+          while [ $# -gt 0 ]; do
+              case "$1" in
+                  -j|--jobs)
+                      if [ $# -lt 2 ]; then echo "Error: $1 requires a value" >&2; usage; exit 1; fi
+                      JOBS="$2"
+                      shift 2
+                      ;;
+                  --jobs=*)
+                      JOBS="${1#--jobs=}"
+                      shift
+                      ;;
+                  -h|--help)
+                      usage
+                      exit 0
+                      ;;
+                  playlists)
+                      MODE="playlists"
+                      shift
+                      ;;
+                  videos)
+                      MODE="videos"
+                      shift
+                      ;;
+                  -*)
+                      echo "Unknown option: $1" >&2
+                      usage
+                      exit 1
+                      ;;
+                  *)
+                      if [ -n "$SOURCE_ARG" ]; then
+                          echo "Unknown argument: $1" >&2
+                          usage
+                          exit 1
+                      fi
+                      SOURCE_ARG="$1"
+                      shift
+                      ;;
+              esac
+          done
+          
+          case "$JOBS" in
+              ''|*[!0-9]*)
+                  echo "Warning: invalid -j/--jobs value '$JOBS', falling back to 1 (sequential)." >&2
+                  JOBS=1
+                  ;;
+          esac
+          [ "$JOBS" -lt 1 ] && JOBS=1
+          
+          if [ -n "$SOURCE_ARG" ] && [ "$MODE" != "videos" ]; then
+              echo "Error: an extra path/URL argument is only valid with the 'videos' mode." >&2
+              usage
+              exit 1
+          fi
+          
+          case "$MODE" in
+              playlists) fetch_playlists ;;
+              videos)    fetch_videos "$SOURCE_ARG" ;;
+              "")        fetch_playlists; fetch_videos ;;
+          esac
+          BASH
 
       # ── Python script: old v3 code, copied verbatim ──────────────────────
       # The only "logging" change is tee in Phase 2 bash — no Python edits.
@@ -275,7 +536,7 @@ jobs:
           FAIL_COUNT=$(wc -l < failed_playlists.txt)
           echo "=== failed_playlists.txt: $FAIL_COUNT playlists ==="
           
-          if [ "$FAIL_COUNT" -ge 400 ]; then
+          if [ "$FAIL_COUNT" -ge 2000 ]; then
             echo "::error::Fallback queue is too large ($FAIL_COUNT >= 400). Aborting to prevent runaway execution limits!"
             exit 1
           fi
