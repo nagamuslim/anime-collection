@@ -529,6 +529,43 @@ jobs:
               mark_not_found(name)
               print(f"  [FLAG]  {name} marked as not_found (Motion Comic/No MAL ID)")
  
+          # ─────────────────────────────────────────────────────────────
+          # STEP 4 — Load external patch / remove files
+          # Looks for (in order, all optional):
+          #   data/patch.txt   root/patch.txt
+          #   data/remove.txt  root/remove.txt
+          # Each line must match one of:
+          #   patch("Anime Name", 12345)   or  patch('Anime Name', 12345)
+          #   remove_entry("Anime Name")   or  remove_entry('Anime Name')
+          # Blank lines and lines starting with # are ignored.
+          # ─────────────────────────────────────────────────────────────
+          import re as _re
+ 
+          def _apply_file(path):
+              try:
+                  with open(path, "r", encoding="utf-8") as _f:
+                      for _line in _f:
+                          _line = _line.strip()
+                          if not _line or _line.startswith("#"):
+                              continue
+                          _m = _re.match(r'patch\(["\'](.+?)["\']\s*,\s*(\d+)\)', _line)
+                          if _m:
+                              patch(_m.group(1), int(_m.group(2)))
+                              continue
+                          _m = _re.match(r'remove_entry\(["\'](.+?)["\']\)', _line)
+                          if _m:
+                              remove_entry(_m.group(1))
+              except FileNotFoundError:
+                  pass
+ 
+          print("\n[STEP 4] Reading external patch/remove files...")
+          for _p in ["data/patch.txt", "patch.txt"]:
+              print(f"  Trying {_p}...")
+              _apply_file(_p)
+          for _r in ["data/remove.txt", "remove.txt"]:
+              print(f"  Trying {_r}...")
+              _apply_file(_r)
+ 
           # Save both files
           with open(META_FILE, "w", encoding="utf-8") as f:
               json.dump(meta, f, indent=2, ensure_ascii=False)

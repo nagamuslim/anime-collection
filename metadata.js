@@ -420,8 +420,14 @@ onconnect = function(e) {
         }
     };
 
-    // ── loadOfflineDb ─────────────────────────────────────────────────
-    const loadOfflineDb = (logCallback, onProgress = null, onStatus = null) => {
+    // ── loadOfflineDb ─────────────────────────────────────────────────────
+    // url (optional, browser-only): arbitrary URL to fetch the offline DB from.
+    //   Omit (or pass null/undefined) → uses the normal discovery chain.
+    //   Browser default chain: SharedWorker → local relative paths → GitHub Releases.
+    //   Supply any HTTP(S) URL (JSON or ZIP) to bypass the browser chain and load
+    //   from that location directly.  Both JSON and ZIP are supported.
+    //   Node always uses: local file first, then GitHub Releases download.
+    const loadOfflineDb = (logCallback, onProgress = null, onStatus = null, url = null) => {
         return new Promise((resolve, reject) => {
             if (offlineDb) return resolve(offlineDb);
             logCallback('[INFO] Memuat anime-offline-database-minified.json...');
@@ -450,10 +456,10 @@ onconnect = function(e) {
                 logCallback('[INFO] URL: ' + GITHUB_DB);
                 logCallback('[INFO] ~60MB, harap tunggu...');
 
-                const download = (url, hops = 0) => {
+                const download = (dlUrl, hops = 0) => {
                     if (hops > 5) return reject(new Error('Too many redirects'));
-                    const mod = url.startsWith('https') ? require('https') : require('http');
-                    mod.get(url, res => {
+                    const mod = dlUrl.startsWith('https') ? require('https') : require('http');
+                    mod.get(dlUrl, res => {
                         if (res.statusCode === 301 || res.statusCode === 302)
                             return download(res.headers.location, hops + 1);
                         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
@@ -480,14 +486,6 @@ onconnect = function(e) {
                 return download(GITHUB_DB);
             }
 
-            // Browser: try JSON (root), then ZIP (root + db/), then JSON (db/)
-            const BROWSER_PATHS = [
-                './anime-offline-database-minified.json',
-                './anime-offline-database-minified.zip',
-                './db/anime-offline-database-minified.zip',
-                './db/anime-offline-database-minified.json',
-            ];
-
             // Extract JSON array from a ZIP arraybuffer using JSZip (already loaded by index.html)
             const extractZipDb = async (arrayBuffer) => {
                 if (typeof JSZip === 'undefined') throw new Error('JSZip tidak tersedia — coba refresh halaman.');
@@ -511,16 +509,16 @@ onconnect = function(e) {
                         'atau gunakan tombol Upload DB untuk mengunggahnya secara manual.'
                     ));
                 }
-                const url   = paths[idx];
-                const isZip = /\.zip$/i.test(url);
-                logCallback('[INFO] Mencoba: ' + url);
+                const fetchUrl = paths[idx];
+                const isZip   = /\.zip$/i.test(fetchUrl);
+                logCallback('[INFO] Mencoba: ' + fetchUrl);
                 const xhr = new XMLHttpRequest();
-                xhr.open('GET', url, true);
+                xhr.open('GET', fetchUrl, true);
                 xhr.responseType = isZip ? 'arraybuffer' : 'json';
                 xhr.onprogress = e => { if (onProgress) onProgress(e.loaded, e.lengthComputable ? e.total : 61000000); };
                 xhr.onload = () => {
                     if (xhr.status !== 200) {
-                        logCallback('[WARN] Tidak ditemukan di ' + url + ' — mencoba lokasi berikutnya...');
+                        logCallback('[WARN] Tidak ditemukan di ' + fetchUrl + ' — mencoba lokasi berikutnya...');
                         return tryNext(paths, idx + 1);
                     }
                     if (isZip) {
@@ -532,33 +530,49 @@ onconnect = function(e) {
                                 if (onStatus) onStatus('indexing');
                                 _setDb(arr);
                                 buildIndex(offlineDb);
-                                logCallback('[SUCCESS] Dimuat dari ' + url + ': ' + offlineDb.length + ' entri, ' + titleIndex.size + ' judul.');
+                                logCallback('[SUCCESS] Dimuat dari ' + fetchUrl + ': ' + offlineDb.length + ' entri, ' + titleIndex.size + ' judul.');
                                 resolve(offlineDb);
                             })
                             .catch(err => {
-                                logCallback('[WARN] ZIP error di ' + url + ': ' + err.message + ' — mencoba lokasi berikutnya...');
+                                logCallback('[WARN] ZIP error di ' + fetchUrl + ': ' + err.message + ' — mencoba lokasi berikutnya...');
                                 tryNext(paths, idx + 1);
                             });
                     } else {
                         // JSON path: parse directly
                         const parsed = xhr.response?.data || xhr.response;
                         if (!Array.isArray(parsed)) {
-                            logCallback('[WARN] Format tidak valid di ' + url + ' — mencoba lokasi berikutnya...');
+                            logCallback('[WARN] Format tidak valid di ' + fetchUrl + ' — mencoba lokasi berikutnya...');
                             return tryNext(paths, idx + 1);
                         }
                         if (onStatus) onStatus('indexing');
                         _setDb(parsed);
                         buildIndex(offlineDb);
-                        logCallback('[SUCCESS] Dimuat dari ' + url + ': ' + offlineDb.length + ' entri, ' + titleIndex.size + ' judul.');
+                        logCallback('[SUCCESS] Dimuat dari ' + fetchUrl + ': ' + offlineDb.length + ' entri, ' + titleIndex.size + ' judul.');
                         resolve(offlineDb);
                     }
                 };
                 xhr.onerror = () => {
-                    logCallback('[WARN] Error jaringan di ' + url + ' — mencoba lokasi berikutnya...');
+                    logCallback('[WARN] Error jaringan di ' + fetchUrl + ' — mencoba lokasi berikutnya...');
                     tryNext(paths, idx + 1);
                 };
                 xhr.send();
             };
+
+            // ── Browser: custom URL → skip worker & chain, fetch directly ──
+            if (url) {
+                logCallback('[INFO] Custom URL: ' + url);
+                // Treat as a single-element chain so ZIP/JSON handling is reused
+                tryNext([url], 0);
+                return;
+            }
+
+            // Browser: try JSON (root), then ZIP (root + db/), then JSON (db/)
+            const BROWSER_PATHS = [
+                './anime-offline-database-minified.json',
+                './anime-offline-database-minified.zip',
+                './db/anime-offline-database-minified.zip',
+                './db/anime-offline-database-minified.json',
+            ];
 
             // ── Browser: try SharedWorker first, fall back to XHR ────────
             _workerLoadDb()
@@ -1018,10 +1032,15 @@ onconnect = function(e) {
 
     // ── loadMetadataJson ──────────────────────────────────────────────────
     // Browser-only. Fetches metadata.json → _inMemoryMeta (RAM, no LS write).
-    const loadMetadataJson = async () => {
+    //
+    // url (optional): arbitrary URL to fetch from.
+    //   Omit (or pass null/undefined) → loads from relative './metadata.json'
+    //   as usual.  Supply any HTTP(S) URL to load from that location instead.
+    const loadMetadataJson = async (url) => {
         if (isNode) return false;
         try {
-            const res = await fetch('metadata.json', { cache: 'no-cache' });
+            const target = (url && typeof url === 'string') ? url : 'metadata.json';
+            const res = await fetch(target, { cache: 'no-cache' });
             if (!res.ok) return false;
             const obj = await res.json();
             if (!obj || typeof obj !== 'object') return false;
