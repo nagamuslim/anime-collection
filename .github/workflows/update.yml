@@ -468,7 +468,7 @@ jobs:
               media-scraper \
               bash get.sh playlists
           fi
-          sort -u all_playlists.txt -o all_playlists.txt
+          sudo sort -u all_playlists.txt -o all_playlists.txt
           echo "=== all_playlists.txt: $(wc -l < all_playlists.txt) entries ==="
           head -5 all_playlists.txt
       - name: Phase 1b — Retry + Finalize (yt-dlp-only path)
@@ -1209,7 +1209,7 @@ jobs:
             git commit -m "Auto-update: anime_data.json + metadata.json $(date +%F)"
             git push origin main
           fi
- 
+          
       # ── Artifacts: upload all useful outputs for manual download.
       # retention-days: 5 keeps storage usage low (GH default is 90 days).
       # if: always() ensures files upload even when a prior step fails,
