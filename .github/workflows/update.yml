@@ -12,13 +12,19 @@ on:
         type: boolean
         required: false
         default: false
-  # schedule:
-  #   - cron: '0 0 * * 0'
+      skip_push:
+        description: 'Skip pushing to repo'
+        type: boolean
+        required: false
+        default: false
+  schedule:
+    - cron: '0 8 * * 2'
 jobs:
   scrape-and-sync:
     runs-on: ubuntu-latest
     permissions:
-      contents: write     
+      contents: write
+      actions: write
     steps:
       - name: Checkout Main Repo
         uses: actions/checkout@v6
@@ -492,7 +498,23 @@ jobs:
           fi
 
           cp filtered_playlist_videos.txt raw_all_scraped.txt
+          docker run --rm -v $(pwd):/workspace media-scraper bash get.sh videos "https://www.youtube.com/playlist?list=UCUn0hEbVJc273anl_0ozDMQ"
+          cat filtered_playlist_videos.txt > filtered_playlist_videos.txt.new
+          mv filtered_playlist_videos.txt.new filtered_anione.txt
+          docker run --rm -v $(pwd):/workspace media-scraper bash get.sh videos "https://www.youtube.com/playlist?list=UCC-g5hWSvCbdB8HQQIA0_pg"
+          cat filtered_playlist_videos.txt > filtered_playlist_videos.txt.new
+          mv filtered_playlist_videos.txt.new filtered_playlist_videos_tropics.txt
+          docker run --rm -v $(pwd):/workspace media-scraper bash get.sh videos "https://www.youtube.com/playlist?list=UCqyqBNOAlZgJ3dQoDSCbCjQ"
+          cat filtered_playlist_videos.txt > filtered_playlist_videos.txt.new
+          mv filtered_playlist_videos.txt.new filtered_playlist_videos_animi.txt
+          docker run --rm -v $(pwd):/workspace media-scraper bash get.sh videos "https://www.youtube.com/playlist?list=UC0wNSTMWIL3qaorLx0jie6A"
+          cat filtered_playlist_videos.txt > filtered_playlist_videos.txt.new
+          mv filtered_playlist_videos.txt.new filtered_playlist_videos_anioneasia.txt
+          docker run --rm -v $(pwd):/workspace media-scraper bash get.sh videos "https://www.youtube.com/playlist?list=UCxxnxya_32jcKj4yN1_kD7A"
+          cat filtered_playlist_videos.txt > filtered_playlist_videos.txt.new
+          mv filtered_playlist_videos.txt.new filtered_playlist_videos_muse.txt
           echo "=== raw_all_scraped.txt: $(grep -c '^https' raw_all_scraped.txt 2>/dev/null || echo 0) URLs ==="
+          echo "=== raw_all_scraped.txt: $(grep -c '^https' filtered*.txt 2>/dev/null || echo 0) URLs ==="
       # ── Phase 2: run old Python, tee stdout+stderr to scrape_log.txt ─────
       # tee is the ONLY logging addition — Python code is untouched.
       # Afterwards we merge both output files into raw_all_scraped.txt so
@@ -513,7 +535,6 @@ jobs:
           #  so everything lands in filtered_combined_all.txt — that's fine,
           #  Phase 4 awk re-sorts by title content.)
           cat filtered_channel_anioneid.txt filtered_combined_all.txt > raw_all_scraped.txt
-
           echo "=== raw_all_scraped.txt : $(grep -c '^https' raw_all_scraped.txt 2>/dev/null || echo 0) URLs ==="
           echo "=== scrape_log.txt      : $(wc -l < scrape_log.txt) lines ==="
 
@@ -536,7 +557,7 @@ jobs:
           FAIL_COUNT=$(wc -l < failed_playlists.txt)
           echo "=== failed_playlists.txt: $FAIL_COUNT playlists ==="
           
-          if [ "$FAIL_COUNT" -ge 2000 ]; then
+          if [ "$FAIL_COUNT" -ge 400 ]; then
             echo "::error::Fallback queue is too large ($FAIL_COUNT >= 400). Aborting to prevent runaway execution limits!"
             exit 1
           fi
@@ -1199,6 +1220,7 @@ jobs:
 
 
       - name: Commit and Push Results      # ← NEW STEP
+        if: ${{ !inputs.skip_push }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -1211,6 +1233,14 @@ jobs:
           fi
           
       # ── Artifacts: upload all useful outputs for manual download.
+      - name: Auto-retry with skip_scrapetube if the scrapetube path failed
+        if: ${{ failure() && !inputs.skip_scrapetube }}
+        run: |
+          gh workflow run update.yml \
+            -f skip_scrapetube=true \
+            -f concurrency=${{ inputs.concurrency }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # retention-days: 5 keeps storage usage low (GH default is 90 days).
       # if: always() ensures files upload even when a prior step fails,
       # so you always have the scrape logs for debugging.
