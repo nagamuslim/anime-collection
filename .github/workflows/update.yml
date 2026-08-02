@@ -499,23 +499,23 @@ jobs:
 
           cp filtered_playlist_videos.txt raw_all_scraped.txt
           sudo rm -f filtered_playlist_videos.txt
-          docker run --rm -v $(pwd):/workspace media-scraper bash get.sh videos "https://www.youtube.com/playlist?list=UCUn0hEbVJc273anl_0ozDMQ"
+          docker run --rm -v $(pwd):/workspace media-scraper bash get.sh videos "https://www.youtube.com/playlist?list=UUUn0hEbVJc273anl_0ozDMQ"
           cat filtered_playlist_videos.txt > filtered_playlist_videos.txt.new
           mv filtered_playlist_videos.txt.new filtered_anione.txt
           sudo rm -f filtered_playlist_videos.txt
-          docker run --rm -v $(pwd):/workspace media-scraper bash get.sh videos "https://www.youtube.com/playlist?list=UCC-g5hWSvCbdB8HQQIA0_pg"
+          docker run --rm -v $(pwd):/workspace media-scraper bash get.sh videos "https://www.youtube.com/playlist?list=UUC-g5hWSvCbdB8HQQIA0_pg"
           cat filtered_playlist_videos.txt > filtered_playlist_videos.txt.new
           mv filtered_playlist_videos.txt.new filtered_playlist_videos_tropics.txt
           sudo rm -f filtered_playlist_videos.txt
-          docker run --rm -v $(pwd):/workspace media-scraper bash get.sh videos "https://www.youtube.com/playlist?list=UCqyqBNOAlZgJ3dQoDSCbCjQ"
+          docker run --rm -v $(pwd):/workspace media-scraper bash get.sh videos "https://www.youtube.com/playlist?list=UUqyqBNOAlZgJ3dQoDSCbCjQ"
           cat filtered_playlist_videos.txt > filtered_playlist_videos.txt.new
           mv filtered_playlist_videos.txt.new filtered_playlist_videos_animi.txt
           sudo rm -f filtered_playlist_videos.txt
-          docker run --rm -v $(pwd):/workspace media-scraper bash get.sh videos "https://www.youtube.com/playlist?list=UC0wNSTMWIL3qaorLx0jie6A"
+          docker run --rm -v $(pwd):/workspace media-scraper bash get.sh videos "https://www.youtube.com/playlist?list=UU0wNSTMWIL3qaorLx0jie6A"
           cat filtered_playlist_videos.txt > filtered_playlist_videos.txt.new
           mv filtered_playlist_videos.txt.new filtered_playlist_videos_anioneasia.txt
           sudo rm -f filtered_playlist_videos.txt
-          docker run --rm -v $(pwd):/workspace media-scraper bash get.sh videos "https://www.youtube.com/playlist?list=UCxxnxya_32jcKj4yN1_kD7A"
+          docker run --rm -v $(pwd):/workspace media-scraper bash get.sh videos "https://www.youtube.com/playlist?list=UUxxnxya_32jcKj4yN1_kD7A"
           cat filtered_playlist_videos.txt > filtered_playlist_videos.txt.new
           mv filtered_playlist_videos.txt.new filtered_playlist_videos_muse.txt
           sudo rm -f filtered_playlist_videos.txt
