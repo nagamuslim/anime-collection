@@ -458,6 +458,37 @@ jobs:
 
       - name: Build Scraper Image
         run: docker build -t media-scraper .
+        
+      - name: Phase 1 — Extract Playlist URLs via yt-dlp
+        if: false
+        run: |
+          CHANNELS=(
+            "https://www.youtube.com/channel/UCUn0hEbVJc273anl_0ozDMQ/playlists"
+            "https://www.youtube.com/channel/UCC-g5hWSvCbdB8HQQIA0_pg/playlists"
+            "https://www.youtube.com/channel/UCqyqBNOAlZgJ3dQoDSCbCjQ/playlists"
+            "https://www.youtube.com/@MuseIndonesia/playlists"
+            "https://www.youtube.com/channel/UCcYw1UUwxjIMYfvmdQrcyUA/playlists"
+            "https://www.youtube.com/channel/UCrcQMdsFqYpZOHDbm-fnNlw/playlists"
+            "https://www.youtube.com/channel/UCqX5I4e5iTpAt3tMYZJzZTQ/playlists"
+            "https://www.youtube.com/channel/UC0wNSTMWIL3qaorLx0jie6A/playlists"
+          )
+          touch all_playlists.txt
+          for CHANNEL in "${CHANNELS[@]}"; do
+            echo "Grabbing playlists for $CHANNEL ..."
+            for run in 1 2; do
+              COUNT=$(docker run --rm \
+                -v ${{ github.workspace }}:/workspace \
+                media-scraper \
+                yt-dlp --flat-playlist --print "%(url)s" "$CHANNEL" 2>/dev/null \
+                | awk 'NF && /youtube\.com/' | tee -a all_playlists.txt | wc -l)
+              echo "  → $COUNT playlists found (Run $run)"
+            done
+          done
+          sudo sort -u all_playlists.txt -o all_playlists.txt
+          echo "=== all_playlists.txt: $(wc -l < all_playlists.txt) entries ==="
+          head -5 all_playlists.txt
+          sudo touch /dev/shm/pemicu.txt
+
 
       - name: Phase 1 — Extract Playlist URLs via yt-dlp
         run: |
@@ -480,6 +511,8 @@ jobs:
       - name: Phase 1b — Retry + Finalize (yt-dlp-only path)
         if: ${{ inputs.skip_scrapetube }}
         run: |
+          date
+          [ -f "/dev/shm/pemicu.txt" ] && docker run --rm -v ${{ github.workspace }}:/workspace media-scraper bash get.sh videos all_playlists.txt -j ${{ inputs.concurrency }}
           FAIL_COUNT=0
           [ -s failed_playlists.txt ] && FAIL_COUNT=$(wc -l < failed_playlists.txt | tr -d ' ')
           echo "=== failed_playlists.txt: $FAIL_COUNT playlists ==="
