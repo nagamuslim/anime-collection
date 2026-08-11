@@ -1618,9 +1618,16 @@
           "title": "(Tensura) Bereinkarnasi Malah Menjadi Slime - Episode 87",
           "url": "https://www.youtube.com/watch?v=RL5gKkwqMY8",
           "video_id": "RL5gKkwqMY8"
+        },
+        {
+          "animeName": "(Tensura) Bereinkarnasi Malah Menjadi Slime",
+          "episode": 88,
+          "title": "(Tensura) Bereinkarnasi Malah Menjadi Slime - Episode 88",
+          "url": "https://www.youtube.com/watch?v=eoDR9a6hUbs",
+          "video_id": "eoDR9a6hUbs"
         }
       ],
-      "episode_count": 87,
+      "episode_count": 88,
       "thumbnail_video_id": "Lys5vkiv0RA",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -2175,9 +2182,23 @@
           "title": "(Tensura) Bereinkarnasi Malah Menjadi Slime - Episode 78",
           "url": "https://www.youtube.com/watch?v=hROvDh4a2-E",
           "video_id": "hROvDh4a2-E"
+        },
+        {
+          "animeName": "(Tensura) Bereinkarnasi Malah Menjadi Slime (Dub Indo)",
+          "episode": 79,
+          "title": "(Tensura) Bereinkarnasi Malah Menjadi Slime - Episode 79",
+          "url": "https://www.youtube.com/watch?v=ReJhqxxFpTs",
+          "video_id": "ReJhqxxFpTs"
+        },
+        {
+          "animeName": "(Tensura) Bereinkarnasi Malah Menjadi Slime (Dub Indo)",
+          "episode": 80,
+          "title": "(Tensura) Bereinkarnasi Malah Menjadi Slime - Episode 80",
+          "url": "https://www.youtube.com/watch?v=LxepeW2ToJU",
+          "video_id": "LxepeW2ToJU"
         }
       ],
-      "episode_count": 78,
+      "episode_count": 80,
       "thumbnail_video_id": "V_-6YvAPzWg",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -3059,9 +3080,16 @@
           "title": "100 Pacar yang Sungguh Sangat Amat Benar-benar Mencintaimu - Episode 27",
           "url": "https://www.youtube.com/watch?v=JWmcO9A4UPw",
           "video_id": "JWmcO9A4UPw"
+        },
+        {
+          "animeName": "100 Pacar yang Sungguh Sangat Amat Benar-benar Mencintaimu",
+          "episode": 28,
+          "title": "100 Pacar yang Sungguh Sangat Amat Benar-benar Mencintaimu - Episode 28",
+          "url": "https://www.youtube.com/watch?v=8WBahxOuHpM",
+          "video_id": "8WBahxOuHpM"
         }
       ],
-      "episode_count": 27,
+      "episode_count": 28,
       "thumbnail_video_id": "-S_SgKw4-d0",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -5257,9 +5285,18 @@
           "video_id": "2hPzCPZDito",
           "is_marathon": true,
           "is_donghua": true
+        },
+        {
+          "animeName": "A Mortal's Journey S5: The War of Molan",
+          "episode": 10,
+          "title": "A Mortal's Journey S5: The War of Molan #10 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=C8E4zA9Tpok",
+          "video_id": "C8E4zA9Tpok",
+          "is_marathon": true,
+          "is_donghua": true
         }
       ],
-      "episode_count": 9,
+      "episode_count": 10,
       "thumbnail_video_id": "b9mcqMJS0ww",
       "min_episode": 1,
       "marathon_video_id": "b9mcqMJS0ww",
@@ -6889,6 +6926,35 @@
       "marathon_video_id": null,
       "marathon_title": null,
       "is_donghua": false
+    },
+    {
+      "name": "Above the Star Abyss",
+      "videos": [
+        {
+          "animeName": "Above the Star Abyss",
+          "episode": 1,
+          "title": "【Above the Star Abyss】EP01 | ENGSUB | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=4zQuH0siOMw",
+          "video_id": "4zQuH0siOMw",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "Above the Star Abyss",
+          "episode": 2,
+          "title": "【Above the Star Abyss】EP02 | ENGSUB |  YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=AMQ2ws6FUwk",
+          "video_id": "AMQ2ws6FUwk",
+          "is_donghua": true,
+          "is_marathon": true
+        }
+      ],
+      "episode_count": 2,
+      "thumbnail_video_id": "4zQuH0siOMw",
+      "min_episode": 1,
+      "marathon_video_id": "4zQuH0siOMw",
+      "marathon_title": "Above the Star Abyss",
+      "is_donghua": true
     },
     {
       "name": "Accel World",
@@ -9729,9 +9795,17 @@
           "url": "https://www.youtube.com/watch?v=WFGjdaY0ZIQ",
           "video_id": "WFGjdaY0ZIQ",
           "is_marathon": true
+        },
+        {
+          "animeName": "Animatica \"Elegy for the Henchmen: Fist of the North Star\"",
+          "episode": 18,
+          "title": "《Animatica \"Elegy for the Henchmen: Fist of the North Star\"》#18 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=B-1hY4nLFqM",
+          "video_id": "B-1hY4nLFqM",
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "i1jUZpchEls",
       "min_episode": 13,
       "marathon_video_id": "i1jUZpchEls",
@@ -17911,13 +17985,14 @@
         {
           "animeName": "BANANYA 10TH ANNIVERSARY",
           "episode": 1,
-          "title": "《BANANYA 10TH ANNIVERSARY》#1 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=nJ-j70_R9QQ",
-          "video_id": "nJ-j70_R9QQ"
+          "title": "《BANANYA 10TH ANNIVERSARY》#1 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=YZzcPjZ2aD4",
+          "video_id": "YZzcPjZ2aD4",
+          "is_marathon": true
         }
       ],
       "episode_count": 1,
-      "thumbnail_video_id": "nJ-j70_R9QQ",
+      "thumbnail_video_id": "YZzcPjZ2aD4",
       "min_episode": 1,
       "marathon_video_id": null,
       "marathon_title": null,
@@ -18497,9 +18572,16 @@
           "title": "BanG Dream! YUME∞MITA - Episode 7",
           "url": "https://www.youtube.com/watch?v=ZkL8bZn3MFo",
           "video_id": "ZkL8bZn3MFo"
+        },
+        {
+          "animeName": "BanG Dream! YUME∞MITA",
+          "episode": 8,
+          "title": "BanG Dream! YUME∞MITA - Episode 8",
+          "url": "https://www.youtube.com/watch?v=ddo8bme8kuw",
+          "video_id": "ddo8bme8kuw"
         }
       ],
-      "episode_count": 7,
+      "episode_count": 8,
       "thumbnail_video_id": "WuzfR-yJuaw",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -25070,9 +25152,16 @@
           "title": "BLACK TORCH - Episode 5",
           "url": "https://www.youtube.com/watch?v=VDyQW6xDQe4",
           "video_id": "VDyQW6xDQe4"
+        },
+        {
+          "animeName": "BLACK TORCH",
+          "episode": 6,
+          "title": "BLACK TORCH - Episode 6",
+          "url": "https://www.youtube.com/watch?v=9SGF9RA-8Ks",
+          "video_id": "9SGF9RA-8Ks"
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "3VyQecb0KUg",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -28479,8 +28568,8 @@
           "animeName": "BLEACH Thousand-Year Blood War",
           "episode": 2,
           "title": "【Limited-Time Free to Watch】《BLEACH Thousand-Year Blood War》#2 (ENG sub | JP dub)【Ani-One Asia】",
-          "url": "https://www.youtube.com/watch?v=R0DyETh9YLk",
-          "video_id": "R0DyETh9YLk",
+          "url": "https://www.youtube.com/watch?v=LMcwt2AThqI",
+          "video_id": "LMcwt2AThqI",
           "is_marathon": true
         },
         {
@@ -30473,44 +30562,57 @@
         {
           "animeName": "Bungo Stray Dogs WAN! 2",
           "episode": 1,
-          "title": "《Bungo Stray Dogs WAN! 2》#1 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=pTmp1cOlzdY",
-          "video_id": "pTmp1cOlzdY"
+          "title": "《Bungo Stray Dogs WAN! 2》#1 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=1dptiZab-cE",
+          "video_id": "1dptiZab-cE",
+          "is_marathon": true
         },
         {
           "animeName": "Bungo Stray Dogs WAN! 2",
           "episode": 2,
-          "title": "《Bungo Stray Dogs WAN! 2》#2 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=5keD32h7OVY",
-          "video_id": "5keD32h7OVY"
+          "title": "《Bungo Stray Dogs WAN! 2》#2 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=fu7oxqnmP3Y",
+          "video_id": "fu7oxqnmP3Y",
+          "is_marathon": true
         },
         {
           "animeName": "Bungo Stray Dogs WAN! 2",
           "episode": 3,
-          "title": "《Bungo Stray Dogs WAN! 2》#3 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=A5ZKZNBErms",
-          "video_id": "A5ZKZNBErms"
+          "title": "《Bungo Stray Dogs WAN! 2》#3 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=qxygEFcMj9w",
+          "video_id": "qxygEFcMj9w",
+          "is_marathon": true
         },
         {
           "animeName": "Bungo Stray Dogs WAN! 2",
           "episode": 4,
-          "title": "《Bungo Stray Dogs WAN! 2》#4 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=alq2rD-3tsE",
-          "video_id": "alq2rD-3tsE"
+          "title": "《Bungo Stray Dogs WAN! 2》#4 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=P_fUYV7_7GM",
+          "video_id": "P_fUYV7_7GM",
+          "is_marathon": true
         },
         {
           "animeName": "Bungo Stray Dogs WAN! 2",
           "episode": 5,
-          "title": "《Bungo Stray Dogs WAN! 2》#5 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=AyTujK-omXU",
-          "video_id": "AyTujK-omXU"
+          "title": "《Bungo Stray Dogs WAN! 2》#5 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=BEIyN8DsQr0",
+          "video_id": "BEIyN8DsQr0",
+          "is_marathon": true
+        },
+        {
+          "animeName": "Bungo Stray Dogs WAN! 2",
+          "episode": 6,
+          "title": "《Bungo Stray Dogs WAN! 2》#6 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=t2fgR3mirks",
+          "video_id": "t2fgR3mirks",
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
-      "thumbnail_video_id": "pTmp1cOlzdY",
+      "episode_count": 6,
+      "thumbnail_video_id": "1dptiZab-cE",
       "min_episode": 1,
-      "marathon_video_id": null,
-      "marathon_title": null,
+      "marathon_video_id": "1dptiZab-cE",
+      "marathon_title": "Bungo Stray Dogs WAN! 2",
       "is_donghua": false
     },
     {
@@ -30861,9 +30963,16 @@
           "title": "Candy Caries - Episode 16",
           "url": "https://www.youtube.com/watch?v=zHWz5McZNNQ",
           "video_id": "zHWz5McZNNQ"
+        },
+        {
+          "animeName": "Candy Caries",
+          "episode": 17,
+          "title": "Candy Caries - Episode 17",
+          "url": "https://www.youtube.com/watch?v=IMnfAEkW8gA",
+          "video_id": "IMnfAEkW8gA"
         }
       ],
-      "episode_count": 16,
+      "episode_count": 17,
       "thumbnail_video_id": "85xNVwpLs2k",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -31846,9 +31955,17 @@
           "url": "https://www.youtube.com/watch?v=xHHEVRM_yZI",
           "video_id": "xHHEVRM_yZI",
           "is_marathon": true
+        },
+        {
+          "animeName": "Cat Tales",
+          "episode": 43,
+          "title": "《Cat Tales》#43 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=BQ1Hp_nZwc0",
+          "video_id": "BQ1Hp_nZwc0",
+          "is_marathon": true
         }
       ],
-      "episode_count": 42,
+      "episode_count": 43,
       "thumbnail_video_id": "xNcuYP_6tvI",
       "min_episode": 1,
       "marathon_video_id": "xNcuYP_6tvI",
@@ -32737,44 +32854,57 @@
         {
           "animeName": "Chainsmoker Cat",
           "episode": 1,
-          "title": "《Chainsmoker Cat》#1 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=1Z185W79A04",
-          "video_id": "1Z185W79A04"
+          "title": "《Chainsmoker Cat》#1 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=2k9H-wMtchk",
+          "video_id": "2k9H-wMtchk",
+          "is_marathon": true
         },
         {
           "animeName": "Chainsmoker Cat",
           "episode": 2,
-          "title": "《Chainsmoker Cat》#2 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=tevJ9gktD4I",
-          "video_id": "tevJ9gktD4I"
+          "title": "《Chainsmoker Cat》#2 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=tnE1IhfT9MQ",
+          "video_id": "tnE1IhfT9MQ",
+          "is_marathon": true
         },
         {
           "animeName": "Chainsmoker Cat",
           "episode": 3,
-          "title": "《Chainsmoker Cat》#3 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=E0M5-dRNZM8",
-          "video_id": "E0M5-dRNZM8"
+          "title": "《Chainsmoker Cat》#3 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=f98tiQgDyn4",
+          "video_id": "f98tiQgDyn4",
+          "is_marathon": true
         },
         {
           "animeName": "Chainsmoker Cat",
           "episode": 4,
-          "title": "《Chainsmoker Cat》#4 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=HubGCj6nfEI",
-          "video_id": "HubGCj6nfEI"
+          "title": "《Chainsmoker Cat》#4 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=Z6TmWfPxQ4U",
+          "video_id": "Z6TmWfPxQ4U",
+          "is_marathon": true
         },
         {
           "animeName": "Chainsmoker Cat",
           "episode": 5,
-          "title": "《Chainsmoker Cat》#5 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=voRVLr8o04g",
-          "video_id": "voRVLr8o04g"
+          "title": "《Chainsmoker Cat》#5 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=20YLWrtstKM",
+          "video_id": "20YLWrtstKM",
+          "is_marathon": true
+        },
+        {
+          "animeName": "Chainsmoker Cat",
+          "episode": 6,
+          "title": "《Chainsmoker Cat》#6 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=9OiwTxPt1j8",
+          "video_id": "9OiwTxPt1j8",
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
-      "thumbnail_video_id": "1Z185W79A04",
+      "episode_count": 6,
+      "thumbnail_video_id": "2k9H-wMtchk",
       "min_episode": 1,
-      "marathon_video_id": null,
-      "marathon_title": null,
+      "marathon_video_id": "2k9H-wMtchk",
+      "marathon_title": "Chainsmoker Cat",
       "is_donghua": false
     },
     {
@@ -35287,9 +35417,23 @@
           "title": "CLASSROOM OF THE ELITE 4th Season: Second Year, First Semester - Episode 9",
           "url": "https://www.youtube.com/watch?v=gX8jg-VqIKk",
           "video_id": "gX8jg-VqIKk"
+        },
+        {
+          "animeName": "CLASSROOM OF THE ELITE 4th Season: Second Year, First Semester (Dub Indo)",
+          "episode": 10,
+          "title": "CLASSROOM OF THE ELITE 4th Season: Second Year, First Semester - Episode 10",
+          "url": "https://www.youtube.com/watch?v=M--PORQd88s",
+          "video_id": "M--PORQd88s"
+        },
+        {
+          "animeName": "CLASSROOM OF THE ELITE 4th Season: Second Year, First Semester (Dub Indo)",
+          "episode": 11,
+          "title": "CLASSROOM OF THE ELITE 4th Season: Second Year, First Semester - Episode 11",
+          "url": "https://www.youtube.com/watch?v=0Aq9T4vCl2U",
+          "video_id": "0Aq9T4vCl2U"
         }
       ],
-      "episode_count": 9,
+      "episode_count": 11,
       "thumbnail_video_id": "oDwkkafeGZA",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -35845,9 +35989,17 @@
           "url": "https://www.youtube.com/watch?v=lz9-q_B2X7g",
           "video_id": "lz9-q_B2X7g",
           "is_marathon": true
+        },
+        {
+          "animeName": "Clevatess II",
+          "episode": 5,
+          "title": "《Clevatess II》#5 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=1Pp5f4GmBLM",
+          "video_id": "1Pp5f4GmBLM",
+          "is_marathon": true
         }
       ],
-      "episode_count": 4,
+      "episode_count": 5,
       "thumbnail_video_id": "1RevttYbtVA",
       "min_episode": 1,
       "marathon_video_id": "1RevttYbtVA",
@@ -38739,9 +38891,58 @@
           "title": "Death Note - Episode 4",
           "url": "https://www.youtube.com/watch?v=4ep75ZKqPp8",
           "video_id": "4ep75ZKqPp8"
+        },
+        {
+          "animeName": "Death Note",
+          "episode": 5,
+          "title": "Death Note - Episode 5",
+          "url": "https://www.youtube.com/watch?v=VitpUBKD47w",
+          "video_id": "VitpUBKD47w"
+        },
+        {
+          "animeName": "Death Note",
+          "episode": 6,
+          "title": "Death Note - Episode 6",
+          "url": "https://www.youtube.com/watch?v=lLovcoAKv20",
+          "video_id": "lLovcoAKv20"
+        },
+        {
+          "animeName": "Death Note",
+          "episode": 7,
+          "title": "Death Note - Episode 7",
+          "url": "https://www.youtube.com/watch?v=h5_aPD4sAl8",
+          "video_id": "h5_aPD4sAl8"
+        },
+        {
+          "animeName": "Death Note",
+          "episode": 8,
+          "title": "Death Note - Episode 8",
+          "url": "https://www.youtube.com/watch?v=_rZTdPz7OfU",
+          "video_id": "_rZTdPz7OfU"
+        },
+        {
+          "animeName": "Death Note",
+          "episode": 9,
+          "title": "Death Note - Episode 9",
+          "url": "https://www.youtube.com/watch?v=S-jMy3pbt1A",
+          "video_id": "S-jMy3pbt1A"
+        },
+        {
+          "animeName": "Death Note",
+          "episode": 10,
+          "title": "Death Note - Episode 10",
+          "url": "https://www.youtube.com/watch?v=LjoEHMrPYek",
+          "video_id": "LjoEHMrPYek"
+        },
+        {
+          "animeName": "Death Note",
+          "episode": 11,
+          "title": "Death Note - Episode 11",
+          "url": "https://www.youtube.com/watch?v=lwG8iaHDbdA",
+          "video_id": "lwG8iaHDbdA"
         }
       ],
-      "episode_count": 4,
+      "episode_count": 11,
       "thumbnail_video_id": "EZMMJ7Nimnc",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -42205,8 +42406,8 @@
         {
           "animeName": "DETECTIVE CONAN",
           "episode": 410,
-          "chapter_title": "KASUS DI PENGINAPAN SUMBER AIR PANAS (BAGIAN 1)",
-          "title": "DETECTIVE CONAN Eps 410: KASUS DI PENGINAPAN SUMBER AIR PANAS (BAGIAN 1)",
+          "chapter_title": "THE HOT SPRING INN MURDER CASE (PART 1)",
+          "title": "DETECTIVE CONAN Ep 410: THE HOT SPRING INN MURDER CASE (PART 1)",
           "url": "https://www.youtube.com/watch?v=-mX6Td-o99k",
           "video_id": "-mX6Td-o99k"
         },
@@ -42661,16 +42862,16 @@
         {
           "animeName": "DETECTIVE CONAN",
           "episode": 476,
-          "chapter_title": "MENGEJAR SURAT IKAN",
-          "title": "DETECTIVE CONAN Eps 476: MENGEJAR SURAT IKAN",
+          "chapter_title": "CHASING THE FISH MAIL",
+          "title": "DETECTIVE CONAN Eps 476: CHASING THE FISH MAIL",
           "url": "https://www.youtube.com/watch?v=mhbQg0IhCI8",
           "video_id": "mhbQg0IhCI8"
         },
         {
           "animeName": "DETECTIVE CONAN",
           "episode": 477,
-          "chapter_title": "JADI, MENGHILANG SEMUANYA",
-          "title": "DETECTIVE CONAN Eps 477: JADI, MENGHILANG SEMUANYA",
+          "chapter_title": "SO, THEY ALL VANISHED",
+          "title": "DETECTIVE CONAN Ep. 477: SO, THEY ALL VANISHED",
           "url": "https://www.youtube.com/watch?v=ijnJjkiPuUs",
           "video_id": "ijnJjkiPuUs"
         },
@@ -43029,8 +43230,8 @@
         {
           "animeName": "DETECTIVE CONAN",
           "episode": 538,
-          "chapter_title": "TUBRUKAN MERAH DAN HITAM (PENDAHULUAN)",
-          "title": "DETECTIVE CONAN Eps 538: TUBRUKAN MERAH DAN HITAM (PENDAHULUAN)",
+          "chapter_title": "RED AND BLACK CLASH (INTRODUCTION)",
+          "title": "DETECTIVE CONAN Eps 538: RED AND BLACK CLASH (INTRODUCTION)",
           "url": "https://www.youtube.com/watch?v=Bt1zhJYRJs8",
           "video_id": "Bt1zhJYRJs8"
         },
@@ -43125,8 +43326,8 @@
         {
           "animeName": "DETECTIVE CONAN",
           "episode": 550,
-          "chapter_title": "PERTARUNGAN MERAH DAN HITAM (KEPUTUSASAAN)",
-          "title": "DETECTIVE CONAN Eps 550: PERTARUNGAN MERAH DAN HITAM (KEPUTUSASAAN)",
+          "chapter_title": "RED AND BLACK CLASH (DESPERATION)",
+          "title": "DETECTIVE CONAN Eps 550: RED AND BLACK CLASH (DESPERATION)",
           "url": "https://www.youtube.com/watch?v=IYWTmUu9hQY",
           "video_id": "IYWTmUu9hQY"
         },
@@ -43211,10 +43412,10 @@
           "video_id": "Crfms7kCLPc"
         },
         {
-          "animeName": "DETECTIVE CONAN",
+          "animeName": "Detective Conan",
           "episode": 561,
-          "chapter_title": "KASUS AROMA KOPI (BAGIAN 2)",
-          "title": "DETECTIVE CONAN Eps 561: KASUS AROMA KOPI (BAGIAN 2)",
+          "chapter_title": "The Mystery of the Coffee Aroma (Part 2)",
+          "title": "Detective Conan Ep. 561: The Mystery of the Coffee Aroma (Part 2)",
           "url": "https://www.youtube.com/watch?v=HmSBlTyO0xM",
           "video_id": "HmSBlTyO0xM"
         },
@@ -43317,8 +43518,8 @@
         {
           "animeName": "DETECTIVE CONAN",
           "episode": 582,
-          "chapter_title": "KEBENARAN LEGENDA URBAN (BAGIAN 2)",
-          "title": "DETECTIVE CONAN Eps 582: KEBENARAN LEGENDA URBAN (BAGIAN 2)",
+          "chapter_title": "THE TRUTH BEHIND THE URBAN LEGEND (PART 2)",
+          "title": "DETECTIVE CONAN Eps 582: THE TRUTH BEHIND THE URBAN LEGEND (PART 2)",
           "url": "https://www.youtube.com/watch?v=kRfIlm0pNWU",
           "video_id": "kRfIlm0pNWU"
         },
@@ -47395,6 +47596,53 @@
       "marathon_video_id": "mQXTpxPwXYg",
       "marathon_title": "ENDRO!",
       "is_donghua": false
+    },
+    {
+      "name": "EP04",
+      "videos": [
+        {
+          "animeName": "EP01",
+          "episode": 1,
+          "title": "✨ENG SUB | Crowned from the Start 【EP01】 | Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=QLp2Ql4fJ4w",
+          "video_id": "QLp2Ql4fJ4w",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "EP02",
+          "episode": 2,
+          "title": "✨INDO SUB | Crowned from the Start 【EP02】 | Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=DDRgPGD67-A",
+          "video_id": "DDRgPGD67-A",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "EP03",
+          "episode": 3,
+          "title": "✨INDO SUB | Crowned from the Start 【EP03】 | Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=0I0TjsoJX5E",
+          "video_id": "0I0TjsoJX5E",
+          "is_donghua": true,
+          "is_marathon": true
+        },
+        {
+          "animeName": "EP04",
+          "episode": 4,
+          "title": "✨INDO SUB | Crowned from the Start 【EP04】 | Yuewen Animation",
+          "url": "https://www.youtube.com/watch?v=LbGoPo_G06k",
+          "video_id": "LbGoPo_G06k",
+          "is_donghua": true,
+          "is_marathon": true
+        }
+      ],
+      "episode_count": 4,
+      "thumbnail_video_id": "QLp2Ql4fJ4w",
+      "min_episode": 1,
+      "marathon_video_id": "QLp2Ql4fJ4w",
+      "marathon_title": "EP04",
+      "is_donghua": true
     },
     {
       "name": "Everlasting God Of Sword",
@@ -55614,9 +55862,16 @@
           "title": "Gambar Ini, Lalu Mati Sana! - Episode 5",
           "url": "https://www.youtube.com/watch?v=8IhkpdhXTHg",
           "video_id": "8IhkpdhXTHg"
+        },
+        {
+          "animeName": "Gambar Ini, Lalu Mati Sana!",
+          "episode": 6,
+          "title": "Gambar Ini, Lalu Mati Sana! - Episode 6",
+          "url": "https://www.youtube.com/watch?v=bdJ7k3qQZX8",
+          "video_id": "bdJ7k3qQZX8"
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "hoVV1dFDxHs",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -55660,9 +55915,16 @@
           "title": "Garda Belakang Terkuat di Dunia - Episode 5",
           "url": "https://www.youtube.com/watch?v=SeE85ZWKqbc",
           "video_id": "SeE85ZWKqbc"
+        },
+        {
+          "animeName": "Garda Belakang Terkuat di Dunia",
+          "episode": 6,
+          "title": "Garda Belakang Terkuat di Dunia - Episode 6",
+          "url": "https://www.youtube.com/watch?v=eVSA1tiqh68",
+          "video_id": "eVSA1tiqh68"
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "2C4i30dG_rY",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -58392,11 +58654,11 @@
       "name": "Grand Blue",
       "videos": [
         {
-          "animeName": "Grand Blue Musim 3",
+          "animeName": "Grand Blue",
           "episode": 1,
-          "title": "Grand Blue Musim 3 - Episode 1",
-          "url": "https://www.youtube.com/watch?v=Z3VznTcZuSg",
-          "video_id": "Z3VznTcZuSg"
+          "title": "Grand Blue - Episode 1",
+          "url": "https://www.youtube.com/watch?v=BBDlMEmK7Wk",
+          "video_id": "BBDlMEmK7Wk"
         },
         {
           "animeName": "Grand Blue",
@@ -58477,7 +58739,7 @@
         }
       ],
       "episode_count": 12,
-      "thumbnail_video_id": "Z3VznTcZuSg",
+      "thumbnail_video_id": "BBDlMEmK7Wk",
       "min_episode": 1,
       "marathon_video_id": null,
       "marathon_title": null,
@@ -58585,89 +58847,89 @@
           "animeName": "Grand Blue Dreaming",
           "episode": 1,
           "title": "Grand Blue Dreaming - Episode 1",
-          "url": "https://www.youtube.com/watch?v=1jLUf2hj0Ic",
-          "video_id": "1jLUf2hj0Ic"
+          "url": "https://www.youtube.com/watch?v=XmNVYS6BKMI",
+          "video_id": "XmNVYS6BKMI"
         },
         {
           "animeName": "Grand Blue Dreaming",
           "episode": 2,
           "title": "Grand Blue Dreaming - Episode 2",
-          "url": "https://www.youtube.com/watch?v=kqQF4iKZX30",
-          "video_id": "kqQF4iKZX30"
+          "url": "https://www.youtube.com/watch?v=cVnxoVJfa-w",
+          "video_id": "cVnxoVJfa-w"
         },
         {
           "animeName": "Grand Blue Dreaming",
           "episode": 3,
           "title": "Grand Blue Dreaming - Episode 3",
-          "url": "https://www.youtube.com/watch?v=139BV2zAnC8",
-          "video_id": "139BV2zAnC8"
+          "url": "https://www.youtube.com/watch?v=gDBXSJTWkPM",
+          "video_id": "gDBXSJTWkPM"
         },
         {
           "animeName": "Grand Blue Dreaming",
           "episode": 4,
           "title": "Grand Blue Dreaming - Episode 4",
-          "url": "https://www.youtube.com/watch?v=D-wyuOYUpOk",
-          "video_id": "D-wyuOYUpOk"
+          "url": "https://www.youtube.com/watch?v=DRPwAOge0Fs",
+          "video_id": "DRPwAOge0Fs"
         },
         {
           "animeName": "Grand Blue Dreaming",
           "episode": 5,
           "title": "Grand Blue Dreaming - Episode 5",
-          "url": "https://www.youtube.com/watch?v=_LGWL6t-s8A",
-          "video_id": "_LGWL6t-s8A"
+          "url": "https://www.youtube.com/watch?v=CgaljhseyVM",
+          "video_id": "CgaljhseyVM"
         },
         {
           "animeName": "Grand Blue Dreaming",
           "episode": 6,
           "title": "Grand Blue Dreaming - Episode 6",
-          "url": "https://www.youtube.com/watch?v=Dn88TgsFtaU",
-          "video_id": "Dn88TgsFtaU"
+          "url": "https://www.youtube.com/watch?v=y4XdvL12_NQ",
+          "video_id": "y4XdvL12_NQ"
         },
         {
           "animeName": "Grand Blue Dreaming",
           "episode": 7,
           "title": "Grand Blue Dreaming - Episode 7",
-          "url": "https://www.youtube.com/watch?v=HnM31H3SakM",
-          "video_id": "HnM31H3SakM"
+          "url": "https://www.youtube.com/watch?v=AN9VYnY4QDA",
+          "video_id": "AN9VYnY4QDA"
         },
         {
           "animeName": "Grand Blue Dreaming",
           "episode": 8,
           "title": "Grand Blue Dreaming - Episode 8",
-          "url": "https://www.youtube.com/watch?v=BXUF09ZiqO8",
-          "video_id": "BXUF09ZiqO8"
+          "url": "https://www.youtube.com/watch?v=OEhRjyKuJ60",
+          "video_id": "OEhRjyKuJ60"
         },
         {
           "animeName": "Grand Blue Dreaming",
           "episode": 9,
           "title": "Grand Blue Dreaming - Episode 9",
-          "url": "https://www.youtube.com/watch?v=Kcr0bhZ9_YI",
-          "video_id": "Kcr0bhZ9_YI"
+          "url": "https://www.youtube.com/watch?v=y1H3Nb4XxAU",
+          "video_id": "y1H3Nb4XxAU"
         },
         {
           "animeName": "Grand Blue Dreaming",
           "episode": 10,
           "title": "Grand Blue Dreaming - Episode 10",
-          "url": "https://www.youtube.com/watch?v=bqZtYVlz3dk",
-          "video_id": "bqZtYVlz3dk"
+          "url": "https://www.youtube.com/watch?v=HlYmB8njcM4",
+          "video_id": "HlYmB8njcM4"
         },
         {
           "animeName": "Grand Blue Dreaming",
           "episode": 11,
           "title": "Grand Blue Dreaming - Episode 11",
-          "url": "https://www.youtube.com/watch?v=wDQmY9sSMPk",
-          "video_id": "wDQmY9sSMPk"
+          "url": "https://www.youtube.com/watch?v=jLKxHJs7OVQ",
+          "video_id": "jLKxHJs7OVQ"
         },
         {
           "animeName": "Grand Blue Dreaming",
           "episode": 12,
           "title": "Grand Blue Dreaming - Episode 12",
-          "url": "https://www.youtube.com/watch?v=N-OuofyNTZk",
-          "video_id": "N-OuofyNTZk"
+          "url": "https://www.youtube.com/watch?v=seDIUfsq5os",
+          "video_id": "seDIUfsq5os"
         }
       ],
       "episode_count": 12,
-      "thumbnail_video_id": "1jLUf2hj0Ic",
+      "thumbnail_video_id": "XmNVYS6BKMI",
       "min_episode": 1,
       "marathon_video_id": null,
       "marathon_title": null,
@@ -58680,89 +58942,89 @@
           "animeName": "Grand Blue Dreaming2",
           "episode": 1,
           "title": "Grand Blue Dreaming2 - Episode 1",
-          "url": "https://www.youtube.com/watch?v=i7wSeNy7QFA",
-          "video_id": "i7wSeNy7QFA"
+          "url": "https://www.youtube.com/watch?v=L-kcXE8oKQ4",
+          "video_id": "L-kcXE8oKQ4"
         },
         {
           "animeName": "Grand Blue Dreaming2",
           "episode": 2,
           "title": "Grand Blue Dreaming2 - Episode 2",
-          "url": "https://www.youtube.com/watch?v=I-J3Q_Lwje0",
-          "video_id": "I-J3Q_Lwje0"
+          "url": "https://www.youtube.com/watch?v=R-iDeYOecAw",
+          "video_id": "R-iDeYOecAw"
         },
         {
           "animeName": "Grand Blue Dreaming2",
           "episode": 3,
           "title": "Grand Blue Dreaming2 - Episode 3",
-          "url": "https://www.youtube.com/watch?v=G9EwbuSTg1w",
-          "video_id": "G9EwbuSTg1w"
+          "url": "https://www.youtube.com/watch?v=5LCxFtleXqo",
+          "video_id": "5LCxFtleXqo"
         },
         {
           "animeName": "Grand Blue Dreaming2",
           "episode": 4,
           "title": "Grand Blue Dreaming2 - Episode 4",
-          "url": "https://www.youtube.com/watch?v=VQM8onCgswU",
-          "video_id": "VQM8onCgswU"
+          "url": "https://www.youtube.com/watch?v=STrAVnuXz_M",
+          "video_id": "STrAVnuXz_M"
         },
         {
           "animeName": "Grand Blue Dreaming2",
           "episode": 5,
           "title": "Grand Blue Dreaming2 - Episode 5",
-          "url": "https://www.youtube.com/watch?v=1S2QGgfJm-o",
-          "video_id": "1S2QGgfJm-o"
+          "url": "https://www.youtube.com/watch?v=SSUgjqMsIh4",
+          "video_id": "SSUgjqMsIh4"
         },
         {
           "animeName": "Grand Blue Dreaming2",
           "episode": 6,
           "title": "Grand Blue Dreaming2 - Episode 6",
-          "url": "https://www.youtube.com/watch?v=uVaONTCtRZ4",
-          "video_id": "uVaONTCtRZ4"
+          "url": "https://www.youtube.com/watch?v=I_M4fpyis2Q",
+          "video_id": "I_M4fpyis2Q"
         },
         {
           "animeName": "Grand Blue Dreaming2",
           "episode": 7,
           "title": "Grand Blue Dreaming2 - Episode 7",
-          "url": "https://www.youtube.com/watch?v=1hUYta2NkTs",
-          "video_id": "1hUYta2NkTs"
+          "url": "https://www.youtube.com/watch?v=OYZp65xrPcc",
+          "video_id": "OYZp65xrPcc"
         },
         {
           "animeName": "Grand Blue Dreaming2",
           "episode": 8,
           "title": "Grand Blue Dreaming2 - Episode 8",
-          "url": "https://www.youtube.com/watch?v=4fcc0P5OVN0",
-          "video_id": "4fcc0P5OVN0"
+          "url": "https://www.youtube.com/watch?v=m1CAfBCKmNo",
+          "video_id": "m1CAfBCKmNo"
         },
         {
           "animeName": "Grand Blue Dreaming2",
           "episode": 9,
           "title": "Grand Blue Dreaming2 - Episode 9",
-          "url": "https://www.youtube.com/watch?v=22jXlzZch3w",
-          "video_id": "22jXlzZch3w"
+          "url": "https://www.youtube.com/watch?v=lnA9gkZytnE",
+          "video_id": "lnA9gkZytnE"
         },
         {
           "animeName": "Grand Blue Dreaming2",
           "episode": 10,
           "title": "Grand Blue Dreaming2 - Episode 10",
-          "url": "https://www.youtube.com/watch?v=XPmgYOAyXCQ",
-          "video_id": "XPmgYOAyXCQ"
+          "url": "https://www.youtube.com/watch?v=mSnbK7RDbow",
+          "video_id": "mSnbK7RDbow"
         },
         {
           "animeName": "Grand Blue Dreaming2",
           "episode": 11,
           "title": "Grand Blue Dreaming2 - Episode 11",
-          "url": "https://www.youtube.com/watch?v=1mA9vn0j4YA",
-          "video_id": "1mA9vn0j4YA"
+          "url": "https://www.youtube.com/watch?v=53wRcCn1yUg",
+          "video_id": "53wRcCn1yUg"
         },
         {
           "animeName": "Grand Blue Dreaming2",
           "episode": 12,
           "title": "Grand Blue Dreaming2 - Episode 12",
-          "url": "https://www.youtube.com/watch?v=2w4ipVDO_zo",
-          "video_id": "2w4ipVDO_zo"
+          "url": "https://www.youtube.com/watch?v=Yj0GJvzO4PA",
+          "video_id": "Yj0GJvzO4PA"
         }
       ],
       "episode_count": 12,
-      "thumbnail_video_id": "i7wSeNy7QFA",
+      "thumbnail_video_id": "L-kcXE8oKQ4",
       "min_episode": 1,
       "marathon_video_id": null,
       "marathon_title": null,
@@ -58772,11 +59034,11 @@
       "name": "Grand Blue Musim 2",
       "videos": [
         {
-          "animeName": "Grand Blue Musim 3",
+          "animeName": "Grand Blue Musim 2",
           "episode": 1,
-          "title": "Grand Blue Musim 3 - Episode 1",
-          "url": "https://www.youtube.com/watch?v=Z3VznTcZuSg",
-          "video_id": "Z3VznTcZuSg"
+          "title": "Grand Blue Musim 2 - Episode 1",
+          "url": "https://www.youtube.com/watch?v=dqcB5OLgQRI",
+          "video_id": "dqcB5OLgQRI"
         },
         {
           "animeName": "Grand Blue Musim 2",
@@ -58857,6 +59119,31 @@
         }
       ],
       "episode_count": 12,
+      "thumbnail_video_id": "dqcB5OLgQRI",
+      "min_episode": 1,
+      "marathon_video_id": null,
+      "marathon_title": null,
+      "is_donghua": false
+    },
+    {
+      "name": "Grand Blue Musim 3",
+      "videos": [
+        {
+          "animeName": "Grand Blue Musim 3",
+          "episode": 1,
+          "title": "Grand Blue Musim 3 - Episode 1",
+          "url": "https://www.youtube.com/watch?v=Z3VznTcZuSg",
+          "video_id": "Z3VznTcZuSg"
+        },
+        {
+          "animeName": "Grand Blue Musim 3",
+          "episode": 2,
+          "title": "Grand Blue Musim 3 - Episode 2",
+          "url": "https://www.youtube.com/watch?v=iW4tuCOMTDs",
+          "video_id": "iW4tuCOMTDs"
+        }
+      ],
+      "episode_count": 2,
       "thumbnail_video_id": "Z3VznTcZuSg",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -67185,9 +67472,23 @@
           "title": "Ikan yang Lepas Dari Pancingku - Episode 6",
           "url": "https://www.youtube.com/watch?v=olE6f2KNX88",
           "video_id": "olE6f2KNX88"
+        },
+        {
+          "animeName": "Ikan yang Lepas Dari Pancingku (Dub Indo)",
+          "episode": 7,
+          "title": "Ikan yang Lepas Dari Pancingku - Episode 7",
+          "url": "https://www.youtube.com/watch?v=Sj77nvkQT18",
+          "video_id": "Sj77nvkQT18"
+        },
+        {
+          "animeName": "Ikan yang Lepas Dari Pancingku (Dub Indo)",
+          "episode": 8,
+          "title": "Ikan yang Lepas Dari Pancingku - Episode 8",
+          "url": "https://www.youtube.com/watch?v=4Vjp414wf6Y",
+          "video_id": "4Vjp414wf6Y"
         }
       ],
-      "episode_count": 6,
+      "episode_count": 8,
       "thumbnail_video_id": "PReCouNgKz0",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -72147,9 +72448,16 @@
           "title": "KAIJU DARA CARAMELISE - Episode 3",
           "url": "https://www.youtube.com/watch?v=W1aGtdhtNkI",
           "video_id": "W1aGtdhtNkI"
+        },
+        {
+          "animeName": "KAIJU DARA CARAMELISE",
+          "episode": 4,
+          "title": "KAIJU DARA CARAMELISE - Episode 4",
+          "url": "https://www.youtube.com/watch?v=FUqTecjE0Gw",
+          "video_id": "FUqTecjE0Gw"
         }
       ],
-      "episode_count": 3,
+      "episode_count": 4,
       "thumbnail_video_id": "7hGrLATSoJQ",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -73645,9 +73953,16 @@
           "title": "Keluarga Tiriku Manis dan Memanja - Episode 4",
           "url": "https://www.youtube.com/watch?v=K3-f8P5ULoE",
           "video_id": "K3-f8P5ULoE"
+        },
+        {
+          "animeName": "Keluarga Tiriku Manis dan Memanja",
+          "episode": 5,
+          "title": "Keluarga Tiriku Manis dan Memanja - Episode 5",
+          "url": "https://www.youtube.com/watch?v=3W3IPm56GQs",
+          "video_id": "3W3IPm56GQs"
         }
       ],
-      "episode_count": 4,
+      "episode_count": 5,
       "thumbnail_video_id": "UvGP-rdI8BU",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -73786,9 +74101,16 @@
           "title": "Kesatria Kelas Berat Tereinkarnasi yang Diasingkan - Episode 5",
           "url": "https://www.youtube.com/watch?v=Lb-qUa0y124",
           "video_id": "Lb-qUa0y124"
+        },
+        {
+          "animeName": "Kesatria Kelas Berat Tereinkarnasi yang Diasingkan",
+          "episode": 6,
+          "title": "Kesatria Kelas Berat Tereinkarnasi yang Diasingkan - Episode 6",
+          "url": "https://www.youtube.com/watch?v=5U9yAGHdxzI",
+          "video_id": "5U9yAGHdxzI"
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "hJyYH0FFIj0",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -73927,9 +74249,16 @@
           "title": "Kesatria Tengkorak Berkelana di Dunia Lain S2 - Episode 5",
           "url": "https://www.youtube.com/watch?v=zmzpvNLs0Vc",
           "video_id": "zmzpvNLs0Vc"
+        },
+        {
+          "animeName": "Kesatria Tengkorak Berkelana di Dunia Lain S2",
+          "episode": 6,
+          "title": "Kesatria Tengkorak Berkelana di Dunia Lain S2 - Episode 6",
+          "url": "https://www.youtube.com/watch?v=zSYItyVWnTE",
+          "video_id": "zSYItyVWnTE"
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "5Qyw70yx1_0",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -75633,9 +75962,17 @@
           "url": "https://www.youtube.com/watch?v=uslR9Mf_VMc",
           "video_id": "uslR9Mf_VMc",
           "is_marathon": true
+        },
+        {
+          "animeName": "Koala's Diary",
+          "episode": 43,
+          "title": "《Koala's Diary》#43 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=hRvSvdDDN2k",
+          "video_id": "hRvSvdDDN2k",
+          "is_marathon": true
         }
       ],
-      "episode_count": 42,
+      "episode_count": 43,
       "thumbnail_video_id": "CTK-GSWCBak",
       "min_episode": 1,
       "marathon_video_id": "CTK-GSWCBak",
@@ -81268,9 +81605,17 @@
           "url": "https://www.youtube.com/watch?v=ptDD29plPKQ",
           "video_id": "ptDD29plPKQ",
           "is_marathon": true
+        },
+        {
+          "animeName": "Love Unseen Beneath the Clear Night Sky",
+          "episode": 6,
+          "title": "《Love Unseen Beneath the Clear Night Sky》#6 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=efWDp0rtyII",
+          "video_id": "efWDp0rtyII",
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "Y-KTYDDQWIo",
       "min_episode": 1,
       "marathon_video_id": "Y-KTYDDQWIo",
@@ -82457,9 +82802,17 @@
           "url": "https://www.youtube.com/watch?v=Y0XCdaKY5kY",
           "video_id": "Y0XCdaKY5kY",
           "is_marathon": true
+        },
+        {
+          "animeName": "MAO",
+          "episode": 19,
+          "title": "《MAO》#19 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=CCT1-HksNXw",
+          "video_id": "CCT1-HksNXw",
+          "is_marathon": true
         }
       ],
-      "episode_count": 18,
+      "episode_count": 19,
       "thumbnail_video_id": "Uh5S9Po06Js",
       "min_episode": 1,
       "marathon_video_id": "Uh5S9Po06Js",
@@ -82605,9 +82958,16 @@
           "title": "Marriagetoxin - Episode 5",
           "url": "https://www.youtube.com/watch?v=GLexHikqBHs",
           "video_id": "GLexHikqBHs"
+        },
+        {
+          "animeName": "Marriagetoxin (Dub Indo)",
+          "episode": 6,
+          "title": "Marriagetoxin - Episode 6",
+          "url": "https://www.youtube.com/watch?v=CXPLDj5DmH4",
+          "video_id": "CXPLDj5DmH4"
         }
       ],
-      "episode_count": 5,
+      "episode_count": 6,
       "thumbnail_video_id": "18SLaTc5md8",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -84333,6 +84693,73 @@
       "episode_count": 1,
       "thumbnail_video_id": "4evPZqeFpDk",
       "min_episode": 6.5,
+      "marathon_video_id": null,
+      "marathon_title": null,
+      "is_donghua": false
+    },
+    {
+      "name": "Matoi the Sacred Slayer",
+      "videos": [
+        {
+          "animeName": "Matoi the Sacred Slayer",
+          "episode": 1,
+          "title": "Matoi the Sacred Slayer - Episode 1",
+          "url": "https://www.youtube.com/watch?v=L16EBI-3EMo",
+          "video_id": "L16EBI-3EMo"
+        },
+        {
+          "animeName": "Matoi the Sacred Slayer",
+          "episode": 2,
+          "title": "Matoi the Sacred Slayer - Episode 2",
+          "url": "https://www.youtube.com/watch?v=ntnl4EH9J64",
+          "video_id": "ntnl4EH9J64"
+        },
+        {
+          "animeName": "Matoi the Sacred Slayer",
+          "episode": 3,
+          "title": "Matoi the Sacred Slayer - Episode 3",
+          "url": "https://www.youtube.com/watch?v=st0-bGKgtcw",
+          "video_id": "st0-bGKgtcw"
+        },
+        {
+          "animeName": "Matoi the Sacred Slayer",
+          "episode": 4,
+          "title": "Matoi the Sacred Slayer - Episode 4",
+          "url": "https://www.youtube.com/watch?v=JjCsPPwHnTk",
+          "video_id": "JjCsPPwHnTk"
+        },
+        {
+          "animeName": "Matoi the Sacred Slayer",
+          "episode": 5,
+          "title": "Matoi the Sacred Slayer - Episode 5",
+          "url": "https://www.youtube.com/watch?v=bQ-psjFz6cM",
+          "video_id": "bQ-psjFz6cM"
+        },
+        {
+          "animeName": "Matoi the Sacred Slayer",
+          "episode": 6,
+          "title": "Matoi the Sacred Slayer - Episode 6",
+          "url": "https://www.youtube.com/watch?v=2DmIpgmo66A",
+          "video_id": "2DmIpgmo66A"
+        },
+        {
+          "animeName": "Matoi the Sacred Slayer",
+          "episode": 7,
+          "title": "Matoi the Sacred Slayer - Episode 7",
+          "url": "https://www.youtube.com/watch?v=PVdZLp7-Hok",
+          "video_id": "PVdZLp7-Hok"
+        },
+        {
+          "animeName": "Matoi the Sacred Slayer",
+          "episode": 8,
+          "title": "Matoi the Sacred Slayer - Episode 8",
+          "url": "https://www.youtube.com/watch?v=dCfNoueRkqQ",
+          "video_id": "dCfNoueRkqQ"
+        }
+      ],
+      "episode_count": 8,
+      "thumbnail_video_id": "L16EBI-3EMo",
+      "min_episode": 1,
       "marathon_video_id": null,
       "marathon_title": null,
       "is_donghua": false
@@ -89225,9 +89652,16 @@
           "title": "Mushoku Tensei: Jobless Reincarnation Season 3 - Episode 6",
           "url": "https://www.youtube.com/watch?v=u5o4R5VfOn0",
           "video_id": "u5o4R5VfOn0"
+        },
+        {
+          "animeName": "Mushoku Tensei: Jobless Reincarnation Season 3",
+          "episode": 7,
+          "title": "Mushoku Tensei: Jobless Reincarnation Season 3 - Episode 7",
+          "url": "https://www.youtube.com/watch?v=DbCWvykQBFc",
+          "video_id": "DbCWvykQBFc"
         }
       ],
-      "episode_count": 6,
+      "episode_count": 7,
       "thumbnail_video_id": "JFhGgPHEbT8",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -96191,9 +96625,23 @@
           "title": "Pembunuh Terhebat di Dunia Reinkarnasi Menjadi Bangsawan Dunia lain - Episode 10",
           "url": "https://www.youtube.com/watch?v=w7rC1pkim7w",
           "video_id": "w7rC1pkim7w"
+        },
+        {
+          "animeName": "Pembunuh Terhebat di Dunia Reinkarnasi Menjadi Bangsawan Dunia lain (Dub Indo)",
+          "episode": 11,
+          "title": "Pembunuh Terhebat di Dunia Reinkarnasi Menjadi Bangsawan Dunia lain - Episode 11",
+          "url": "https://www.youtube.com/watch?v=s0dX65vlMRY",
+          "video_id": "s0dX65vlMRY"
+        },
+        {
+          "animeName": "Pembunuh Terhebat di Dunia Reinkarnasi Menjadi Bangsawan Dunia lain (Dub Indo)",
+          "episode": 12,
+          "title": "Pembunuh Terhebat di Dunia Reinkarnasi Menjadi Bangsawan Dunia lain - Episode 12",
+          "url": "https://www.youtube.com/watch?v=nuB2LdfUP88",
+          "video_id": "nuB2LdfUP88"
         }
       ],
-      "episode_count": 10,
+      "episode_count": 12,
       "thumbnail_video_id": "-yMNUYaks4E",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -96592,9 +97040,16 @@
           "title": "Penguasa Negeri Terluar Memulai dari 0 Rakyat - Episode 1",
           "url": "https://www.youtube.com/watch?v=5Bsd8-nhGEI",
           "video_id": "5Bsd8-nhGEI"
+        },
+        {
+          "animeName": "Penguasa Negeri Terluar Memulai dari 0 Rakyat",
+          "episode": 2,
+          "title": "Penguasa Negeri Terluar Memulai dari 0 Rakyat - Episode 2",
+          "url": "https://www.youtube.com/watch?v=PH8VK5EUsKY",
+          "video_id": "PH8VK5EUsKY"
         }
       ],
-      "episode_count": 1,
+      "episode_count": 2,
       "thumbnail_video_id": "5Bsd8-nhGEI",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -96737,9 +97192,17 @@
           "url": "https://www.youtube.com/watch?v=4mfRKJbqBp4",
           "video_id": "4mfRKJbqBp4",
           "is_marathon": true
+        },
+        {
+          "animeName": "Perfect Addiction",
+          "episode": 5,
+          "title": "《Perfect Addiction》#5 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=e-1QlAElhVs",
+          "video_id": "e-1QlAElhVs",
+          "is_marathon": true
         }
       ],
-      "episode_count": 4,
+      "episode_count": 5,
       "thumbnail_video_id": "f1HJd_nyGPw",
       "min_episode": 1,
       "marathon_video_id": "f1HJd_nyGPw",
@@ -99927,9 +100390,23 @@
           "title": "Re:ZERO - Starting Life in Another World- Season 4 - Episode 71",
           "url": "https://www.youtube.com/watch?v=avrb9QQukw8",
           "video_id": "avrb9QQukw8"
+        },
+        {
+          "animeName": "Re:ZERO - Starting Life in Another World- Season 4 (Dub Indo)",
+          "episode": 72,
+          "title": "Re:ZERO - Starting Life in Another World- Season 4 - Episode 72",
+          "url": "https://www.youtube.com/watch?v=JiOdg72rqdM",
+          "video_id": "JiOdg72rqdM"
+        },
+        {
+          "animeName": "Re:ZERO - Starting Life in Another World- Season 4 (Dub Indo)",
+          "episode": 73,
+          "title": "Re:ZERO - Starting Life in Another World- Season 4 - Episode 73",
+          "url": "https://www.youtube.com/watch?v=x7lXzE9aQKM",
+          "video_id": "x7lXzE9aQKM"
         }
       ],
-      "episode_count": 4,
+      "episode_count": 6,
       "thumbnail_video_id": "sZIopGYbatw",
       "min_episode": 67,
       "marathon_video_id": null,
@@ -101151,9 +101628,16 @@
           "title": "Rilakkuma - Episode 18",
           "url": "https://www.youtube.com/watch?v=p3Q6v-qRIKI",
           "video_id": "p3Q6v-qRIKI"
+        },
+        {
+          "animeName": "Rilakkuma",
+          "episode": 19,
+          "title": "Rilakkuma - Episode 19",
+          "url": "https://www.youtube.com/watch?v=DsS7SgQRoeQ",
+          "video_id": "DsS7SgQRoeQ"
         }
       ],
-      "episode_count": 18,
+      "episode_count": 19,
       "thumbnail_video_id": "LZZzYVfNw78",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -102491,37 +102975,49 @@
         {
           "animeName": "Saga of Tanya the Evil 2",
           "episode": 1,
-          "title": "《Saga of Tanya the Evil 2》#1 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=QzKjsdhJaKc",
-          "video_id": "QzKjsdhJaKc"
+          "title": "《Saga of Tanya the Evil 2》#1 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=FLqFvl08d5g",
+          "video_id": "FLqFvl08d5g",
+          "is_marathon": true
         },
         {
           "animeName": "Saga of Tanya the Evil 2",
           "episode": 2,
-          "title": "《Saga of Tanya the Evil 2》#2 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=GnG78GfSTIg",
-          "video_id": "GnG78GfSTIg"
+          "title": "《Saga of Tanya the Evil 2》#2 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=JebW3tte3BI",
+          "video_id": "JebW3tte3BI",
+          "is_marathon": true
         },
         {
           "animeName": "Saga of Tanya the Evil 2",
           "episode": 3,
-          "title": "《Saga of Tanya the Evil 2》#3 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=bQhqegH779M",
-          "video_id": "bQhqegH779M"
+          "title": "《Saga of Tanya the Evil 2》#3 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=9GZ7cKNbv0E",
+          "video_id": "9GZ7cKNbv0E",
+          "is_marathon": true
         },
         {
           "animeName": "Saga of Tanya the Evil 2",
           "episode": 4,
-          "title": "《Saga of Tanya the Evil 2》#4 (ID Sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=FUyqIvD56vA",
-          "video_id": "FUyqIvD56vA"
+          "title": "《Saga of Tanya the Evil 2》#4 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=bLIUo3loajA",
+          "video_id": "bLIUo3loajA",
+          "is_marathon": true
+        },
+        {
+          "animeName": "Saga of Tanya the Evil 2",
+          "episode": 5,
+          "title": "《Saga of Tanya the Evil 2》#5 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=lYBIHsSF8EQ",
+          "video_id": "lYBIHsSF8EQ",
+          "is_marathon": true
         }
       ],
-      "episode_count": 4,
-      "thumbnail_video_id": "QzKjsdhJaKc",
+      "episode_count": 5,
+      "thumbnail_video_id": "FLqFvl08d5g",
       "min_episode": 1,
-      "marathon_video_id": null,
-      "marathon_title": null,
+      "marathon_video_id": "FLqFvl08d5g",
+      "marathon_title": "Saga of Tanya the Evil 2",
       "is_donghua": false
     },
     {
@@ -103768,44 +104264,57 @@
         {
           "animeName": "Saved By the Ice Cold Prince's Embrace",
           "episode": 1,
-          "title": "《Saved By the Ice Cold Prince's Embrace》#1 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=f1AXvRw167I",
-          "video_id": "f1AXvRw167I"
+          "title": "《Saved By the Ice Cold Prince's Embrace》#1 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=gQt6ZdVPNUQ",
+          "video_id": "gQt6ZdVPNUQ",
+          "is_marathon": true
         },
         {
           "animeName": "Saved By the Ice Cold Prince's Embrace",
           "episode": 2,
-          "title": "《Saved By the Ice Cold Prince's Embrace》#2 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=EjefxOPTFOs",
-          "video_id": "EjefxOPTFOs"
+          "title": "《Saved By the Ice Cold Prince's Embrace》#2 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=bxTXcHcwhDE",
+          "video_id": "bxTXcHcwhDE",
+          "is_marathon": true
         },
         {
           "animeName": "Saved By the Ice Cold Prince's Embrace",
           "episode": 3,
-          "title": "《Saved By the Ice Cold Prince's Embrace》#3 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=lgU8so4dT2M",
-          "video_id": "lgU8so4dT2M"
+          "title": "《Saved By the Ice Cold Prince's Embrace》#3 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=lDzD_NNIiq4",
+          "video_id": "lDzD_NNIiq4",
+          "is_marathon": true
         },
         {
           "animeName": "Saved By the Ice Cold Prince's Embrace",
           "episode": 4,
-          "title": "《Saved By the Ice Cold Prince's Embrace》#4 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=eFnznYMVjgQ",
-          "video_id": "eFnznYMVjgQ"
+          "title": "《Saved By the Ice Cold Prince's Embrace》#4 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=DaaOX-uBT0w",
+          "video_id": "DaaOX-uBT0w",
+          "is_marathon": true
         },
         {
           "animeName": "Saved By the Ice Cold Prince's Embrace",
           "episode": 5,
-          "title": "《Saved By the Ice Cold Prince's Embrace》#5 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=t7usHlQnSpI",
-          "video_id": "t7usHlQnSpI"
+          "title": "《Saved By the Ice Cold Prince's Embrace》#5 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=AMb4wEQlkxw",
+          "video_id": "AMb4wEQlkxw",
+          "is_marathon": true
+        },
+        {
+          "animeName": "Saved By the Ice Cold Prince's Embrace",
+          "episode": 6,
+          "title": "《Saved By the Ice Cold Prince's Embrace》#6 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=Fgr6L5klF3Q",
+          "video_id": "Fgr6L5klF3Q",
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
-      "thumbnail_video_id": "f1AXvRw167I",
+      "episode_count": 6,
+      "thumbnail_video_id": "gQt6ZdVPNUQ",
       "min_episode": 1,
-      "marathon_video_id": null,
-      "marathon_title": null,
+      "marathon_video_id": "gQt6ZdVPNUQ",
+      "marathon_title": "Saved By the Ice Cold Prince's Embrace",
       "is_donghua": false
     },
     {
@@ -109463,9 +109972,153 @@
           "video_id": "CytKuLTNOZY",
           "is_marathon": true,
           "is_donghua": true
+        },
+        {
+          "animeName": "Spy x Sect",
+          "episode": 71,
+          "title": "Spy x Sect #71 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=gFwTgNA9UII",
+          "video_id": "gFwTgNA9UII",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Spy x Sect",
+          "episode": 72,
+          "title": "Spy x Sect #72 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=D6qQyXqMO7M",
+          "video_id": "D6qQyXqMO7M",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Spy x Sect",
+          "episode": 73,
+          "title": "Spy x Sect #73 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=xeueBCV1LRA",
+          "video_id": "xeueBCV1LRA",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Spy x Sect",
+          "episode": 74,
+          "title": "Spy x Sect #74 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=67KADfeExZo",
+          "video_id": "67KADfeExZo",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Spy x Sect",
+          "episode": 75,
+          "title": "Spy x Sect #75 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=VcCJRekG4OE",
+          "video_id": "VcCJRekG4OE",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Spy x Sect",
+          "episode": 76,
+          "title": "Spy x Sect #76 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=2GSh1bwU2PA",
+          "video_id": "2GSh1bwU2PA",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Spy x Sect",
+          "episode": 77,
+          "title": "Spy x Sect #77 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=FPgqyga9Wm0",
+          "video_id": "FPgqyga9Wm0",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Spy x Sect",
+          "episode": 78,
+          "title": "Spy x Sect #78 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=3y06KDGz6IQ",
+          "video_id": "3y06KDGz6IQ",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Spy x Sect",
+          "episode": 79,
+          "title": "Spy x Sect #79 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=d9P4EN5Fv1g",
+          "video_id": "d9P4EN5Fv1g",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Spy x Sect",
+          "episode": 80,
+          "title": "Spy x Sect #80 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=6zGimrb9xRs",
+          "video_id": "6zGimrb9xRs",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Spy x Sect",
+          "episode": 81,
+          "title": "Spy x Sect #81 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=HoSWF34Aum0",
+          "video_id": "HoSWF34Aum0",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Spy x Sect",
+          "episode": 82,
+          "title": "Spy x Sect #82 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=VLvv7sguOmo",
+          "video_id": "VLvv7sguOmo",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Spy x Sect",
+          "episode": 83,
+          "title": "Spy x Sect #83 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=rVzDmdIpbew",
+          "video_id": "rVzDmdIpbew",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Spy x Sect",
+          "episode": 84,
+          "title": "Spy x Sect #84 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=_o-d8ab6Bo4",
+          "video_id": "_o-d8ab6Bo4",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Spy x Sect",
+          "episode": 85,
+          "title": "Spy x Sect #85 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=JriJWCMw2FM",
+          "video_id": "JriJWCMw2FM",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Spy x Sect",
+          "episode": 86,
+          "title": "Spy x Sect #86 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=kHkOvKJoZ-A",
+          "video_id": "kHkOvKJoZ-A",
+          "is_marathon": true,
+          "is_donghua": true
         }
       ],
-      "episode_count": 69,
+      "episode_count": 85,
       "thumbnail_video_id": "OB3laA3TDas",
       "min_episode": 1,
       "marathon_video_id": "OB3laA3TDas",
@@ -114687,9 +115340,27 @@
           "video_id": "IEJHwQeqk58",
           "is_marathon": true,
           "is_donghua": true
+        },
+        {
+          "animeName": "Tales of Herding God",
+          "episode": 27,
+          "title": "Tales of Herding God #27 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=8sTN-Tv-D5E",
+          "video_id": "8sTN-Tv-D5E",
+          "is_marathon": true,
+          "is_donghua": true
+        },
+        {
+          "animeName": "Tales of Herding God",
+          "episode": 28,
+          "title": "Tales of Herding God #28 (ENG sub)【Ani-Mi Asia】",
+          "url": "https://www.youtube.com/watch?v=6sQ2YFurATo",
+          "video_id": "6sQ2YFurATo",
+          "is_marathon": true,
+          "is_donghua": true
         }
       ],
-      "episode_count": 24,
+      "episode_count": 26,
       "thumbnail_video_id": "x-PXDxtZFX4",
       "min_episode": 1,
       "marathon_video_id": "x-PXDxtZFX4",
@@ -117255,9 +117926,17 @@
           "url": "https://www.youtube.com/watch?v=Kv76siI0_T0",
           "video_id": "Kv76siI0_T0",
           "is_marathon": true
+        },
+        {
+          "animeName": "The Cat and the Dragon",
+          "episode": 7,
+          "title": "《The Cat and the Dragon》#7 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=5VoyCS4LDjk",
+          "video_id": "5VoyCS4LDjk",
+          "is_marathon": true
         }
       ],
-      "episode_count": 6,
+      "episode_count": 7,
       "thumbnail_video_id": "vgJHbhymEww",
       "min_episode": 1,
       "marathon_video_id": "vgJHbhymEww",
@@ -117402,9 +118081,17 @@
           "url": "https://www.youtube.com/watch?v=fW7XSr4Hr3c",
           "video_id": "fW7XSr4Hr3c",
           "is_marathon": true
+        },
+        {
+          "animeName": "The Classroom of a Black Cat and a Witch",
+          "episode": 18,
+          "title": "《The Classroom of a Black Cat and a Witch》#18 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=l3sRrWNvtQU",
+          "video_id": "l3sRrWNvtQU",
+          "is_marathon": true
         }
       ],
-      "episode_count": 17,
+      "episode_count": 18,
       "thumbnail_video_id": "bFwW728v9wo",
       "min_episode": 1,
       "marathon_video_id": "bFwW728v9wo",
@@ -119041,9 +119728,18 @@
           "video_id": "-2Bn8Mkq5i0",
           "is_donghua": true,
           "is_marathon": true
+        },
+        {
+          "animeName": "The Demon Hunter3",
+          "episode": 20,
+          "title": "【The Demon Hunter3】EP20 Preview  | MUTISUB | YOUKU ANIMATION",
+          "url": "https://www.youtube.com/watch?v=hG1ooRmEfxY",
+          "video_id": "hG1ooRmEfxY",
+          "is_donghua": true,
+          "is_marathon": true
         }
       ],
-      "episode_count": 18,
+      "episode_count": 19,
       "thumbnail_video_id": "lom1cHBHYPk",
       "min_episode": 1,
       "marathon_video_id": "lom1cHBHYPk",
@@ -119572,9 +120268,16 @@
           "title": "The Drops of God - Episode 13",
           "url": "https://www.youtube.com/watch?v=onpQTGgQ35Q",
           "video_id": "onpQTGgQ35Q"
+        },
+        {
+          "animeName": "The Drops of God",
+          "episode": 14,
+          "title": "The Drops of God - Episode 14",
+          "url": "https://www.youtube.com/watch?v=CJGHyLNCVcE",
+          "video_id": "CJGHyLNCVcE"
         }
       ],
-      "episode_count": 13,
+      "episode_count": 14,
       "thumbnail_video_id": "0DaULKSAUhc",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -120266,44 +120969,57 @@
         {
           "animeName": "The Forsaken Saintess and Her Foodie Roadtrip in Another World",
           "episode": 1,
-          "title": "《The Forsaken Saintess and Her Foodie Roadtrip in Another World》#1 (ID sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=dKjKiDoDF34",
-          "video_id": "dKjKiDoDF34"
+          "title": "《The Forsaken Saintess and Her Foodie Roadtrip in Another World》#1 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=WtGpH93nNm0",
+          "video_id": "WtGpH93nNm0",
+          "is_marathon": true
         },
         {
           "animeName": "The Forsaken Saintess and Her Foodie Roadtrip in Another World",
           "episode": 2,
-          "title": "《The Forsaken Saintess and Her Foodie Roadtrip in Another World》#2 (ID sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=1h29xChhs7I",
-          "video_id": "1h29xChhs7I"
+          "title": "《The Forsaken Saintess and Her Foodie Roadtrip in Another World》#2 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=Qo6zHVuzBSQ",
+          "video_id": "Qo6zHVuzBSQ",
+          "is_marathon": true
         },
         {
           "animeName": "The Forsaken Saintess and Her Foodie Roadtrip in Another World",
           "episode": 3,
-          "title": "《The Forsaken Saintess and Her Foodie Roadtrip in Another World》#3 (ID sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=e3y84ecXV20",
-          "video_id": "e3y84ecXV20"
+          "title": "《The Forsaken Saintess and Her Foodie Roadtrip in Another World》#3 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=8h_h57T2gYA",
+          "video_id": "8h_h57T2gYA",
+          "is_marathon": true
         },
         {
           "animeName": "The Forsaken Saintess and Her Foodie Roadtrip in Another World",
           "episode": 4,
-          "title": "《The Forsaken Saintess and Her Foodie Roadtrip in Another World》#4 (ID sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=ZcJt3Z-0lAY",
-          "video_id": "ZcJt3Z-0lAY"
+          "title": "《The Forsaken Saintess and Her Foodie Roadtrip in Another World》#4 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=vaOCOfqOJ7U",
+          "video_id": "vaOCOfqOJ7U",
+          "is_marathon": true
         },
         {
           "animeName": "The Forsaken Saintess and Her Foodie Roadtrip in Another World",
           "episode": 5,
-          "title": "《The Forsaken Saintess and Her Foodie Roadtrip in Another World》#5 (ID sub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=nxuo5fJRU4Y",
-          "video_id": "nxuo5fJRU4Y"
+          "title": "《The Forsaken Saintess and Her Foodie Roadtrip in Another World》#5 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=1_ENyQrlGko",
+          "video_id": "1_ENyQrlGko",
+          "is_marathon": true
+        },
+        {
+          "animeName": "The Forsaken Saintess and Her Foodie Roadtrip in Another World",
+          "episode": 6,
+          "title": "《The Forsaken Saintess and Her Foodie Roadtrip in Another World》#6 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=jocmqZ6acAg",
+          "video_id": "jocmqZ6acAg",
+          "is_marathon": true
         }
       ],
-      "episode_count": 5,
-      "thumbnail_video_id": "dKjKiDoDF34",
+      "episode_count": 6,
+      "thumbnail_video_id": "WtGpH93nNm0",
       "min_episode": 1,
-      "marathon_video_id": null,
-      "marathon_title": null,
+      "marathon_video_id": "WtGpH93nNm0",
+      "marathon_title": "The Forsaken Saintess and Her Foodie Roadtrip in Another World",
       "is_donghua": false
     },
     {
@@ -136770,9 +137486,16 @@
           "title": "THE WORLD IS DANCING - Episode 6",
           "url": "https://www.youtube.com/watch?v=gwgrQFNHGdE",
           "video_id": "gwgrQFNHGdE"
+        },
+        {
+          "animeName": "THE WORLD IS DANCING",
+          "episode": 7,
+          "title": "THE WORLD IS DANCING - Episode 7",
+          "url": "https://www.youtube.com/watch?v=qZl9Nf9hcC4",
+          "video_id": "qZl9Nf9hcC4"
         }
       ],
-      "episode_count": 6,
+      "episode_count": 7,
       "thumbnail_video_id": "k0vN0WEOsuU",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -139635,9 +140358,17 @@
           "url": "https://www.youtube.com/watch?v=HphhF-lu1YA",
           "video_id": "HphhF-lu1YA",
           "is_marathon": true
+        },
+        {
+          "animeName": "Tomb Raider King",
+          "episode": 5,
+          "title": "《Tomb Raider King》#5 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=nefIwDiPJT8",
+          "video_id": "nefIwDiPJT8",
+          "is_marathon": true
         }
       ],
-      "episode_count": 4,
+      "episode_count": 5,
       "thumbnail_video_id": "_d8M4HDC1Q0",
       "min_episode": 1,
       "marathon_video_id": "_d8M4HDC1Q0",
@@ -140288,9 +141019,30 @@
           "title": "Tongkat Sihir dan Pedang Wistoria - Episode 16",
           "url": "https://www.youtube.com/watch?v=p-w_CNSOPhk",
           "video_id": "p-w_CNSOPhk"
+        },
+        {
+          "animeName": "Tongkat Sihir dan Pedang Wistoria (Dub Indo)",
+          "episode": 17,
+          "title": "Tongkat Sihir dan Pedang Wistoria - Episode 17",
+          "url": "https://www.youtube.com/watch?v=3qBV4fcXmII",
+          "video_id": "3qBV4fcXmII"
+        },
+        {
+          "animeName": "Tongkat Sihir dan Pedang Wistoria (Dub Indo)",
+          "episode": 18,
+          "title": "Tongkat Sihir dan Pedang Wistoria - Episode 18",
+          "url": "https://www.youtube.com/watch?v=qwR392gX3CU",
+          "video_id": "qwR392gX3CU"
+        },
+        {
+          "animeName": "Tongkat Sihir dan Pedang Wistoria (Dub Indo)",
+          "episode": 19,
+          "title": "Tongkat Sihir dan Pedang Wistoria - Episode 19",
+          "url": "https://www.youtube.com/watch?v=agMAgCC_5_E",
+          "video_id": "agMAgCC_5_E"
         }
       ],
-      "episode_count": 16,
+      "episode_count": 19,
       "thumbnail_video_id": "C_Vs0swSlFE",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -142356,9 +143108,16 @@
           "title": "Utusan Empat Musim: Tarian Musim Semi - Episode 8",
           "url": "https://www.youtube.com/watch?v=KnQb5yhh19M",
           "video_id": "KnQb5yhh19M"
+        },
+        {
+          "animeName": "Utusan Empat Musim: Tarian Musim Semi",
+          "episode": 14,
+          "title": "Utusan Empat Musim: Tarian Musim Semi - Episode 14",
+          "url": "https://www.youtube.com/watch?v=8bvXw0DYwCU",
+          "video_id": "8bvXw0DYwCU"
         }
       ],
-      "episode_count": 8,
+      "episode_count": 9,
       "thumbnail_video_id": "tFa7jqifWzw",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -143085,30 +143844,34 @@
         {
           "animeName": "Victoria of Many Faces",
           "episode": 1,
-          "title": "《Victoria of Many Faces》#1 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=qy7Y5NfwdVE",
-          "video_id": "qy7Y5NfwdVE"
+          "title": "《Victoria of Many Faces》#1 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=ekVtlo3vNpk",
+          "video_id": "ekVtlo3vNpk",
+          "is_marathon": true
         },
         {
           "animeName": "Victoria of Many Faces",
           "episode": 2,
-          "title": "《Victoria of Many Faces》#2 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=NsfegVDSuMo",
-          "video_id": "NsfegVDSuMo"
+          "title": "《Victoria of Many Faces》#2 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=j7vZLp_QnSw",
+          "video_id": "j7vZLp_QnSw",
+          "is_marathon": true
         },
         {
           "animeName": "Victoria of Many Faces",
           "episode": 3,
-          "title": "《Victoria of Many Faces》#3 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=29nkuxsKZoA",
-          "video_id": "29nkuxsKZoA"
+          "title": "《Victoria of Many Faces》#3 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=z_PB-w-wAqk",
+          "video_id": "z_PB-w-wAqk",
+          "is_marathon": true
         },
         {
           "animeName": "Victoria of Many Faces",
           "episode": 4,
-          "title": "《Victoria of Many Faces》#4 (ID sub | JP dub)【Ani-One Indonesia】",
-          "url": "https://www.youtube.com/watch?v=QldsGBLv-QY",
-          "video_id": "QldsGBLv-QY"
+          "title": "《Victoria of Many Faces》#4 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=HEmjJUT9tk0",
+          "video_id": "HEmjJUT9tk0",
+          "is_marathon": true
         },
         {
           "animeName": "Victoria of Many Faces",
@@ -143120,10 +143883,10 @@
         }
       ],
       "episode_count": 5,
-      "thumbnail_video_id": "qy7Y5NfwdVE",
+      "thumbnail_video_id": "ekVtlo3vNpk",
       "min_episode": 1,
-      "marathon_video_id": null,
-      "marathon_title": null,
+      "marathon_video_id": "ekVtlo3vNpk",
+      "marathon_title": "Victoria of Many Faces",
       "is_donghua": false
     },
     {
@@ -144590,9 +145353,23 @@
           "title": "Welcome to Demon School! Iruma-kun S4 - Episode 6",
           "url": "https://www.youtube.com/watch?v=4qUD6EqeXQM",
           "video_id": "4qUD6EqeXQM"
+        },
+        {
+          "animeName": "Welcome to Demon School! Iruma-kun S4 (Dub Indo)",
+          "episode": 7,
+          "title": "Welcome to Demon School! Iruma-kun S4 - Episode 7",
+          "url": "https://www.youtube.com/watch?v=4pBIAiIiQwE",
+          "video_id": "4pBIAiIiQwE"
+        },
+        {
+          "animeName": "Welcome to Demon School! Iruma-kun S4 (Dub Indo)",
+          "episode": 8,
+          "title": "Welcome to Demon School! Iruma-kun S4 - Episode 8",
+          "url": "https://www.youtube.com/watch?v=Aoi3j-yKfks",
+          "video_id": "Aoi3j-yKfks"
         }
       ],
-      "episode_count": 6,
+      "episode_count": 8,
       "thumbnail_video_id": "XAWcB-NMzf8",
       "min_episode": 1,
       "marathon_video_id": null,
@@ -146316,9 +147093,17 @@
           "url": "https://www.youtube.com/watch?v=MW-aLfuolP0",
           "video_id": "MW-aLfuolP0",
           "is_marathon": true
+        },
+        {
+          "animeName": "You and I are Polar Opposites Season 2",
+          "episode": 13,
+          "title": "《You and I are Polar Opposites Season 2》#13 (ENG sub | JP dub)【Ani-One Asia】",
+          "url": "https://www.youtube.com/watch?v=p2GDNsK2kp4",
+          "video_id": "p2GDNsK2kp4",
+          "is_marathon": true
         }
       ],
-      "episode_count": 12,
+      "episode_count": 13,
       "thumbnail_video_id": "Q2Jkm9GqhzQ",
       "min_episode": 1,
       "marathon_video_id": "Q2Jkm9GqhzQ",
@@ -147480,6 +148265,6 @@
       "is_donghua": false
     }
   ],
-  "total_series": 915,
-  "last_updated": "2026-08-04"
+  "total_series": 919,
+  "last_updated": "2026-08-11"
 }
